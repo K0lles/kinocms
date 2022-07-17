@@ -1,10 +1,19 @@
 from django.shortcuts import render
-from django.views.generic import CreateView
+from django.forms import modelformset_factory
+from .forms import *
 
-from cinema.models import Cinema
+from cinema.models import Cinema, SEO
 
 
-class CinemaCreateView(CreateView):
-    model = Cinema
-    fields = ('name', 'description', 'condition', 'logo')
-    template_name = 'admin_cms/base.html'
+def create_cinema(request):
+    cinema_form = CinemaCreateForm()
+    photo_form_set = modelformset_factory(Photo, form=PhotoCreateForm, extra=2)
+
+    return render(request, 'admin_cms/cinema_form.html', context={'form': cinema_form,
+                                                                  'photo_form': photo_form_set})
+
+
+# class CinemaCreateView(CreateView):
+#     form_class = CinemaCreateForm
+#     template_name = 'admin_cms/base.html'
+

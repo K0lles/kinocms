@@ -11,6 +11,16 @@ class Cinema(models.Model):
     gallery = models.OneToOneField('Gallery', on_delete=models.CASCADE, verbose_name='Галерея картинок')
     seo = models.ForeignKey('SEO', on_delete=models.CASCADE, verbose_name='SEO блок')
 
+    class Meta:
+        verbose_name_plural = 'Кінотеатри'
+
+    def meta(self):
+        return self._meta
+
+    @staticmethod
+    def get_verbose_name_plural():
+        return Cinema._meta.verbose_name_plural
+
 
 class Hall(models.Model):
     cinema_id = models.ForeignKey(Cinema, on_delete=models.CASCADE, verbose_name='Кінотеатр')
