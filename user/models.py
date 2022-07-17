@@ -16,7 +16,7 @@ class SimpleUser(models.Model):
         UKRAINIAN = 'ukrainian', 'Українська'
         RUSSIAN = 'russian', 'Російська'
 
-    language = models.CharField(choices=Language.choices, verbose_name='Мова')
+    language = models.CharField(max_length= 55, choices=Language.choices, verbose_name='Мова')
 
     class Sex(models.TextChoices):
         MALE = 'male', 'Чоловік'

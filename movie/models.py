@@ -18,5 +18,5 @@ class Session(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
     type = models.CharField(max_length=55)
-    price = models.DecimalField(decimal_places=2)
+    price = models.FloatField()
     date = models.DateTimeField()

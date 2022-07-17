@@ -14,7 +14,7 @@ class Cinema(models.Model):
 
 class Hall(models.Model):
     cinema_id = models.ForeignKey(Cinema, on_delete=models.CASCADE, verbose_name='Кінотеатр')
-    number = models.IntegerField(verbose_name='Номер зала')
+    number = models.IntegerField(validators=[MinValueValidator(0)], verbose_name='Номер зала')
     created_at = models.DateField(auto_now_add=True)
     scheme = models.ImageField(upload_to='cinema/hall/scheme/', verbose_name='Схема зала')
     banner_photo = models.ImageField(upload_to='cinema/hall/banner_photo/' ,verbose_name='Верхній баннер')
