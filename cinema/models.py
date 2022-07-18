@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.utils.safestring import mark_safe
 
 
 class Cinema(models.Model):
@@ -41,6 +42,12 @@ class Gallery(models.Model):
 class Photo(models.Model):
     photo = models.ImageField(upload_to='gallery/')
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
+
+    def image_tag(self):
+        return mark_safe(f"<img src={self.photo.url}>")
+
+    image_tag.short_description = 'image'
+    image_tag.allow_tags = True
 
 
 class SEO(models.Model):

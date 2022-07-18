@@ -1,0 +1,22 @@
+{% extends 'admin_cms/base.html' %}
+
+{% block content %}
+
+    <a class="btn btn-success float-right text-light" href="{% url 'cinema_create' %}">Створити кінотеатр</a>
+
+    {% if cinema_list|length == 0 %}
+        <div class="content" style="padding-top: 15%;">
+            <h1>Поки що не існує жодного кінотеатру, але ви можете виправити це</h1>
+        </div>
+    {% else %}
+
+        {% for cinema in cinema_list %}
+            <div class="content">
+                <img class="img-fluid" src="{{ cinema.logo.url }}" alt="">
+                <p>{{ cinema.name }}</p>
+            </div>
+        {% endfor %}
+
+    {% endif %}
+
+{% endblock %}

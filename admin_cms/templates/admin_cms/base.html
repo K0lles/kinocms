@@ -3,9 +3,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ title }}</title>
+    <link rel="icon" href="{% static 'admin_cms/logos/cinema_popcorn.svg' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+{#    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>#}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
 </head>
@@ -40,7 +41,7 @@
           <!-- Brand Logo -->
           <a href="#" class="brand-link">
             <img src="{% static 'admin_cms/logos/../../../static/admin_cms/logos/cinema_popcorn.svg' %}"
-                 alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                 alt="Kino" class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">KinoCMS</span>
           </a>
 
@@ -75,7 +76,7 @@
                 </li>
 
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="#" class="nav-link {% if curr_page == 'films' %}active{% endif %}">
                     <i class="nav-icon fas fa-th">
 
                     </i>
@@ -86,18 +87,18 @@
                 </li>
 
                 <li class="nav-item">
-                  <a href="#" class="nav-link active">
+                  <a href="{% url 'cinema' %}" class="nav-link {% if curr_page == 'cinema'  %}active{% endif %}">
                     <i class="nav-icon fas fa-tachometer-alt">
                         <img src="{% static 'admin_cms/logos/cinema-logo.png' %}" alt="" style="height: 20px;">
                     </i>
-                      Кінотеатри
+                      <p>Кінотеатри</p>
                   </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Active Page</p>
+                      <p>Новини</p>
                     </a>
                 </li>
 
@@ -106,36 +107,25 @@
                     <i class="nav-icon fas fa-th">
 
                     </i>
-                    <p>
-                      Simple Link
-                    </p>
+                    <p>Акції</p>
                   </a>
                 </li>
+
               </ul>
             </nav>
-
           </div>
-
         </aside>
 
+
+        <div class="content-wrapper px-4 py-2" style="min-height: 481px;">
+                <div class="content px-2">
         {% block content %}
 
-            <div class="content-wrapper px-4 py-2" style="min-height: 481px;">
-
-                <div class="content px-2">
-
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <input type="submit" value="Добавити">
-                    </form>
-                </div>
-
-            </div>
-
         {% endblock content %}
+                </div>
+        </div>
+
 
     </div>
-
 </body>
 </html>

@@ -2,13 +2,19 @@ from django import forms
 from cinema.models import *
 
 
-class PhotoCreateForm(forms.ModelForm):
+class CinemaCreateForm(forms.ModelForm):
+    class Meta:
+        model = Cinema
+        exclude = ('seo',)
+
+
+class PhotoCreateForm(forms.BaseModelFormSet):
     class Meta:
         model = Photo
         fields = ('photo',)
 
 
-class CinemaCreateForm(forms.ModelForm):
+class SeoCreateForm(forms.ModelForm):
     class Meta:
-        model = Cinema
-        fields = ('name', 'logo')
+        model = SEO
+        fields = '__all__'

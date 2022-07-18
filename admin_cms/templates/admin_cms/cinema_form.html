@@ -7,14 +7,48 @@
 
         <div class="content px-2">
 
-            <form method="post" enctype="multipart/form-data">
+            <form id="cinema-form" action="{% url 'cinema_create' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input type="submit" value="Добавити">
-                {{ photo_form.as_p }}
+
+                <img src="{{ photo_form.photo.url }}">
+
+                {{ photo_formset.management_form.as_p }}
+
+                <label>Галерея картинок</label>
+                <div class="content" id="photo-form-list" style="display: block;">
+                    {% for photo_form in photo_formset %}
+                        <div class="photo-form" style="display: inline-block;">
+{#                            {{ photo_form.as_p }}#}
+                        <input type="image" id="{{ photo_form.label_suffix }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="hidden" id="empty-form" style="display: none">{{ photo_formset.empty_form.as_p }}</div>
+                <button class="btn" id="add-more" type="button">Додати фотографію</button>
+                <div class="container">
+                    {{ seo_form.as_p }}
+                </div>
+                 <button class="btn-success" type="submit">Створити</button>
             </form>
         </div>
 
     </div>
 
+<script>
+    const addMoreButton = document.getElementById('add-more');
+    addMoreButton.addEventListener('click', add_new_form);
+
+    function add_new_form(event) {
+        if (event) {
+            event.preventDefault();
+        }
+        const photoFormList = document.getElementById('photo-form-list');
+        const photoForm = document.getElementById('empty-form').cloneNode(true);
+        photoForm.setAttribute('class', 'photo-form');
+        photoForm.style.display = 'block';
+        photoForm.setAttribute('id', '');
+        photoFormList.append(photoForm);
+    }
+</script>
 {% endblock content %}
