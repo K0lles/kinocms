@@ -9,18 +9,12 @@ class Cinema(models.Model):
     condition = models.TextField(verbose_name='Умови')
     logo = models.ImageField(upload_to='cinema/cinema/logo/', verbose_name='Логотип')
     banner_photo = models.ImageField(upload_to='cinema/cinema/banner_photo/', verbose_name='Фото верхнього баннера')
-    gallery = models.OneToOneField('Gallery', on_delete=models.CASCADE, verbose_name='Галерея картинок')
-    seo = models.ForeignKey('SEO', on_delete=models.CASCADE, verbose_name='SEO блок')
+    gallery = models.OneToOneField('Gallery', on_delete=models.CASCADE, verbose_name='Галерея картинок',
+                                   blank=True, null=True)
+    seo = models.ForeignKey('SEO', on_delete=models.CASCADE, verbose_name='SEO блок', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Кінотеатри'
-
-    def meta(self):
-        return self._meta
-
-    @staticmethod
-    def get_verbose_name_plural():
-        return Cinema._meta.verbose_name_plural
 
 
 class Hall(models.Model):
@@ -41,7 +35,7 @@ class Gallery(models.Model):
 
 class Photo(models.Model):
     photo = models.ImageField(upload_to='gallery/')
-    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, blank=True, null=True)
 
     def image_tag(self):
         return mark_safe(f"<img src={self.photo.url}>")

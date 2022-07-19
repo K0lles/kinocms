@@ -13,18 +13,18 @@
 
                 <img src="{{ photo_form.photo.url }}">
 
+                <label>Галерея картинок</label>
+
                 {{ photo_formset.management_form.as_p }}
 
-                <label>Галерея картинок</label>
-                <div class="content" id="photo-form-list" style="display: block;">
+                <div class="content flex-column" id="photo-form-list" >
                     {% for photo_form in photo_formset %}
                         <div class="photo-form" style="display: inline-block;">
 {#                            {{ photo_form.as_p }}#}
-                        <input type="image" id="{{ photo_form.label_suffix }}">
                         </div>
                     {% endfor %}
                 </div>
-                <div class="hidden" id="empty-form" style="display: none">{{ photo_formset.empty_form.as_p }}</div>
+                <div id="empty-form" style="display: none">{{ photo_formset.empty_form.as_p }}</div>
                 <button class="btn" id="add-more" type="button">Додати фотографію</button>
                 <div class="container">
                     {{ seo_form.as_p }}
@@ -37,17 +37,25 @@
 
 <script>
     const addMoreButton = document.getElementById('add-more');
+    const totalPhotoForms = document.getElementById('id_form-TOTAL_FORMS');
+
     addMoreButton.addEventListener('click', add_new_form);
 
     function add_new_form(event) {
         if (event) {
             event.preventDefault();
         }
+
+        const currentPhotoForms = document.getElementsByClassName('photo-form');
+        let currentFormCount = currentPhotoForms.length;
         const photoFormList = document.getElementById('photo-form-list');
         const photoForm = document.getElementById('empty-form').cloneNode(true);
+        const regex = RegExp('__prefix__', 'g');
+        photoForm.innerHTML = photoForm.innerHTML.replace(regex, currentPhotoForms);
+        photoForm.cloneNode(true);
         photoForm.setAttribute('class', 'photo-form');
         photoForm.style.display = 'block';
-        photoForm.setAttribute('id', '');
+        photoForm.setAttribute('id', `form-${currentFormCount}`);
         photoFormList.append(photoForm);
     }
 </script>

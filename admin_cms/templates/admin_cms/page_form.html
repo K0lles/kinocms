@@ -1,0 +1,9 @@
+{% extends 'admin_cms/base.html' %}
+
+{% block content %}
+    <form method="post" action="{% url 'page_create' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button  type="submit">Зберегти</button>
+    </form>
+{% endblock %}
