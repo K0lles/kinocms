@@ -11,25 +11,28 @@
                 {% csrf_token %}
                 {{ form.as_p }}
 
-                <img src="{{ photo_form.photo.url }}">
-
-                <label>Галерея картинок</label>
-
                 {{ photo_formset.management_form.as_p }}
-
-                <div class="content flex-column" id="photo-form-list" >
+                <div class="content flex-column" id="photo-form-list" style="padding-top: 2%">
+                    <label>Галерея картинок</label> <br>
                     {% for photo_form in photo_formset %}
-                        <div class="photo-form" style="display: inline-block;">
+                        <div class="photo-form flex-column" style="display: inline-block;">
 {#                            {{ photo_form.as_p }}#}
+                            {% for field in photo_form.visible_fields %}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                                <input class="form-control" type="file" name="{{ field.html_name }}" id="{{ field.id_for_label }}">
+                            {% endfor %}
                         </div>
                     {% endfor %}
                 </div>
-                <div id="empty-form" style="display: none">{{ photo_formset.empty_form.as_p }}</div>
-                <button class="btn" id="add-more" type="button">Додати фотографію</button>
-                <div class="container">
+                {% comment %}<div id="empty-form" style="display: none">
+                    {{ photo_formset.empty_form.as_p }}
+                </div>{% endcomment %}
+                <button class="btn btn-primary" id="add-more" type="button">Додати картинку</button>
+
+                <div class="container" style="padding-top: 3%">
                     {{ seo_form.as_p }}
                 </div>
-                 <button class="btn-success" type="submit">Створити</button>
+                 <button class="btn btn-success" type="submit">Створити</button>
             </form>
         </div>
 
@@ -38,6 +41,7 @@
 <script>
     const addMoreButton = document.getElementById('add-more');
     const totalPhotoForms = document.getElementById('id_form-TOTAL_FORMS');
+    const photoFormList = document.getElementById('photo-form-list');
 
     addMoreButton.addEventListener('click', add_new_form);
 
@@ -48,15 +52,14 @@
 
         const currentPhotoForms = document.getElementsByClassName('photo-form');
         let currentFormCount = currentPhotoForms.length;
-        const photoFormList = document.getElementById('photo-form-list');
         const photoForm = document.getElementById('empty-form').cloneNode(true);
-        const regex = RegExp('__prefix__', 'g');
-        photoForm.innerHTML = photoForm.innerHTML.replace(regex, currentPhotoForms);
-        photoForm.cloneNode(true);
-        photoForm.setAttribute('class', 'photo-form');
+        {#const regex = RegExp('__prefix__', 'g');#}
+        photoForm.setAttribute('class', 'photo-form flex-column');
         photoForm.style.display = 'block';
         photoForm.setAttribute('id', `form-${currentFormCount}`);
+        photoForm.setAttribute('for', `form`)
         photoFormList.append(photoForm);
     }
+
 </script>
 {% endblock content %}

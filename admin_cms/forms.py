@@ -1,10 +1,10 @@
-from django.forms import modelform_factory, modelformset_factory, BaseModelFormSet, ModelForm, fields
+from django.forms import modelform_factory, modelformset_factory, BaseForm, ModelForm, fields
 from cinema.models import *
 from page.models import *
 
 
-cinema_form_factory = modelform_factory(Cinema, fields='__all__')
-photo_formset_factory = modelformset_factory(Photo, fields='__all__', extra=0)
+cinema_form_factory = modelform_factory(Cinema, exclude=('gallery', 'seo'))
+photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=3)
 seo_form_factory = modelform_factory(SEO, fields='__all__')
 
 
@@ -15,10 +15,8 @@ seo_form_factory = modelform_factory(SEO, fields='__all__')
 #         exclude = ('seo',)
 
 
-class PhotoCreateForm(BaseModelFormSet):
-    class Meta:
-        model = Photo
-        fields = ('photo',)
+class PhotoCreateForm(BaseForm):
+    pass
 
 
 class SeoCreateForm(ModelForm):
@@ -30,7 +28,4 @@ class SeoCreateForm(ModelForm):
 class PageCreateForm(ModelForm):
     class Meta:
         model = Page
-        fields = ['name', 'description']
-
-    def meta(self):
-        return self._meta
+        exclude = ('gallery', 'seo',)
