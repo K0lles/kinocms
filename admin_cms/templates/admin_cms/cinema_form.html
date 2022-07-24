@@ -2,64 +2,68 @@
 {% load static %}
 
 {% block content %}
-
-    <div class="content-wrapper px-4 py-2" style="min-height: 481px;">
-
-        <div class="content px-2">
-
             <form id="cinema-form" action="{% url 'cinema_create' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.as_p }}
+
+                {% for field in cinema_form %}
+                    <label for="{{ field.id_for_label }} ">{{ field.label }}: </label>
+                    {{ field }}
+{#                    <input class="form-control" type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}">#}
+                {% endfor %}
 
                 {{ photo_formset.management_form.as_p }}
                 <div class="content flex-column" id="photo-form-list" style="padding-top: 2%">
                     <label>Галерея картинок</label> <br>
+
+                </div>
+                <div id="empty-form" style="display: none">
                     {% for photo_form in photo_formset %}
-                        <div class="photo-form flex-column" style="display: inline-block;">
-{#                            {{ photo_form.as_p }}#}
-                            {% for field in photo_form.visible_fields %}
-                                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
-                                <input class="form-control" type="file" name="{{ field.html_name }}" id="{{ field.id_for_label }}">
-                            {% endfor %}
-                        </div>
+                        {% for field in photo_formset.empty_form.visible_fields %}
+                            <label for="{{ field.id_for_label }}">Картинка:</label>
+                            <input class="form-control" type="file" name="{{ field.html_name }}" id="{{ field.id_for_label }}">
+{#                            <a id="cancel-photo" class="button btn-danger cancel-button">Скасувати</a>#}
+                            <button type="button" class="btn btn-danger cancel-button">Скасувати</button>
+                        {% endfor %}
                     {% endfor %}
                 </div>
-                {% comment %}<div id="empty-form" style="display: none">
-                    {{ photo_formset.empty_form.as_p }}
-                </div>{% endcomment %}
-                <button class="btn btn-primary" id="add-more" type="button">Додати картинку</button>
+                <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">Додати картинку</button>
 
-                <div class="container" style="padding-top: 3%">
-                    {{ seo_form.as_p }}
+                <div class="seo-form" style="padding-top: 3%">
+                    {% for field in seo_form.visible_fields %}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}: </label>
+                        {{ field }}
+                    {% endfor %}
+{#                    {{ seo_form.as_p }}#}
                 </div>
-                 <button class="btn btn-success" type="submit">Створити</button>
+                 <button class="btn btn-success" type="submit" style="margin-top: 5%">Створити</button>
             </form>
-        </div>
-
-    </div>
-
 <script>
-    const addMoreButton = document.getElementById('add-more');
-    const totalPhotoForms = document.getElementById('id_form-TOTAL_FORMS');
-    const photoFormList = document.getElementById('photo-form-list');
+    const addMoreButtons = $('#add-more')
+    const photoFormList = $('#photo-form-list');
+    const cancelButton = $('.cancel-button');
 
-    addMoreButton.addEventListener('click', add_new_form);
+    $(document).on("click", "button.cancel-button" , function() {
+            $(this).parent().remove();
+    });
 
-    function add_new_form(event) {
-        if (event) {
-            event.preventDefault();
-        }
 
-        const currentPhotoForms = document.getElementsByClassName('photo-form');
-        let currentFormCount = currentPhotoForms.length;
-        const photoForm = document.getElementById('empty-form').cloneNode(true);
-        {#const regex = RegExp('__prefix__', 'g');#}
-        photoForm.setAttribute('class', 'photo-form flex-column');
-        photoForm.style.display = 'block';
-        photoForm.setAttribute('id', `form-${currentFormCount}`);
-        photoForm.setAttribute('for', `form`)
-        photoFormList.append(photoForm);
-    }
+    addMoreButtons.click(function (e) {
+        e.preventDefault();
+        let totalForms = parseInt($('#id_form-TOTAL_FORMS').val());
+
+
+        let emptyRow = $('#empty-form').clone();
+
+        emptyRow.find('#id_form-__prefix__-photo').attr('id', `id_form-${totalForms}-photo`)
+            .attr('name', `form-${totalForms}-photo`);
+        emptyRow.find('label').attr('for', `id_form-${totalForms}-photo`);
+        emptyRow.attr('id', `photo-${totalForms}`);
+        emptyRow.attr('class', 'photo-form flex-column')
+        emptyRow.css('display', 'inline-block');
+        photoFormList.append(emptyRow)
+        $('#id_form-TOTAL_FORMS').val(totalForms + 1);
+    });
+
 
 </script>
 {% endblock content %}

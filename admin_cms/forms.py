@@ -1,28 +1,36 @@
-from django.forms import modelform_factory, modelformset_factory, BaseForm, ModelForm, fields
+from django.forms import modelform_factory, modelformset_factory, BaseForm, ModelForm, Form, fields
 from cinema.models import *
 from page.models import *
 
 
-cinema_form_factory = modelform_factory(Cinema, exclude=('gallery', 'seo'))
-photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=3)
-seo_form_factory = modelform_factory(SEO, fields='__all__')
+photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=1)
 
 
-#
-# class CinemaCreateForm(forms.ModelForm):
-#     class Meta:
-#         model = Cinema
-#         exclude = ('seo',)
+class CinemaCreateForm(ModelForm):
+    class Meta:
+        exclude = ('gallery', 'seo')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
 
 
-class PhotoCreateForm(BaseForm):
-    pass
+cinema_form_factory = modelform_factory(Cinema, form=CinemaCreateForm)
 
 
 class SeoCreateForm(ModelForm):
     class Meta:
         model = SEO
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+
+seo_form_factory = modelform_factory(SEO, form=SeoCreateForm)
 
 
 class PageCreateForm(ModelForm):

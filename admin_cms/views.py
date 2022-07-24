@@ -26,7 +26,7 @@ def create_cinema(request):
 
     context = {
         'title': 'KinoCMS| Список кінотеатрів',
-        'form': cinema_form,
+        'cinema_form': cinema_form,
         'photo_formset': photo_formset,
         'seo_form': seo_form,
         'curr_page': 'cinema'
