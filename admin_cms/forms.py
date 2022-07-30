@@ -3,7 +3,7 @@ from cinema.models import *
 from page.models import *
 
 
-photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=1)
+photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=0)
 
 
 class CinemaCreateForm(ModelForm):

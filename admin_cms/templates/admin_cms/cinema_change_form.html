@@ -1,0 +1,43 @@
+{% extends 'admin_cms/base.html' %}
+{% load static %}
+
+{% block content %}
+    <form id="cinema-form" action="{% url 'cinema_create' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for field in cinema_form %}
+            <label for="{{ field.id_for_label }} ">{{ field.label }}: </label>
+            {{ field }}
+        {% endfor %}
+
+        {{ photo_formset.management_form.as_p }}
+        <div class="content flex-column" id="photo-form-list" style="padding-top: 2%">
+            <label>Галерея картинок</label> <br>
+            {% for form in photo_formset %}
+                <div>
+                    {{ form }}
+                    <button type="button" class="btn btn-danger cancel-button">Скасувати</button>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="empty-form" style="display: none">
+            {% for photo_form in photo_formset %}
+                {% for field in photo_formset.empty_form.visible_fields %}
+                    <label for="{{ field.id_for_label }}">Картинка:</label>
+                    <input class="form-control" type="file" name="{{ field.html_name }}" id="{{ field.id_for_label }}">
+                    <button type="button" class="btn btn-danger cancel-button">Скасувати</button>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">Додати картинку</button>
+
+        <div class="seo-form" style="padding-top: 3%">
+            {% comment %}{% for field in seo_form.visible_fields %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}: </label>
+                {{ field }}
+            {% endfor %}{% endcomment %}
+            {{ seo_form }}
+        </div>
+         <button class="btn btn-success" type="submit" style="margin-top: 5%">Створити</button>
+    </form>
+{% endblock %}

@@ -16,10 +16,6 @@ def cinema_view(request):
 
 
 def create_cinema(request):
-    # cinema_form = CinemaCreateForm()
-    # photo_formset = modelformset_factory(Photo, formset=PhotoCreateForm, extra=0, fields=('photo',),
-    #                                      labels={'photo': ''})
-    # seo_form = modelformset_factory(SEO, form=SeoCreateForm, extra=1)
     cinema_form = cinema_form_factory()
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
     seo_form = seo_form_factory()
@@ -62,6 +58,21 @@ def create_cinema(request):
             return redirect('cinema')
 
     return render(request, 'admin_cms/cinema_form.html', context=context)
+
+
+def update_cinema(request, pk):
+    cinema = Cinema.objects.get(pk=pk)
+    cinema_form = cinema_form_factory(instance=cinema)
+    seo_form = seo_form_factory(instance=cinema.seo)
+    photo_formset = photo_formset_factory(queryset=Photo.objects.filter(gallery=cinema.gallery))
+
+    context = {
+        'cinema_form': cinema_form,
+        'photo_formset': photo_formset,
+        'seo_form': seo_form,
+        'curr_page': 'cinema'
+    }
+    return render(request, 'admin_cms/cinema_change_form.html', context=context)
 
 
 def create_page(request):
