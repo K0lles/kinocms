@@ -5,33 +5,105 @@
             <form id="cinema-form" action="{% url 'cinema_create' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                {% for field in cinema_form %}
-{#                    <label for="{{ field.id_for_label }} ">{{ field.label }}: </label>#}
-                    {{ field.label_tag }}
-                    {{ field }}
-                {% endfor %}
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="{{ cinema_form.name.id_for_label }}">
+                        {{ cinema_form.name.label }}
+                    </label>
+                    <div class="col-sm-10">
+                        {{ cinema_form.name }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="{{ cinema_form.description.id_for_label }}">
+                        {{ cinema_form.description.label }}
+                    </label>
+                    <div class="col-sm-10">
+                        {{ cinema_form.description }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="{{ cinema_form.condition.id_for_label }}">
+                        {{ cinema_form.condition.label }}
+                    </label>
+                    <div class="col-sm-10">
+                        {{ cinema_form.condition }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="{{ cinema_form.logo.id_for_label }}">
+                       Лого
+                    </label>
+                    <div class="col-sm-10">
+                        <img id="id_logo-preview" src="{% static 'admin_cms/logos/empty-photo.png' %}"
+                            class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
+                        <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">Додати
+                            <input type="file" onchange="loadFile(event, this.id)"
+                                   name="{{ cinema_form.logo.html_name }}" id="{{ cinema_form.logo.id_for_label }}">
+                        </span>
+                        <button id="{{ cinema_form.logo.id_for_label }}-delete" type="button"
+                                class="btn btn-danger" onclick="removeFile(this)"
+                                style="margin: 0% 0% 0% 8%;">Видалити</button>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="{{ cinema_form.banner_photo.id_for_label }}">
+                       Фото верхнього банера
+                    </label>
+                    <div class="col-sm-10">
+                        <img id="id_banner_photo-preview" src="{% static 'admin_cms/logos/empty-photo.png' %}"
+                            class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
+                        <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">Додати
+                            <input type="file" onchange="loadFile(event, this.id)"
+                                   name="{{ cinema_form.banner_photo.html_name }}"
+                                   id="{{ cinema_form.banner_photo.id_for_label }}">
+                        </span>
+                        <button id="{{ cinema_form.banner_photo.id_for_label }}-delete" type="button"
+                                class="btn btn-danger" onclick="removeFile(this)"
+                                style="margin: 0% 0% 0% 8%;">Видалити</button>
+                    </div>
+                </div>
+
+                {% comment %}{% for field in cinema_form %}
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="col-sm-10">
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endfor %}{% endcomment %}
 
                 {{ photo_formset.management_form.as_p }}
                 <div class="content flex-column" id="photo-form-list" style="padding-top: 2%">
                     <label>Галерея картинок</label> <br>
 
                 </div>
-                <div id="empty-form" style="display: none">
-                        {% for field in photo_formset.empty_form.visible_fields %}
-                            <label for="{{ field.id_for_label }}">Картинка:</label>
-                            <img id="image-preview" src="{% static 'admin_cms/logos/empty-photo.png' %}"
-                                 class="img-thumbnail" alt="your image" />
-                            <input class="form-control" type="file"
-                                  onchange="loadFile(event, this.id)" name="{{ field.html_name }}" id="{{ field.id_for_label }}">
-                            <button type="button" class="btn btn-danger cancel-button">Скасувати</button>
-                        {% endfor %}
+                <div id="empty-form" style="display: none; margin: 2% 0% 0% 4%;">
+                    {% for field in photo_formset.empty_form.visible_fields %}
+                            <div style="position: relative">
+                                <img id="image-preview" src="{% static 'admin_cms/logos/empty-photo.png' %}"
+                                class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
+                                <img class="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}">
+                            </div>
+                            <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 5%">Вибрати фото
+                                <input type="file" onchange="loadFile(event, this.id)"
+                                                    name="{{ field.html_name }}" id="{{ field.id_for_label }}">
+                            </span>
+                    {% endfor %}
                 </div>
                 <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">Додати картинку</button>
 
                 <div class="seo-form" style="padding-top: 3%">
-                    {% for field in seo_form.visible_fields %}
-                        <label for="{{ field.id_for_label }}">{{ field.label }}: </label>
-                        {{ field }}
+                    {% for field in seo_form %}
+                        <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="col-sm-10">
+                            {{ field }}
+                        </div>
+                    </div>
                     {% endfor %}
                 </div>
                  <button class="btn btn-success" type="submit" style="margin-top: 5%">Створити</button>

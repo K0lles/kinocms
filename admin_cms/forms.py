@@ -1,4 +1,7 @@
+from fileinput import FileInput
+
 from django.forms import modelform_factory, modelformset_factory, BaseForm, ModelForm, Form, fields
+from django.forms.widgets import FileInput
 from cinema.models import *
 from page.models import *
 

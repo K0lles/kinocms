@@ -2,11 +2,9 @@ const addMoreButtons = $('#add-more')
 const photoFormList = $('#photo-form-list');
 const cancelButton = $('.cancel-button');
 
-$(document).on("click", "button.cancel-button" , function() {
-        $(this).parent().remove();
+$(document).on("click", ".cancel-button" , function() {
+        $(this).parent().parent().remove();
 });
-
-
 
 
 addMoreButtons.click(function (e) {
@@ -19,11 +17,11 @@ addMoreButtons.click(function (e) {
     emptyRow.find('#id_form-__prefix__-photo').attr('id', `id_form-${totalForms}-photo`)
         .attr('name', `form-${totalForms}-photo`);
     emptyRow.find('label').attr('for', `id_form-${totalForms}-photo`);
-    emptyRow.find('#image-preview').attr('id', `id_form-${totalForms}-photo-preview`)
+    emptyRow.find('#image-preview').attr('id', `id_form-${totalForms}-photo-preview`);
     emptyRow.attr('id', `id_form-${totalForms}-photo`);
-    emptyRow.attr('class', 'photo-form flex-column')
+    emptyRow.attr('class', 'photo-form flex-column');
     emptyRow.css('display', 'inline-block');
-    photoFormList.append(emptyRow)
+    photoFormList.append(emptyRow);
     $('#id_form-TOTAL_FORMS').val(totalForms + 1);
 });
 
@@ -35,4 +33,12 @@ function loadFile(event, id) {
     image.onload = function() {
         URL.revokeObjectURL(image.src);
     };
+}
+
+function removeFile(image) {
+
+    let inputFieldID = image.id.replace("-delete", "");
+    let otherInputImage = document.getElementById(inputFieldID);
+    otherInputImage.value = "";
+    $(`#${inputFieldID}-preview`).attr('src', '/static/admin_cms/logos/empty-photo.png');
 }

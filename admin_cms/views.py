@@ -66,6 +66,20 @@ def update_cinema(request, pk):
     seo_form = seo_form_factory(instance=cinema.seo)
     photo_formset = photo_formset_factory(queryset=Photo.objects.filter(gallery=cinema.gallery))
 
+    if request.method == 'POST':
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES)
+        cinema_form_class = cinema_form_factory(request.POST, request.FILES)
+        seo_form_class = seo_form_factory(request.POST)
+
+        if cinema_form_class.is_valid() and seo_form_class.is_valid() \
+                and all([form.is_valid() for form in photo_formset_class]):
+
+            cinema_form_class.save()
+            photo_formset_class.save()
+            seo_form_class.save()
+
+            return redirect('cinema')
+
     context = {
         'cinema_form': cinema_form,
         'photo_formset': photo_formset,
