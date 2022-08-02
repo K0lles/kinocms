@@ -1,7 +1,5 @@
-from fileinput import FileInput
-
 from django.forms import modelform_factory, modelformset_factory, BaseForm, ModelForm, Form, fields
-from django.forms.widgets import FileInput
+from django.forms.widgets import FileInput, Textarea, TextInput
 from cinema.models import *
 from page.models import *
 
@@ -9,31 +7,21 @@ from page.models import *
 photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=0)
 
 
-class CinemaCreateForm(ModelForm):
-    class Meta:
-        exclude = ('gallery', 'seo')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
+cinema_form_factory = modelform_factory(Cinema, exclude=('gallery', 'seo'),
+                                        widgets={
+                                            'name': TextInput(attrs={'class': 'form-control'}),
+                                            'description': Textarea(attrs={'class': 'form-control'}),
+                                            'condition': Textarea(attrs={'class': 'form-control'})
+                                        })
 
 
-cinema_form_factory = modelform_factory(Cinema, form=CinemaCreateForm)
-
-
-class SeoCreateForm(ModelForm):
-    class Meta:
-        model = SEO
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-
-
-seo_form_factory = modelform_factory(SEO, form=SeoCreateForm)
+seo_form_factory = modelform_factory(SEO, fields=('url', 'title', 'keyword', 'seo_description'),
+                                     widgets={
+                                         'url': TextInput(attrs={'class': 'form-control'}),
+                                         'title': TextInput(attrs={'class': 'form-control'}),
+                                         'keyword': TextInput(attrs={'class': 'form-control'}),
+                                         'seo_description': Textarea(attrs={'class': 'form-control'})
+                                     })
 
 
 class PageCreateForm(ModelForm):

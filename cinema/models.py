@@ -16,6 +16,9 @@ class Cinema(models.Model):
     class Meta:
         verbose_name_plural = 'Кінотеатри'
 
+    def __str__(self):
+        return self.name
+
 
 class Hall(models.Model):
     cinema_id = models.ForeignKey(Cinema, on_delete=models.CASCADE, verbose_name='Кінотеатр')
@@ -32,20 +35,23 @@ class Hall(models.Model):
 class Gallery(models.Model):
     name = models.CharField(max_length=55)
 
+    def __str__(self):
+        return self.name
+
 
 class Photo(models.Model):
     photo = models.ImageField(upload_to='gallery/')
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, blank=True, null=True)
 
-    def image_tag(self):
-        return mark_safe(f"<img src={self.photo.url}>")
-
-    image_tag.short_description = 'image'
-    image_tag.allow_tags = True
+    def __str__(self):
+        return self.photo.url
 
 
 class SEO(models.Model):
-    url = models.URLField()
-    title = models.CharField(max_length=55)
-    keyword = models.CharField(max_length=155)
-    description = models.TextField()
+    url = models.URLField(verbose_name='Url')
+    title = models.CharField(max_length=55, verbose_name='Title')
+    keyword = models.CharField(max_length=155, verbose_name='Keywords')
+    seo_description = models.TextField(verbose_name='Description', blank=True)
+
+    def __str__(self):
+        return self.title

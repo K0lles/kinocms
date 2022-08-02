@@ -65,20 +65,36 @@ def update_cinema(request, pk):
     cinema_form = cinema_form_factory(instance=cinema)
     seo_form = seo_form_factory(instance=cinema.seo)
     photo_formset = photo_formset_factory(queryset=Photo.objects.filter(gallery=cinema.gallery))
+    print(cinema_form.instance.id)
 
     if request.method == 'POST':
-        photo_formset_class = photo_formset_factory(request.POST, request.FILES)
-        cinema_form_class = cinema_form_factory(request.POST, request.FILES)
-        seo_form_class = seo_form_factory(request.POST)
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES,
+                                                    queryset=Photo.objects.filter(gallery=cinema.gallery))
+        cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
+        seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
+
+        print('yeah, we are inside POST method')
+
+        if cinema_form_class.is_valid():
+            print('cinema_form_class is valid')
+
+        if seo_form_class.is_valid():
+            print('seo_form_class is valid')
 
         if cinema_form_class.is_valid() and seo_form_class.is_valid() \
                 and all([form.is_valid() for form in photo_formset_class]):
+
+            print('everything is valid')
+
+            for form in photo_formset_class:
+                form_saved = form.save(commit=False)
+                form_saved.gallery = cinema.gallery
 
             cinema_form_class.save()
             photo_formset_class.save()
             seo_form_class.save()
 
-            return redirect('cinema')
+        return redirect('cinema')
 
     context = {
         'cinema_form': cinema_form,
