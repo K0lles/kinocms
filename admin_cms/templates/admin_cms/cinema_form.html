@@ -6,6 +6,10 @@
                 {% csrf_token %}
 
                 <div class="form-group row">
+                    {% for error in cinema_form.errors %}
+                        {{ error }}
+                    {% endfor %}
+
                     <label class="col-sm-2 col-form-label" for="{{ cinema_form.name.id_for_label }}">
                         {{ cinema_form.name.label }}
                     </label>
@@ -15,6 +19,7 @@
                 </div>
 
                 <div class="form-group row">
+                    {{ cinema_form.description.errors }}
                     <label class="col-sm-2 col-form-label" for="{{ cinema_form.description.id_for_label }}">
                         {{ cinema_form.description.label }}
                     </label>
@@ -24,6 +29,7 @@
                 </div>
 
                 <div class="form-group row">
+                    {{ cinema_form.condition.errors }}
                     <label class="col-sm-2 col-form-label" for="{{ cinema_form.condition.id_for_label }}">
                         {{ cinema_form.condition.label }}
                     </label>
@@ -33,6 +39,7 @@
                 </div>
 
                 <div class="form-group row">
+                    {{ cinema_form.logo.errors }}
                     <label class="col-sm-2 col-form-label" for="{{ cinema_form.logo.id_for_label }}">
                        Лого
                     </label>
@@ -40,8 +47,9 @@
                         <img id="id_logo-preview" src="{% static 'admin_cms/logos/empty-photo.png' %}"
                             class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                         <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">Додати
-                            <input type="file" onchange="loadFile(event, this.id)"
-                                   name="{{ cinema_form.logo.html_name }}" id="{{ cinema_form.logo.id_for_label }}">
+                            {% comment %}<input type="file" onchange="loadFile(event, this.id)"
+                                   name="{{ cinema_form.logo.html_name }}" id="{{ cinema_form.logo.id_for_label }}">{% endcomment %}
+                            {{ cinema_form.logo }}
                         </span>
                         <button id="{{ cinema_form.logo.id_for_label }}-delete" type="button"
                                 class="btn btn-danger" onclick="removeFile(this)"
@@ -73,17 +81,16 @@
 
                 </div>
                 <div id="empty-form" style="display: none; margin: 2% 0% 0% 4%;">
-                    {% for field in photo_formset.empty_form.visible_fields %}
                             <div style="position: relative">
                                 <img id="image-preview" src="{% static 'admin_cms/logos/empty-photo.png' %}"
                                 class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                                 <img class="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}">
                             </div>
                             <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 5%">Вибрати фото
-                                <input type="file" onchange="loadFile(event, this.id)"
-                                                    name="{{ field.html_name }}" id="{{ field.id_for_label }}">
+                                {% comment %}<input type="file" onchange="loadFile(event, this.id)"
+                                                    name="{{ field.html_name }}" id="{{ field.id_for_label }}">{% endcomment %}
+                                {{ photo_formset.empty_form.photo }}
                             </span>
-                    {% endfor %}
                 </div>
                 <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">Додати картинку</button>
 

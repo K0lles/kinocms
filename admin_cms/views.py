@@ -62,33 +62,30 @@ def create_cinema(request):
 
 def update_cinema(request, pk):
     cinema = Cinema.objects.get(pk=pk)
+    gallery = Gallery.objects.prefetch_related('photo_set').get(pk=cinema.gallery_id)
     cinema_form = cinema_form_factory(instance=cinema)
     seo_form = seo_form_factory(instance=cinema.seo)
-    photo_formset = photo_formset_factory(queryset=Photo.objects.filter(gallery=cinema.gallery))
-    print(cinema_form.instance.id)
+    photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
 
     if request.method == 'POST':
         photo_formset_class = photo_formset_factory(request.POST, request.FILES,
-                                                    queryset=Photo.objects.filter(gallery=cinema.gallery))
+                                                    queryset=gallery.photo_set.all())
         cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
         seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
 
-        print('yeah, we are inside POST method')
+        print(photo_formset_class.errors)
 
-        if cinema_form_class.is_valid():
-            print('cinema_form_class is valid')
+        if cinema_form_class.is_valid() and seo_form_class.is_valid() and photo_formset_class.is_valid()\
+                and all([form.is_valid() for form in photo_formset_class.extra_forms]):
 
-        if seo_form_class.is_valid():
-            print('seo_form_class is valid')
+            print('validated is successfully done')
 
-        if cinema_form_class.is_valid() and seo_form_class.is_valid() \
-                and all([form.is_valid() for form in photo_formset_class]):
+            print(photo_formset_class.deleted_forms)
 
-            print('everything is valid')
-
-            for form in photo_formset_class:
-                form_saved = form.save(commit=False)
-                form_saved.gallery = cinema.gallery
+            for extra_form in photo_formset_class.extra_forms:
+                extra_form_saved = extra_form.save(commit=False)
+                extra_form_saved.gallery = gallery
+                extra_form_saved.save()
 
             cinema_form_class.save()
             photo_formset_class.save()
@@ -103,6 +100,10 @@ def update_cinema(request, pk):
         'curr_page': 'cinema'
     }
     return render(request, 'admin_cms/cinema_change_form.html', context=context)
+
+
+def create_hall(request):
+    pass
 
 
 def create_page(request):

@@ -1,11 +1,13 @@
 const addMoreButtons = $('#add-more')
 const photoFormList = $('#photo-form-list');
-const cancelButton = $('.cancel-button');
 
 $(document).on("click", ".cancel-button" , function() {
-        $(this).parent().parent().remove();
+    $(this).parent().parent().remove();
 });
 
+$(document).on('click', '.cancel-button-checkbox', function () {
+    $(this).parent().parent().css('display', 'none');
+});
 
 addMoreButtons.click(function (e) {
     e.preventDefault();
@@ -33,6 +35,15 @@ function loadFile(event, id) {
     image.onload = function() {
         URL.revokeObjectURL(image.src);
     };
+}
+
+function hidePhoto(event, element) {
+    console.log('hello you have triggered me!');
+    $(element).parent().parent().css('display', 'none');
+    let photoID = ($(element).parent().parent().attr('id')).replace('-photo', '-DELETE');
+    console.log(photoID);
+    $(`#${photoID}`).prop('checked', true);
+    console.log($(`#${photoID}`));
 }
 
 function removeFile(image) {

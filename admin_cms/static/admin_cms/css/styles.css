@@ -24,3 +24,12 @@
   width: 25px;
   height: 25px;
 }
+
+.cancel-button-checkbox {
+  position: absolute;
+  cursor: pointer;
+  top: -20%;
+  right: -16%;
+  width: 25px;
+  height: 25px;
+}
