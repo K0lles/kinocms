@@ -43,4 +43,4 @@ class BackgroundBanner(models.Model):
         PHOTO_BACKGROUND = 1, 'Фото на фон'
         BACKGROUND = 2, 'Просто фон'
 
-    background = models.IntegerField(choices=Type.choices)
+    background = models.IntegerField(choices=Type.choices, default=1)

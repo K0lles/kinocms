@@ -1,0 +1,12 @@
+{% extends 'admin_cms/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <form action="{% url 'create_banner' %}" method="post" enctype="multipart/form-data">
+        {{ main_top_banner_form }}
+        {{ background_banner_form }}
+        {{ news_banner_form }}
+    </form>
+
+{% endblock content %}

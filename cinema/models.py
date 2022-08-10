@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from django.utils.safestring import mark_safe
 
 
 class Cinema(models.Model):
@@ -21,15 +20,16 @@ class Cinema(models.Model):
 
 
 class Hall(models.Model):
-    cinema_id = models.ForeignKey(Cinema, on_delete=models.CASCADE, verbose_name='Кінотеатр')
+    cinema_id = models.ForeignKey(Cinema, on_delete=models.CASCADE, verbose_name='Кінотеатр', blank=True, null=True)
     number = models.IntegerField(validators=[MinValueValidator(0)], verbose_name='Номер зала')
+    description = models.TextField(verbose_name='Опис залу', blank=True, null=True)
     created_at = models.DateField(auto_now_add=True)
     scheme = models.ImageField(upload_to='cinema/hall/scheme/', verbose_name='Схема зала')
-    banner_photo = models.ImageField(upload_to='cinema/hall/banner_photo/' ,verbose_name='Верхній баннер')
-    gallery = models.OneToOneField('Gallery', on_delete=models.CASCADE, verbose_name='Галерея картинок')
-    row_amount = models.IntegerField(default=6, validators=[MinValueValidator(1)])
-    seat_amount = models.IntegerField(default=12, validators=[MinValueValidator(1)])
-    seo = models.ForeignKey('SEO', on_delete=models.CASCADE, verbose_name='SEO блок')
+    banner_photo = models.ImageField(upload_to='cinema/hall/banner_photo/', verbose_name='Верхній баннер')
+    gallery = models.OneToOneField('Gallery', on_delete=models.CASCADE, verbose_name='Галерея картинок', blank=True)
+    row_amount = models.IntegerField(default=6, validators=[MinValueValidator(1)], blank=True)
+    seat_amount = models.IntegerField(default=12, validators=[MinValueValidator(1)], blank=True)
+    seo = models.ForeignKey('SEO', on_delete=models.CASCADE, verbose_name='SEO блок', blank=True, null=True)
 
 
 class Gallery(models.Model):

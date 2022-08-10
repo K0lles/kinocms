@@ -38,7 +38,6 @@ function loadFile(event, id) {
 }
 
 function hidePhoto(event, element) {
-    console.log('hello you have triggered me!');
     $(element).parent().parent().css('display', 'none');
     let photoID = ($(element).parent().parent().attr('id')).replace('-photo', '-DELETE');
     console.log(photoID);

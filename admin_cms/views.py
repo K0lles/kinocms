@@ -68,8 +68,7 @@ def update_cinema(request, pk):
     photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
 
     if request.method == 'POST':
-        photo_formset_class = photo_formset_factory(request.POST, request.FILES,
-                                                    queryset=gallery.photo_set.all())
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
         cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
         seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
 
@@ -82,10 +81,10 @@ def update_cinema(request, pk):
 
             print(photo_formset_class.deleted_forms)
 
-            for extra_form in photo_formset_class.extra_forms:
-                extra_form_saved = extra_form.save(commit=False)
-                extra_form_saved.gallery = gallery
-                extra_form_saved.save()
+            for form in photo_formset_class:
+                form_saved = form.save(commit=False)
+                form_saved.gallery = gallery
+                form_saved.save()
 
             cinema_form_class.save()
             photo_formset_class.save()
@@ -102,8 +101,107 @@ def update_cinema(request, pk):
     return render(request, 'admin_cms/cinema_change_form.html', context=context)
 
 
-def create_hall(request):
-    pass
+def create_hall(request, cinema_pk):
+    hall_form = hall_form_factory()
+    photo_formset = photo_formset_factory(queryset=Photo.objects.none())
+    seo_form = seo_form_factory()
+
+    if request.method == 'POST':
+        hall_form = hall_form_factory(request.POST, request.FILES or None)
+        photo_formset = photo_formset_factory(request.POST, request.FILES or None)
+        seo_form = seo_form_factory(request.POST)
+
+        if hall_form.is_valid() and photo_formset.is_valid() and all([form.is_valid() for form in photo_formset]) \
+                and seo_form.is_valid():
+
+            gallery = Gallery.objects.create(name=f"Hall {request.POST['number']}")
+            gallery.save()
+            seo_object = seo_form.save()
+
+            for form in photo_formset:
+                photo = form.save(commit=False)
+                photo.gallery = gallery
+
+            hall_form_saved = hall_form.save(commit=False)
+            hall_form_saved.gallery = gallery
+            hall_form_saved.cinema_id = Cinema.objects.get(pk=cinema_pk)
+            hall_form_saved.seo = seo_object
+            hall_form_saved.save()
+            photo_formset.save()
+
+            return redirect('update_cinema', pk=cinema_pk)
+
+    context = {
+        'title': 'KinoCMS | Створення зала',
+        'curr_page': 'cinema',
+        'hall_form': hall_form,
+        'photo_formset': photo_formset,
+        'seo_form': seo_form,
+        'cinema_id': cinema_pk
+    }
+
+    return render(request, 'admin_cms/hall_form.html', context=context)
+
+
+def update_hall(request, hall_pk):
+    hall = Hall.objects.get(pk=hall_pk)
+    gallery = Gallery.objects.prefetch_related('photo_set').get(pk=hall.gallery.pk)
+
+    hall_form = hall_form_factory(instance=hall)
+    seo_form = seo_form_factory(instance=hall.seo)
+    photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
+
+    if request.method == "POST":
+        hall_form = hall_form_factory(request.POST, request.FILES, instance=hall)
+        seo_form = seo_form_factory(request.POST, instance=hall.seo)
+        photo_formset = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
+
+        if hall_form.is_valid() and seo_form.is_valid():
+            hall_form.save()
+            seo_form.save()
+
+        print(photo_formset.errors)
+        print('-----------------------------------------')
+        print(photo_formset.extra_forms)
+
+        for form in photo_formset:
+            print(form.errors)
+
+        if photo_formset.is_valid() and all([form.is_valid() for form in photo_formset]):
+            print('photo formset is valid')
+            for form in photo_formset:
+                photo = form.save(commit=False)
+                photo.gallery = hall.gallery
+                photo.save()
+            photo_formset.save()
+
+        return redirect('update_cinema', pk=hall.cinema_id.pk)
+
+    context = {
+        'hall_form': hall_form,
+        'seo_form': seo_form,
+        'photo_formset': photo_formset,
+        'curr_page': 'cinema',
+        'title': 'KinoCMS | Редагування залу'
+    }
+
+    return render(request, 'admin_cms/hall_change_form.html', context=context)
+
+
+def create_banner(request):
+    main_top_banner_form = main_top_banner_form_factory()
+    background_banner_form = background_banner_form_factory()
+    news_banner_form = news_banner_form_factory()
+
+    context = {
+        'main_top_banner_form': main_top_banner_form,
+        'background_banner_form': background_banner_form,
+        'news_banner_form': news_banner_form,
+        'curr_page': 'banners',
+        'title': 'KinoCMS | Створення банерів'
+    }
+
+    return render(request, 'admin_cms/banner_form.html', context=context)
 
 
 def create_page(request):
@@ -112,7 +210,11 @@ def create_page(request):
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
 
     context = {
-        'form': page_form
+        'form': page_form,
+        'seo_form': seo_form,
+        'photo_formset': photo_formset,
+        'curr_page': 'pages',
+        'title': 'KinoCMS | Створення сторінок'
     }
 
     if request.method == 'POST':
