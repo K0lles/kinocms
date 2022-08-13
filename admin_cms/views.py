@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
-from django.forms import modelformset_factory, modelform_factory
 from .forms import *
 
-from cinema.models import Cinema, SEO
+from cinema.models import Cinema
 
 
 def cinema_view(request):
@@ -63,37 +62,46 @@ def create_cinema(request):
 def update_cinema(request, pk):
     cinema = Cinema.objects.get(pk=pk)
     gallery = Gallery.objects.prefetch_related('photo_set').get(pk=cinema.gallery_id)
-    cinema_form = cinema_form_factory(instance=cinema)
-    seo_form = seo_form_factory(instance=cinema.seo)
-    photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
+    halls = Hall.objects.filter(cinema_id=cinema)
 
     if request.method == 'POST':
         photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
         cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
         seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
+        hall_formset_class = hall_formset_factory(request.POST, queryset=halls, prefix='hall')
 
-        print(photo_formset_class.errors)
-
-        if cinema_form_class.is_valid() and seo_form_class.is_valid() and photo_formset_class.is_valid()\
-                and all([form.is_valid() for form in photo_formset_class.extra_forms]):
-
-            print('validated is successfully done')
-
-            print(photo_formset_class.deleted_forms)
+        if cinema_form_class.is_valid() and seo_form_class.is_valid() and photo_formset_class.is_valid() \
+                and hall_formset_class.is_valid() \
+                and all([form.is_valid() for form in photo_formset_class.extra_forms]) \
+                and all([deleted_form.is_valid() for deleted_form in hall_formset_class.deleted_forms]):
 
             for form in photo_formset_class:
                 form_saved = form.save(commit=False)
                 form_saved.gallery = gallery
                 form_saved.save()
 
+            for deleted_form in hall_formset_class.deleted_forms:
+                deleted_form_saved = deleted_form.save(commit=False)
+                deleted_form_saved.gallery.delete().save()
+                deleted_form_saved.seo.delete().save()
+                deleted_form_saved.save()
+
             cinema_form_class.save()
             photo_formset_class.save()
             seo_form_class.save()
+            hall_formset_class.save()
 
         return redirect('cinema')
 
+    else:
+        cinema_form = cinema_form_factory(instance=cinema)
+        hall_formset = hall_formset_factory(queryset=halls, prefix='hall')
+        seo_form = seo_form_factory(instance=cinema.seo)
+        photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
+
     context = {
         'cinema_form': cinema_form,
+        'hall_formset': hall_formset,
         'photo_formset': photo_formset,
         'seo_form': seo_form,
         'curr_page': 'cinema'
@@ -160,15 +168,8 @@ def update_hall(request, hall_pk):
             hall_form.save()
             seo_form.save()
 
-        print(photo_formset.errors)
-        print('-----------------------------------------')
-        print(photo_formset.extra_forms)
-
-        for form in photo_formset:
-            print(form.errors)
-
         if photo_formset.is_valid() and all([form.is_valid() for form in photo_formset]):
-            print('photo formset is valid')
+
             for form in photo_formset:
                 photo = form.save(commit=False)
                 photo.gallery = hall.gallery
@@ -190,11 +191,13 @@ def update_hall(request, hall_pk):
 
 def create_banner(request):
     main_top_banner_form = main_top_banner_form_factory()
+    main_top_photo_formset = main_top_formset_factory(queryset=MainTopBannerPhoto.objects.none())
     background_banner_form = background_banner_form_factory()
     news_banner_form = news_banner_form_factory()
 
     context = {
         'main_top_banner_form': main_top_banner_form,
+        'main_top_photo_formset': main_top_photo_formset,
         'background_banner_form': background_banner_form,
         'news_banner_form': news_banner_form,
         'curr_page': 'banners',

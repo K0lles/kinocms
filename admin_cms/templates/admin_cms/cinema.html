@@ -1,4 +1,5 @@
 {% extends 'admin_cms/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -10,12 +11,19 @@
         </div>
     {% else %}
 
-        {% for cinema in cinema_list %}
-            <div class="content">
-                <img class="img-fluid" src="{{ cinema.logo.url }}" alt="">
-                <p>{{ cinema.name }}</p>
-            </div>
-        {% endfor %}
+        <div class="d-flex" style="padding-top: 4%">
+            {% for cinema in cinema_list %}
+                <div class="d-flex">
+                    <div style="position: relative">
+                        <a href="{% url 'update_cinema' pk=cinema.id %}">
+                            <img class="img-fluid" src="{{ cinema.logo.url }}" alt="cinema_logo" style="width: 295px; height: 255px;">
+                        </a>
+                        <img class="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}" style="top: -8%; right: -8%;">
+                        <p style="text-align: center">{{ cinema.name }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
 
     {% endif %}
 

@@ -1,8 +1,15 @@
 from django.forms import modelform_factory, modelformset_factory, ModelForm
-from django.forms.widgets import FileInput, Textarea, TextInput, Select
+from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateTimeInput
 from cinema.models import *
 from page.models import *
 from banner.models import *
+
+
+hall_formset_factory = modelformset_factory(Hall, fields=('number', 'created_at'), extra=0,
+                                            widgets={
+                                               'number': TextInput(attrs={'readonly': True}),
+                                               'created_at': DateTimeInput(attrs={'readonly': True})
+                                            }, can_delete=True)
 
 photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=0,
                                              widgets={
@@ -28,7 +35,7 @@ seo_form_factory = modelform_factory(SEO, fields=('url', 'title', 'keyword', 'se
                                          'seo_description': Textarea(attrs={'class': 'form-control'})
                                      })
 
-hall_form_factory = modelform_factory(Hall, exclude=('cinema_id','gallery', 'created_at', 'row_amount',
+hall_form_factory = modelform_factory(Hall, exclude=('cinema_id', 'gallery', 'created_at', 'row_amount',
                                                      'seat_amount', 'seo'),
                                       widgets={
                                           'number': TextInput(attrs={'class': 'form-control'}),

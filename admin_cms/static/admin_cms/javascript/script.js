@@ -40,9 +40,7 @@ function loadFile(event, id) {
 function hidePhoto(event, element) {
     $(element).parent().parent().css('display', 'none');
     let photoID = ($(element).parent().parent().attr('id')).replace('-photo', '-DELETE');
-    console.log(photoID);
     $(`#${photoID}`).prop('checked', true);
-    console.log($(`#${photoID}`));
 }
 
 function removeFile(image) {
@@ -51,4 +49,10 @@ function removeFile(image) {
     let otherInputImage = document.getElementById(inputFieldID);
     otherInputImage.value = "";
     $(`#${inputFieldID}-preview`).attr('src', '/static/admin_cms/logos/empty-photo.png');
+}
+
+function deleteHall(element) {
+    $(element).parent().parent().css('display', 'none');
+    let hallID = ($(element).attr('id')).replace('number-to-delete', 'DELETE');
+    $(`#${hallID}`).prop('checked', true);
 }

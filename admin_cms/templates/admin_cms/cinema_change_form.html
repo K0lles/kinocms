@@ -97,6 +97,46 @@
        </div>
        <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">Додати картинку</button>
 
+        {{ hall_formset.management_form }}
+        <div class="list" id="table-list" style="padding-top: 2%;">
+            <h5>Список залів</h5>
+            <table class="table table-bordered" border="1">
+                <tbody>
+                    <tr>
+                        <td>
+                            Номер зала
+                        </td>
+                        <td>
+                            Дата створення
+                        </td>
+                    </tr>
+                    {% for hall_form in hall_formset %}
+                        {{ hall_form.id }}
+                        <tr>
+                            <td>
+                                <div style="display: none">{{ hall_form.number }}</div>
+                                {{ hall_form.number.value }}
+                            </td>
+                            <td>
+                                <div style="display: none">{{ hall_form.created_at }}</div>
+                                {{ hall_form.created_at.value|date:"d.m.Y" }}
+                            </td>
+                            <td style="border: none">
+                                <a href="{% url 'update_hall' hall_pk=hall_form.instance.id %}">
+                                    <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                                </a>
+                                <img id="{{ hall_form.number.auto_id }}-to-delete" src="{% static 'admin_cms/logos/cancel-button.png' %}"
+                                     onclick="deleteHall(this)" style="width: 25px; height: 25px;">
+                                <div style="display: none">
+                                    {{ hall_form.DELETE }}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <a class="btn btn-success" href="{% url 'create_hall' cinema_pk=cinema_form.instance.id %}">Створити кінозал</a>
+        </div>
         <div class="seo-form row" style="padding-top: 3%">
             <div class="col-1">
                 <b>SEO блок:</b>

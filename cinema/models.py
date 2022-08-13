@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -23,7 +24,7 @@ class Hall(models.Model):
     cinema_id = models.ForeignKey(Cinema, on_delete=models.CASCADE, verbose_name='Кінотеатр', blank=True, null=True)
     number = models.IntegerField(validators=[MinValueValidator(0)], verbose_name='Номер зала')
     description = models.TextField(verbose_name='Опис залу', blank=True, null=True)
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now, verbose_name='Дата створення')
     scheme = models.ImageField(upload_to='cinema/hall/scheme/', verbose_name='Схема зала')
     banner_photo = models.ImageField(upload_to='cinema/hall/banner_photo/', verbose_name='Верхній баннер')
     gallery = models.OneToOneField('Gallery', on_delete=models.CASCADE, verbose_name='Галерея картинок', blank=True)
