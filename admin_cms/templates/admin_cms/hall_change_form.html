@@ -26,7 +26,7 @@
         </div>
 
         <div class="form-group row">
-            <label for="{{ hall_form.scheme.auto_id }}">
+            <label class="col-sm-2 col-form-label" for="{{ hall_form.scheme.auto_id }}">
                 {{ hall_form.scheme.label }}
             </label>
             <div class="col-sm-10">
@@ -42,7 +42,7 @@
         </div>
 
         <div class="form-group row">
-            <label for="{{ hall_form.banner_photo.auto_id }}">
+            <label class="col-sm-2 col-form-label" for="{{ hall_form.banner_photo.auto_id }}">
                 {{ hall_form.banner_photo.label }}
             </label>
             <div class="col-sm-10">
@@ -66,7 +66,9 @@
                 {{ form.id }}
                 <div id="{{ form.photo.auto_id }}" style="display: inline-block; margin: 2% 0% 0% 4%;">
                     <div style="position: relative">
-                        <img id="{{ form.photo.auto_id }}-preview" src="{{ form.instance.photo.url }}"
+                        <img id="{{ form.photo.auto_id }}-preview"
+                             src="{% if form.instance.photo.url %}{{ form.instance.photo.url }}
+                                        {% else %} {% static 'admin_cms/logos/empty-photo.png' %} {% endif %}"
                         class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                         <img class="cancel-button-checkbox" alt="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}"
                                         onclick="hidePhoto(event, this)">
@@ -134,7 +136,7 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-success" type="submit" style="margin-top: 5%">Створити</button>
+        <button class="btn btn-success" type="submit" style="margin-top: 5%">Зберегти</button>
 
     </form>
 

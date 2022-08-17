@@ -1,132 +1,182 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-    <link rel="icon" href="{% static 'admin_cms/logos/cinema_popcorn.svg' %}">
-    <link rel="stylesheet" href="{% static 'admin_cms/css/styles.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-{#    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />#}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
 
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- overlayScrollbars -->
+{#  <link rel="stylesheet" href="{% static 'admin_cms/css/OverlayScrollbars.min.css' %}">#}
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'admin_cms/css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'admin_cms/css/adminlte.min.css' %}">
+  <link rel="stylesheet" href="{% static 'admin_cms/css/styles.css' %}">
 </head>
-<body>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <!-- Site wrapper -->
     <div class="wrapper">
+      <!-- Navbar -->
+      <nav class="main-header navbar navbar-expand navbar-light">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button" style="transform: rotate(90deg)">|||</a>
+          </li>
+        </ul>
 
-        <!-- Header -->
-        <nav class="main-header navbar navbar-expand navbar-dark">
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+          <!-- Navbar Search -->
+            <li class="nav-item">
+              <a class="nav-link" href="#" role="button">
+                  <img src="{% static 'admin_cms/logos/admin-logo.png' %}" style="width: 30px; height: 30px;">
+                    Мій кабінет
+              </a>
+            </li>
 
-            <ul class="navbar-nav">
+            <li class="nav-item">
+            <a class="nav-link" href="#" role="button">
+                <img src="{% static 'admin_cms/logos/power-off.jpg' %}" style="width: 30px; height: 30px;">
+              <i class="fas fa-search"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.navbar -->
 
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
-                </li>
+      <!-- Main Sidebar Container -->
+      <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
+        <!-- Brand Logo -->
+        <a href="#" class="brand-link">
+          <img src="{% static 'admin_cms/logos/cinema-logo.png' %}" alt="KinoCMS" class="brand-image img-circle elevation-3" style="opacity: .8">
+          <span class="brand-text font-weight-light">KinoCMS</span>
+        </a>
 
-            </ul>
-
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <div class="theme-switch-wrapper nav-link">
-                        <img src="{% static 'admin_cms/logos/cinema-logo.png' %}" alt="logo" style="height: 35px;">
-                    </div>
-                </li>
-            </ul>
-
-        </nav>
-
-
-        <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-
-          <!-- Brand Logo -->
-          <a href="#" class="brand-link">
-            <img src="{% static 'admin_cms/logos/../../../static/admin_cms/logos/cinema_popcorn.svg' %}"
-                 alt="Kino" class="brand-image img-circle elevation-3" style="opacity: .8">
-            <span class="brand-text font-weight-light">KinoCMS</span>
-          </a>
-
-          <!-- Sidebar -->
-          <div class="sidebar">
-
-            <!-- Sidebar Menu -->
-            <nav class="mt-2">
-
-              <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <!-- Sidebar Menu -->
+          <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+              <!-- Add icons to the links using the .nav-icon class
+                   with font-awesome or any other icon font library -->
                 <li class="nav-item">
                   <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-th">
-
-                    </i>
+                    <i class="nav-icon fas fa-calculator"></i>
                     <p>
                       Статистика
+                      <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
                 </li>
 
                 <li class="nav-item">
-                  <a href="{% url 'create_banner' %}" class="nav-link {% if curr_page == 'banners' %}active{% endif %}">
-                    <i class="nav-icon fas fa-th">
+                <a href="{% url 'create_banner' %}" class="nav-link">
+                  <i class="nav-icon fas fa-calculator"></i>
+                  <p>
+                    Банера | Слайдери
+                  </p>
+                </a>
+              </li>
 
-                    </i>
-                    <p>
-                      Баннера/Слайдери
-                    </p>
-                  </a>
-                </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-calculator"></i>
+                  <p>
+                    Фільми
+                  </p>
+                </a>
+              </li>
 
-                <li class="nav-item">
-                  <a href="#" class="nav-link {% if curr_page == 'films' %}active{% endif %}">
-                    <i class="nav-icon fas fa-th">
+              <li class="nav-item">
+                <a href="{% url 'cinema' %}" class="nav-link">
+                  <i class="nav-icon fas fa-calculator"></i>
+                  <p>
+                    Кінотеатри
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+              </li>
 
-                    </i>
-                    <p>
-                      Фільми
-                    </p>
-                  </a>
-                </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-calculator"></i>
+                  <p>
+                    Новини
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+              </li>
 
-                <li class="nav-item">
-                  <a href="{% url 'cinema' %}" class="nav-link {% if curr_page == 'cinema'  %}active{% endif %}">
-                    <i class="nav-icon fas fa-tachometer-alt">
-                        <img src="{% static 'admin_cms/logos/cinema-logo.png' %}" alt="" style="height: 20px;">
-                    </i>
-                      <p>Кінотеатри</p>
-                  </a>
-                </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-calculator"></i>
+                  <p>
+                    Акції
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+              </li>
 
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Новини</p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-th">
-
-                    </i>
-                    <p>Акції</p>
-                  </a>
-                </li>
-
-              </ul>
-            </nav>
-          </div>
-        </aside>
-
-
-        <div class="content-wrapper px-4 py-2" style="min-height: 923px;">
-                <div class="content px-2">
-        {% block content %}
-
-        {% endblock content %}
-                </div>
+            </ul>
+          </nav>
+          <!-- /.sidebar-menu -->
         </div>
+        <!-- /.sidebar -->
+        <!-- /.sidebar-custom -->
+      </aside>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <div class="container-fluid">
+            {% comment %}<div class="row mb-2">
+              <div class="col-sm-10">
+                <h1>Fixed Layout</h1>
+              </div>
+            </div>{% endcomment %}
+            {% block content-header %}
+
+            {% endblock content-header %}
+
+          </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+          <div class="container-fluid">
+            {% comment %}<div class="row">
+              <div class="col-12">
+
+                <div class="card">
+
+                  <div class="card-body">
+                    Start creating your amazing application!
+                  </div>
+
+                </div>
+
+              </div>
+            </div>{% endcomment %}
+            {% block content %}
+
+            {% endblock content %}
+          </div>
+        </section>
+      </div>
+      <!-- /.content-wrapper -->
     </div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery -->
+    <script src="{% static 'admin_cms/javascript/jquery.min.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'admin_cms/javascript/adminlte.min.js' %}"></script>
     <script src="{% static 'admin_cms/javascript/script.js' %}"></script>
 </body>
 </html>

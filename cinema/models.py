@@ -32,6 +32,9 @@ class Hall(models.Model):
     seat_amount = models.IntegerField(default=12, validators=[MinValueValidator(1)], blank=True)
     seo = models.ForeignKey('SEO', on_delete=models.CASCADE, verbose_name='SEO блок', blank=True, null=True)
 
+    def __str__(self):
+        return f"Hall {self.number}"
+
 
 class Gallery(models.Model):
     name = models.CharField(max_length=55)

@@ -1,6 +1,9 @@
 const addMoreButtons = $('#add-more')
 const photoFormList = $('#photo-form-list');
 
+// const mainBannerFormList = $('#')
+const addMoreMainBanner = $('#add-more-main_banner');
+
 $(document).on("click", ".cancel-button" , function() {
     $(this).parent().parent().remove();
 });
@@ -26,6 +29,21 @@ addMoreButtons.click(function (e) {
     photoFormList.append(emptyRow);
     $('#id_form-TOTAL_FORMS').val(totalForms + 1);
 });
+
+addMoreMainBanner.click(function(e) {
+    e.preventDefault();
+
+    let totalForms = parseInt($('#id_form-TOTAL_FORMS').val());
+    let emptyRow = $('#empy_form').clone();
+
+    emptyRow.find('id_form-__prefix__-photo').attr('id', `id_form-${totalForms}-photo`)
+        .attr('name', `form-${totalForms}-photo`);
+    emptyRow.find('id_form-__prefix__-url').attr('id', `id_form-${totalForms}-url`)
+        .attr('name', `form-${totalForms}-url`);
+    emptyRow.find('id_form-__prefix__-text').attr('id', `id_form-${totalForms}-text`)
+        .attr('name', `form-${totalForms}-text`);
+
+})
 
 function loadFile(event, id) {
     event.preventDefault();

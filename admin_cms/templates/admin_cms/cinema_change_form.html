@@ -99,7 +99,7 @@
 
         {{ hall_formset.management_form }}
         <div class="list" id="table-list" style="padding-top: 2%;">
-            <h5>Список залів</h5>
+            <h5 class="text-center">Список залів</h5>
             <table class="table table-bordered" border="1">
                 <tbody>
                     <tr>
@@ -122,7 +122,7 @@
                                 {{ hall_form.created_at.value|date:"d.m.Y" }}
                             </td>
                             <td style="border: none">
-                                <a href="{% url 'update_hall' hall_pk=hall_form.instance.id %}">
+                                <a href="{% url 'update_hall' hall_pk=hall_form.instance.id %}" style="text-decoration: none;">
                                     <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
                                 </a>
                                 <img id="{{ hall_form.number.auto_id }}-to-delete" src="{% static 'admin_cms/logos/cancel-button.png' %}"

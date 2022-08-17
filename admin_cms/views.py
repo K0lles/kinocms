@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from .forms import *
-
 from cinema.models import Cinema
 
 
@@ -72,19 +71,19 @@ def update_cinema(request, pk):
 
         if cinema_form_class.is_valid() and seo_form_class.is_valid() and photo_formset_class.is_valid() \
                 and hall_formset_class.is_valid() \
-                and all([form.is_valid() for form in photo_formset_class.extra_forms]) \
+                and all([form.is_valid() for form in photo_formset_class]) \
                 and all([deleted_form.is_valid() for deleted_form in hall_formset_class.deleted_forms]):
 
             for form in photo_formset_class:
                 form_saved = form.save(commit=False)
-                form_saved.gallery = gallery
-                form_saved.save()
+                if form_saved.photo:
+                    form_saved.gallery = gallery
+                    form_saved.save()
 
             for deleted_form in hall_formset_class.deleted_forms:
                 deleted_form_saved = deleted_form.save(commit=False)
-                deleted_form_saved.gallery.delete().save()
-                deleted_form_saved.seo.delete().save()
-                deleted_form_saved.save()
+                deleted_form_saved.gallery.delete()
+                deleted_form_saved.seo.delete()
 
             cinema_form_class.save()
             photo_formset_class.save()
@@ -107,6 +106,31 @@ def update_cinema(request, pk):
         'curr_page': 'cinema'
     }
     return render(request, 'admin_cms/cinema_change_form.html', context=context)
+
+
+def delete_cinema(request, pk):
+    try:
+        cinema_to_delete = Cinema.objects.get(pk=pk)
+        halls = Hall.objects.filter(cinema_id=cinema_to_delete)
+
+        for hall in halls:
+            hall.seo.delete()
+            hall.gallery.delete()
+            hall.delete()
+
+        cinema_to_delete.gallery.delete()
+        cinema_to_delete.seo.delete()
+        cinema_to_delete.delete()
+
+    finally:
+        cinema_list = Cinema.objects.all()
+        context = {
+            'cinema_list': cinema_list,
+            'title': 'KinoCMS| Список кінотеатрів',
+            'curr_page': 'cinema'
+        }
+
+        return render(request, 'admin_cms/cinema.html', context=context)
 
 
 def create_hall(request, cinema_pk):
@@ -155,28 +179,34 @@ def update_hall(request, hall_pk):
     hall = Hall.objects.get(pk=hall_pk)
     gallery = Gallery.objects.prefetch_related('photo_set').get(pk=hall.gallery.pk)
 
-    hall_form = hall_form_factory(instance=hall)
-    seo_form = seo_form_factory(instance=hall.seo)
-    photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
-
     if request.method == "POST":
         hall_form = hall_form_factory(request.POST, request.FILES, instance=hall)
         seo_form = seo_form_factory(request.POST, instance=hall.seo)
         photo_formset = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
 
-        if hall_form.is_valid() and seo_form.is_valid():
-            hall_form.save()
+        if hall_form.is_valid() and seo_form.is_valid() and photo_formset.is_valid() \
+                and all([form.is_valid() for form in photo_formset]):
+
+            hall_saved = hall_form.save()
             seo_form.save()
 
-        if photo_formset.is_valid() and all([form.is_valid() for form in photo_formset]):
+            gallery_to_save = Gallery.objects.get(pk=hall.gallery.pk)
+            gallery_to_save.name = f"Hall {hall_saved.number}"
+            gallery_to_save.save()
 
             for form in photo_formset:
                 photo = form.save(commit=False)
-                photo.gallery = hall.gallery
-                photo.save()
+                if photo.photo:
+                    photo.gallery = hall.gallery
+                    photo.save()
             photo_formset.save()
 
         return redirect('update_cinema', pk=hall.cinema_id.pk)
+
+    else:
+        hall_form = hall_form_factory(instance=hall)
+        seo_form = seo_form_factory(instance=hall.seo)
+        photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
 
     context = {
         'hall_form': hall_form,
@@ -225,3 +255,7 @@ def create_page(request):
         page_form.save(commit=False)
 
     return render(request, 'admin_cms/page_form.html', context=context)
+
+
+def test_page(request):
+    return render(request, 'admin_cms/base.html')

@@ -1,9 +1,14 @@
 {% extends 'admin_cms/base.html' %}
 {% load static %}
 
-{% block content %}
+{% block content-header %}
+    <div>
+        <h4 class="text-center">Список кінотеатрів</h4>
+    </div>
+     <a class="btn btn-success float-right" style="margin-right: 3%;" href="{% url 'cinema_create' %}">Створити кінотеатр</a>
+{% endblock content-header %}
 
-    <a class="btn btn-success float-right text-light" href="{% url 'cinema_create' %}">Створити кінотеатр</a>
+{% block content %}
 
     {% if cinema_list|length == 0 %}
         <div class="content" style="padding-top: 15%;">
@@ -11,16 +16,16 @@
         </div>
     {% else %}
 
-        <div class="d-flex" style="padding-top: 4%">
+        <div class="d-flex" style="padding-top: 75px;">
             {% for cinema in cinema_list %}
-                <div class="d-flex">
-                    <div style="position: relative">
-                        <a href="{% url 'update_cinema' pk=cinema.id %}">
-                            <img class="img-fluid" src="{{ cinema.logo.url }}" alt="cinema_logo" style="width: 295px; height: 255px;">
-                        </a>
+                <div style="position: relative; margin-left: 8%;">
+                    <a href="{% url 'update_cinema' pk=cinema.id %}">
+                        <img class="img-fluid" src="{{ cinema.logo.url }}" alt="cinema_logo" style="width: 295px; height: 255px;">
+                    </a>
+                    <a href="{% url 'delete_cinema' pk=cinema.id %}" style="color: black; text-decoration: none;">
                         <img class="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}" style="top: -8%; right: -8%;">
-                        <p style="text-align: center">{{ cinema.name }}</p>
-                    </div>
+                    </a>
+                    <h5 class="text-center" style="margin-top: 2%;">{{ cinema.name }}</h5>
                 </div>
             {% endfor %}
         </div>

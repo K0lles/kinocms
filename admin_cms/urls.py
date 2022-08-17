@@ -6,7 +6,10 @@ urlpatterns = [
     path('cinema/', views.cinema_view, name='cinema'),
     path('cinema/create/', views.create_cinema, name='cinema_create'),
     path('cinema/update/<int:pk>/', views.update_cinema, name='update_cinema'),
+    path('cinema/delete/<int:pk>/', views.delete_cinema, name='delete_cinema'),
     path('hall/<int:cinema_pk>/create/', views.create_hall, name='create_hall'),
     path('hall/update/<int:hall_pk>/', views.update_hall, name='update_hall'),
-    path('page/create/', views.create_page, name='page_create')
+    path('page/create/', views.create_page, name='page_create'),
+
+    path('test/', views.test_page)
 ]
