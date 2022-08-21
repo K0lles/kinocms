@@ -1,0 +1,201 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    {% comment %}<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>{% endcomment %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        $( function() {
+            $( "#id_birthday" ).datepicker({ dateFormat: 'dd-mm-yy', defaultDate: new Date(2000, 10, 30) }).val();
+        } );
+    </script>
+    <link rel="stylesheet" href="{% static 'admin_cms/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_cms/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_cms/css/styles.css' %}">
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box">
+      <div class="register-logo">
+        <b>KinoCMS</b>
+      </div>
+
+      <div class="card">
+        <div class="card-body register-card-body">
+          <p class="login-box-msg">Registration</p>
+
+          <form action="{% url 'registration' %}" method="post">
+              {% csrf_token %}
+
+            <div class="input-group mb-3">
+                <input id="{{ registration_form.surname.auto_id }}" name="{{ registration_form.surname.html_name }}"
+                       class="form-control" placeholder="Ваше прізвище">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+{#                <input id="{{ registration_form.name.auto_id }}" class="form-control" placeholder="Ваше ім'я">#}
+                {{ registration_form.name }}
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <input type="text" id="{{ registration_form.alias.auto_id }}"
+                       name="{{ registration_form.alias.html_name }}" class="form-control"
+                       placeholder="Ваш псевдонім" required>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+                {{ registration_form.card_number }}
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="form-check form-check-inline">
+                    {{ registration_form.language.0 }}
+                </div>
+                <div class="form-check form-check-inline">
+                    {{ registration_form.language.1 }}
+                </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <input id="{{ registration_form.phone_number.auto_id }}"
+                       name="{{ registration_form.phone_number.html_name }}"
+                       class="form-control" placeholder="Ваш номер телефону">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+                {{ registration_form.birthday }}
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-user"></span>
+                    </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="form-check form-check-inline">
+                    {{ registration_form.sex.0 }}
+                </div>
+                <div class="form-check form-check-inline">
+                    {{ registration_form.sex.1 }}
+                </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <input id="{{ registration_form.city.auto_id }}" name="{{ registration_form.city.html_name }}"
+                       class="form-control" placeholder="Ваше місто проживання">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+              <input id="{{ registration_form.email.auto_id }}" name="{{ registration_form.email.html_name }}"
+                     class="form-control" placeholder="E-mail">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-envelope"></span>
+                </div>
+              </div>
+            </div>
+
+            {% comment %}<div class="input-group mb-3">
+              <input id="{{ registration_form.password.auto_id }}" name="{{ registration_form.password.html_name }}"
+                     type="password" class="form-control" placeholder="Пароль">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>{% endcomment %}
+
+            {% comment %}<div class="input-group mb-3">
+              <input id="{{ registration_form.password1.auto_id }}" name="{{ registration_form.password1.html_name }}"
+                     type="password" class="form-control" placeholder="Пароль1">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>{% endcomment %}
+
+            <div class="input-group mb-3">
+              <input class="form-control" type="password" id="{{ registration_form.password.auto_id }}"
+                     name="{{ registration_form.password.html_name }}" placeholder="Введіть пароль" required>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+              {% comment %}<input class="form-control" type="password" id="{{ registration_form.password1.auto_id }}"
+                     name="{{ registration_form.password1.html_name }}" placeholder="Повторіть пароль" required>{% endcomment %}
+                {{ registration_form.password1 }}
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+
+            {% comment %}<div class="input-group mb-3">
+              <input id="{{ registration_form.password_2.auto_id }}" name="{{ registration_form.password_2.html_name }}"
+                     type="password" class="form-control" placeholder="Підтвердіть пароль">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>{% endcomment %}
+            <div class="row">
+              <div class="col-4">
+              </div>
+              <!-- /.col -->
+              <div class="col-4">
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+            <p style="margin-top: 5%; margin-bottom: 0">Already have account? - <a href="{% url 'login' %}">Sign in</a></p>
+        </div>
+        <!-- /.form-box -->
+      </div><!-- /.card -->
+    </div>
+    <!-- /.register-box -->
+</body>
+</html>

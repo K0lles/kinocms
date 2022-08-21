@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .forms import *
 from cinema.models import Cinema
 
 
+@login_required
 def cinema_view(request):
     cinema_list = Cinema.objects.all()
     context = {
