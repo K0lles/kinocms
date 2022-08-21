@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
 from movie.models import Session
@@ -5,49 +7,60 @@ from movie.models import Session
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, email, password, **kwargs):
+    def create_user(self, email, password, **extra_fields):
 
         if not email:
             raise ValueError('The Email must be set')
 
         email = self.normalize_email(email)
-        user = self.model(email=email, **kwargs)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
+
         return user
 
-    def create_superuser(self, email, password, **kwargs):
-        kwargs.setdefault('is_staff', True)
-        kwargs.setdefault('is_admin', True)
-        kwargs.setdefault('is_superuser', True)
+    def create_superuser(self, email, password, **extra_fields):
 
-        return self.create_user(email, password, **kwargs)
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_admin', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(email=email, password=password, **extra_fields)
+        # user = self.create_user(email=email,
+        #                         password=password,
+        #                         **kwargs)
+        # user.is_staff = True
+        # user.is_admin = True
+        # user.is_superuser = True
+        # user.save(using=self._db)
+        #
+        # return user
 
 
 class SimpleUser(AbstractBaseUser):
 
-    name = models.CharField(max_length=55, verbose_name='Імʼя')
-    surname = models.CharField(max_length=55, verbose_name='Прізвище')
-    alias = models.CharField(max_length=55, verbose_name='Псевдонім', unique=True)
-    email = models.EmailField(verbose_name='E-mail', unique=True)
-    password = models.CharField(max_length=55, verbose_name='Пароль')
-    card_number = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='Номер карти')
+    name = models.CharField(max_length=200, verbose_name='Імʼя')
+    surname = models.CharField(max_length=200, verbose_name='Прізвище')
+    alias = models.CharField(max_length=200, verbose_name='Псевдонім', unique=True)
+    email = models.EmailField(max_length=200, verbose_name='E-mail', unique=True)
+    password1 = models.CharField(max_length=200, verbose_name='Пароль', blank=True, null=True)  # delete blank and null
+    card_number = models.IntegerField(verbose_name='Номер карти', blank=True, null=True)    # delete blank and null
 
     class Language(models.TextChoices):
         UKRAINIAN = 'ukrainian', 'Українська'
         RUSSIAN = 'russian', 'Російська'
 
-    language = models.CharField(max_length= 55, choices=Language.choices, verbose_name='Мова')
+    language = models.CharField(max_length=55, choices=Language.choices, verbose_name='Мова', default='ukrainian')
 
     class Sex(models.TextChoices):
         MALE = 'male', 'Чоловік'
         FEMALE = 'female', 'Жінка'
 
-    sex = models.IntegerField(choices=Sex.choices, verbose_name='Стать')
-    phone_number = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='Телефон')
+    sex = models.CharField(max_length=55, choices=Sex.choices, verbose_name='Стать', default='male')
+    phone_number = models.CharField(max_length=15, verbose_name='Телефон')
     birthday = models.DateField(verbose_name='Дата народження')
-    city = models.CharField(max_length=55, verbose_name='Місто')
-    date_joined = models.DateTimeField(auto_now_add=True)
+    city = models.CharField(max_length=200, verbose_name='Місто')
+    date_joined = models.DateTimeField(auto_now_add=True, blank=True, null=True)    # delete blank and null
     last_login = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -56,7 +69,18 @@ class SimpleUser(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
 
-    REQUIRED_FIELDS = ['email', 'password']
+    REQUIRED_FIELDS = ['alias', 'password']
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.email
+
+    def has_perm(self, app_label):
+        return self.is_superuser
+
+    def has_module_perms(self, app_label):
+        return True
 
 
 class Ticket(models.Model):

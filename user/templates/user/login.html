@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login in</title>
+    {% comment %}<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>{% endcomment %}
+    <link rel="stylesheet" href="{% static 'admin_cms/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_cms/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_cms/css/styles.css' %}">
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box">
+          <div class="register-logo">
+            <b>KinoCMS</b>
+          </div>
+
+          <div class="card">
+            <div class="card-body register-card-body">
+              <p class="login-box-msg">Login</p>
+
+              <form action="{% url 'login' %}" method="post">
+                  {% csrf_token %}
+                    <div class="input-group mb-3">
+                      <input id="{{ login_form.email.auto_id }}" name="{{ login_form.email.html_name }}"
+                             class="form-control" placeholder="E-mail">
+                      <div class="input-group-append">
+                        <div class="input-group-text">
+                          <span class="fas fa-envelope"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input class="form-control" type="password" id="{{ login_form.password.auto_id }}"
+                               name="{{ login_form.password.html_name }}" placeholder="Введіть пароль" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                             <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="row">
+                 <div class="col-4">
+                 </div>
+                  <!-- /.col -->
+                      <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                      </div>
+                      <!-- /.col -->
+                 </div>
+              </form>
+            </div>
+          </div>
+    </div>
+</body>
+</html>

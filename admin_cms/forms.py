@@ -1,5 +1,7 @@
 from django.forms import modelform_factory, modelformset_factory, ModelForm
 from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateTimeInput
+from django.contrib.auth.forms import UserCreationForm
+from user.models import *
 from cinema.models import *
 from page.models import *
 from banner.models import *
