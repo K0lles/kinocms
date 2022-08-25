@@ -4,10 +4,10 @@
 {% block content %}
 
     <form action="{% url 'create_banner' %}" method="post" enctype="multipart/form-data">
-        <div class="form-group row">
-            <h5>На головній верх</h5>
+    <h3 class="text-center">На головній верх</h3>
+        <div class="form-group row" style="border: solid black 1px; border-radius: 5px;">
             <div class="d-flex">
-                {% comment %}{% for form in main_top_photo_formset %}
+                {% for form in main_top_photo_formset %}
                     <div class="{{ form.auto_id }}">
                         <div style="position: relative">
                             <img id="{{ form.photo.auto_id }}-preview" src="{{ form.instance.photo.url }}"
@@ -28,11 +28,13 @@
                             {{ form.DELETE }}
                         </div>
                     </div>
-                {% endfor %}{% endcomment %}
+                {% endfor %}
+
                 {{ main_top_photo_formset.management_form }}
                 <div id="main-banner-list">
 
                 </div>
+
                 <div id="empty-form" style="display: none; margin: 2% 0% 0% 4%;">
                     <div style="position: relative">
                         <img id="image-preview" src="{% static 'admin_cms/logos/empty-photo.png' %}"

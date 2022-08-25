@@ -35011,7 +35011,6 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 
 .login-card-body .input-group .form-control,
 .register-card-body .input-group .form-control {
-  border-right: 0;
 }
 
 .login-card-body .input-group .form-control:focus,

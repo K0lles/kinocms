@@ -20,11 +20,15 @@ class UserRegistrationForm(UserCreationForm):
         widgets = {
             'name': TextInput(attrs={'class': 'form-control', 'placeholder': "Ваше ім'я", 'value': ''}),
             'surname': TextInput(attrs={'class': 'form-control', 'placeholder': "Ваше прізвище"}),
+            'email': TextInput(attrs={'class': 'form-control', 'placeholder': "E-mail"}),
+            'alias': TextInput(attrs={'class': 'form-control', 'placeholder': "Псевдонім"}),
             'birthday': TextInput(attrs={'class': 'form-control', 'placeholder': 'Дата народження'}),
             'phone_number': TextInput(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
+            'city': TextInput(attrs={'class': 'form-control', 'placeholder': "Місто"}),
             'card_number': NumberInput(attrs={'class': 'form-control', 'placeholder': 'Номер банківської картки'}),
             'language': RadioSelect(attrs={'class': 'form-check-input'}),
             'sex': RadioSelect(attrs={'class': 'form-check-input'}),
+            'password': PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть пароль'})
         }
 
     def clean(self):
@@ -33,7 +37,7 @@ class UserRegistrationForm(UserCreationForm):
         confirm_password = cleaned_data.get('password1')
 
         if password != confirm_password:
-            raise ValueError('Passwords must be similar')
+            self.add_error('password', 'Passwords must match. Check it writing!')
 
         return cleaned_data
 

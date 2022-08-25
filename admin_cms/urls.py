@@ -10,6 +10,7 @@ urlpatterns = [
     path('hall/<int:cinema_pk>/create/', views.create_hall, name='create_hall'),
     path('hall/update/<int:hall_pk>/', views.update_hall, name='update_hall'),
     path('page/create/', views.create_page, name='page_create'),
-
-    path('test/', views.test_page)
+    path('users/', views.users, name='users'),
+    path('user/<int:pk>/delete', views.user_delete, name='user_delete'),
+    path('user/update/<int:pk>', views.user_update, name='user_update'),
 ]

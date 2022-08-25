@@ -1,7 +1,7 @@
 const addMoreButtons = $('#add-more')
 const photoFormList = $('#photo-form-list');
 
-// const mainBannerFormList = $('#')
+const mainBannerFormList = $('#main-banner-list');
 const addMoreMainBanner = $('#add-more-main_banner');
 
 $(document).on("click", ".cancel-button" , function() {
@@ -15,7 +15,6 @@ $(document).on('click', '.cancel-button-checkbox', function () {
 addMoreButtons.click(function (e) {
     e.preventDefault();
     let totalForms = parseInt($('#id_form-TOTAL_FORMS').val());
-
 
     let emptyRow = $('#empty-form').clone();
 
@@ -33,6 +32,7 @@ addMoreButtons.click(function (e) {
 addMoreMainBanner.click(function(e) {
     e.preventDefault();
 
+
     let totalForms = parseInt($('#id_form-TOTAL_FORMS').val());
     let emptyRow = $('#empy_form').clone();
 
@@ -42,6 +42,10 @@ addMoreMainBanner.click(function(e) {
         .attr('name', `form-${totalForms}-url`);
     emptyRow.find('id_form-__prefix__-text').attr('id', `id_form-${totalForms}-text`)
         .attr('name', `form-${totalForms}-text`);
+    emptyRow.css('display', 'inline-block');
+    console.log(mainBannerFormList);
+    mainBannerFormList.append(emptyRow);
+    $('#id_form-TOTAL_FORMS').val(totalForms + 1);
 
 })
 
@@ -74,3 +78,6 @@ function deleteHall(element) {
     let hallID = ($(element).attr('id')).replace('number-to-delete', 'DELETE');
     $(`#${hallID}`).prop('checked', true);
 }
+
+
+

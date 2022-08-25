@@ -43,7 +43,7 @@ class SimpleUser(AbstractBaseUser):
     surname = models.CharField(max_length=200, verbose_name='Прізвище')
     alias = models.CharField(max_length=200, verbose_name='Псевдонім', unique=True)
     email = models.EmailField(max_length=200, verbose_name='E-mail', unique=True)
-    password1 = models.CharField(max_length=200, verbose_name='Пароль', blank=True, null=True)  # delete blank and null
+    password = models.CharField(max_length=200, verbose_name='Пароль', blank=True, null=True)  # delete blank and null
     card_number = models.IntegerField(verbose_name='Номер карти', blank=True, null=True)    # delete blank and null
 
     class Language(models.TextChoices):

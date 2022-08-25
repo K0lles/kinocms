@@ -5,34 +5,55 @@
     <form id="cinema-form" action="{% url 'update_cinema' pk=cinema_form.instance.id %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <div class="form-group row">
+        <div class="form-group row"
+                    {% if cinema_form.name.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>
             <label class="col-sm-2 col-form-label" for="{{ cinema_form.name.id_for_label }}">
                 {{ cinema_form.name.label }}
             </label>
             <div class="col-sm-10">
                 {{ cinema_form.name }}
+                {% for error in cinema_form.name.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row"
+                    {% if cinema_form.description.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>
             <label class="col-sm-2 col-form-label" for="{{ cinema_form.description.id_for_label }}">
                 {{ cinema_form.description.label }}
             </label>
             <div class="col-sm-10">
                 {{ cinema_form.description }}
+                {% for error in cinema_form.description.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row"
+                    {% if cinema_form.condition.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>
             <label class="col-sm-2 col-form-label" for="{{ cinema_form.condition.id_for_label }}">
                 {{ cinema_form.condition.label }}
             </label>
             <div class="col-sm-10">
                 {{ cinema_form.condition }}
+                {% for error in cinema_form.condition.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row"
+                    {% if cinema_form.logo.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>
             <label class="col-sm-2 col-form-label" for="{{ cinema_form.logo.id_for_label }}">
                Лого
             </label>
@@ -47,8 +68,14 @@
                         style="margin: 0% 0% 0% 8%;">Видалити</button>
             </div>
         </div>
+                {% for error in cinema_form.logo.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
 
-        <div class="form-group row">
+        <div class="form-group row"
+                    {% if cinema_form.banner_photo.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>
             <label class="col-sm-2 col-form-label" for="{{ cinema_form.banner_photo.id_for_label }}">
                Фото верхнього банера
             </label>
@@ -63,9 +90,15 @@
                         style="margin: 0% 0% 0% 8%;">Видалити</button>
             </div>
         </div>
+                {% for error in cinema_form.banner_photo.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
 
         {{ photo_formset.management_form.as_p }}
-        <div class="content flex-column" id="photo-form-list" style="padding-top: 2%">
+        <div class="content flex-column" id="photo-form-list" style="padding-top: 2%"
+                    {% if photo_formset.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>
             <label>Галерея картинок</label> <br>
             {% for form in photo_formset %}
                 {{ form.id }}
@@ -142,25 +175,40 @@
                 <b>SEO блок:</b>
             </div>
             <div class="col-10" style="margin-top: 4%">
-                <div class="form-group row">
+                <div class="form-group row"
+                    {% if seo_form.url.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>
                     <label class="col-sm-2 col-form-label" for="{{ seo_form.url.id_for_label }}">
                         {{ seo_form.url.label }}
                     </label>
                     <div class="col-sm-10">
                         {{ seo_form.url }}
+                        {% for error in seo_form.url.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row"
+                    {% if seo_form.title.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>>
                     <label class="col-sm-2 col-form-label" for="{{ seo_form.title.id_for_label }}">
                         {{ seo_form.title.label }}
                     </label>
                     <div class="col-sm-10">
                         {{ seo_form.title }}
+                        {% for error in seo_form.title.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row"
+                    {% if seo_form.keyword.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>>
                     <label class="col-sm-2 col-form-label" for="{{ seo_form.keyword.id_for_label }}">
                         {{ seo_form.keyword.label }}
                     </label>
@@ -169,12 +217,18 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row"
+                    {% if seo_form.seo_description.errors %}
+                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
+                    {% endif %}>>
                     <label class="col-sm-2 col-form-label" for="{{ seo_form.seo_description.id_for_label }}">
                         {{ seo_form.seo_description.label }}
                     </label>
                     <div class="col-sm-10">
                         {{ seo_form.seo_description }}
+                        {% for error in seo_form.seo_description.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

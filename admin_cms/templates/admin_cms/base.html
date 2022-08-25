@@ -15,6 +15,15 @@
   <link rel="stylesheet" href="{% static 'admin_cms/css/all.min.css' %}">
   <link rel="stylesheet" href="{% static 'admin_cms/css/adminlte.min.css' %}">
   <link rel="stylesheet" href="{% static 'admin_cms/css/styles.css' %}">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+{#    <script src="{% static 'admin_cms/javascript/jquery.min.js' %}"></script>#}
+  <!-- AdminLTE App -->
+  <script src="{% static 'admin_cms/javascript/adminlte.min.js' %}"></script>
+  {% block scripts %}
+  {% endblock scripts %}
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <!-- Site wrapper -->
@@ -121,6 +130,36 @@
                 </a>
               </li>
 
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-calculator"></i>
+                  <p>
+                    Сторінки
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'users' %}" class="nav-link">
+                  <i class="nav-icon fas fa-calculator"></i>
+                  <p>
+                    Користувачі
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-calculator"></i>
+                  <p>
+                    Розсилки
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+              </li>
+
             </ul>
           </nav>
           <!-- /.sidebar-menu -->
@@ -172,11 +211,6 @@
       <!-- /.content-wrapper -->
     </div>
     <!-- ./wrapper -->
-
-    <!-- jQuery -->
-    <script src="{% static 'admin_cms/javascript/jquery.min.js' %}"></script>
-    <!-- AdminLTE App -->
-    <script src="{% static 'admin_cms/javascript/adminlte.min.js' %}"></script>
     <script src="{% static 'admin_cms/javascript/script.js' %}"></script>
 </body>
 </html>
