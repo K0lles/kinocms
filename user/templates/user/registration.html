@@ -5,12 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
-<<<<<<< HEAD
-=======
-    {% comment %}<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>{% endcomment %}
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -22,14 +16,11 @@
     <link rel="stylesheet" href="{% static 'admin_cms/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'admin_cms/css/adminlte.min.css' %}">
     <link rel="stylesheet" href="{% static 'admin_cms/css/styles.css' %}">
-<<<<<<< HEAD
     <style>
         p {
             color: red;
         }
     </style>
-=======
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
 </head>
 <body class="hold-transition register-page">
     <div class="register-box">
@@ -39,32 +30,20 @@
 
       <div class="card">
         <div class="card-body register-card-body">
-<<<<<<< HEAD
           <p class="login-box-msg" style="color: black;">Registration</p>
-=======
-          <p class="login-box-msg">Registration</p>
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
-
           <form action="{% url 'registration' %}" method="post">
               {% csrf_token %}
 
-<<<<<<< HEAD
             <div class="input-group mb-3"
                     {% if registration_form.surname.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
                 {{ registration_form.surname }}
-=======
-            <div class="input-group mb-3">
-                <input id="{{ registration_form.surname.auto_id }}" name="{{ registration_form.surname.html_name }}"
-                       class="form-control" placeholder="Ваше прізвище">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
                 </div>
               </div>
-<<<<<<< HEAD
                 {% if registration_form.surname.errors %}
                         {% for error in registration_form.surname.errors %}
                             <p>{{ error }}</p>
@@ -76,19 +55,12 @@
                     {% if registration_form.name.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
-=======
-            </div>
-
-            <div class="input-group mb-3">
-{#                <input id="{{ registration_form.name.auto_id }}" class="form-control" placeholder="Ваше ім'я">#}
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
                 {{ registration_form.name }}
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
                 </div>
               </div>
-<<<<<<< HEAD
                 {% if registration_form.name.errors %}
                         {% for error in registration_form.name.errors %}
                             <p>{{ error }}</p>
@@ -101,20 +73,11 @@
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
                 {{ registration_form.alias }}
-=======
-            </div>
-
-            <div class="input-group mb-3">
-                <input type="text" id="{{ registration_form.alias.auto_id }}"
-                       name="{{ registration_form.alias.html_name }}" class="form-control"
-                       placeholder="Ваш псевдонім" required>
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
                 </div>
               </div>
-<<<<<<< HEAD
                 {% if registration_form.alias.errors %}
                         {% for error in registration_form.alias.errors %}
                             <p>{{ error }}</p>
@@ -126,18 +89,12 @@
                     {% if registration_form.card_number.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
-=======
-            </div>
-
-            <div class="input-group mb-3">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
                 {{ registration_form.card_number }}
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
                 </div>
               </div>
-<<<<<<< HEAD
                 {% if registration_form.card_number.errors %}
                         {% for error in registration_form.card_number.errors %}
                             <p>{{ error }}</p>
@@ -146,11 +103,6 @@
             </div>
 
             <div class="input-group mb-3" >
-=======
-            </div>
-
-            <div class="input-group mb-3">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
                 <div class="form-check form-check-inline">
                     {{ registration_form.language.0 }}
                 </div>
@@ -159,24 +111,16 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div class="input-group mb-3"
                     {% if registration_form.phone_number.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
                 {{ registration_form.phone_number }}
-=======
-            <div class="input-group mb-3">
-                <input id="{{ registration_form.phone_number.auto_id }}"
-                       name="{{ registration_form.phone_number.html_name }}"
-                       class="form-control" placeholder="Ваш номер телефону">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
                 </div>
               </div>
-<<<<<<< HEAD
                 {% if registration_form.phone_number.errors %}
                         {% for error in registration_form.phone_number.errors %}
                             <p>{{ error }}</p>
@@ -188,26 +132,17 @@
                     {% if registration_form.birthday.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
-=======
-            </div>
-
-            <div class="input-group mb-3">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
                 {{ registration_form.birthday }}
                 <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-user"></span>
                     </div>
-<<<<<<< HEAD
                 </div>
                 {% if registration_form.birthday.errors %}
                     {% for error in registration_form.birthday.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 {% endif %}
-=======
-              </div>
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
             </div>
 
             <div class="input-group mb-3">
@@ -219,23 +154,16 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div class="input-group mb-3"
                     {% if registration_form.city.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
                 {{ registration_form.city }}
-=======
-            <div class="input-group mb-3">
-                <input id="{{ registration_form.city.auto_id }}" name="{{ registration_form.city.html_name }}"
-                       class="form-control" placeholder="Ваше місто проживання">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-user"></span>
                 </div>
               </div>
-<<<<<<< HEAD
                 {% if registration_form.city.errors %}
                     {% for error in registration_form.city.errors %}
                         <p>{{ error }}</p>
@@ -248,20 +176,12 @@
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
               {{ registration_form.email }}
-=======
-            </div>
-
-            <div class="input-group mb-3">
-              <input id="{{ registration_form.email.auto_id }}" name="{{ registration_form.email.html_name }}"
-                     class="form-control" placeholder="E-mail">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-envelope"></span>
                 </div>
               </div>
             </div>
-<<<<<<< HEAD
                 {% if registration_form.email.errors %}
                     {% for error in registration_form.email.errors %}
                         <p>{{ error }}</p>
@@ -273,38 +193,11 @@
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
               {{ registration_form.password }}
-=======
-
-            {% comment %}<div class="input-group mb-3">
-              <input id="{{ registration_form.password.auto_id }}" name="{{ registration_form.password.html_name }}"
-                     type="password" class="form-control" placeholder="Пароль">
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-lock"></span>
                 </div>
               </div>
-            </div>{% endcomment %}
-
-            {% comment %}<div class="input-group mb-3">
-              <input id="{{ registration_form.password1.auto_id }}" name="{{ registration_form.password1.html_name }}"
-                     type="password" class="form-control" placeholder="Пароль1">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
-              </div>
-            </div>{% endcomment %}
-
-            <div class="input-group mb-3">
-              <input class="form-control" type="password" id="{{ registration_form.password.auto_id }}"
-                     name="{{ registration_form.password.html_name }}" placeholder="Введіть пароль" required>
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
-              </div>
-<<<<<<< HEAD
                 <br>
                 {% if registration_form.password.errors %}
                     {% for error in registration_form.password.errors %}
@@ -317,20 +210,12 @@
                     {% if registration_form.password1.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
-=======
-            </div>
-
-            <div class="input-group mb-3">
-              {% comment %}<input class="form-control" type="password" id="{{ registration_form.password1.auto_id }}"
-                     name="{{ registration_form.password1.html_name }}" placeholder="Повторіть пароль" required>{% endcomment %}
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
                 {{ registration_form.password1 }}
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-lock"></span>
                 </div>
               </div>
-<<<<<<< HEAD
                 {% if registration_form.password1.errors %}
                     {% for error in registration_form.password1.errors %}
                         <p>{{ error }}</p>
@@ -347,30 +232,6 @@
             </div>
           </form>
             <p style="margin-top: 5%; margin-bottom: 0; color: gray">Already have account? - <a href="{% url 'login' %}">Sign in</a></p>
-=======
-            </div>
-
-            {% comment %}<div class="input-group mb-3">
-              <input id="{{ registration_form.password_2.auto_id }}" name="{{ registration_form.password_2.html_name }}"
-                     type="password" class="form-control" placeholder="Підтвердіть пароль">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
-              </div>
-            </div>{% endcomment %}
-            <div class="row">
-              <div class="col-4">
-              </div>
-              <!-- /.col -->
-              <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block">Register</button>
-              </div>
-              <!-- /.col -->
-            </div>
-          </form>
-            <p style="margin-top: 5%; margin-bottom: 0">Already have account? - <a href="{% url 'login' %}">Sign in</a></p>
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
         </div>
         <!-- /.form-box -->
       </div><!-- /.card -->

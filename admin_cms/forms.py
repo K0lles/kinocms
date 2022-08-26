@@ -67,7 +67,6 @@ background_banner_form_factory = modelform_factory(BackgroundBanner, fields=('ph
                                                        'background': Select(attrs={'class': 'form-control'})
                                                    })
 
-
 user_form_factory = modelform_factory(SimpleUser,
                                       fields='__all__',
                                       widgets={

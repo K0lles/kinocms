@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
 from movie.models import Session
@@ -26,15 +24,6 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
 
         return self.create_user(email=email, password=password, **extra_fields)
-        # user = self.create_user(email=email,
-        #                         password=password,
-        #                         **kwargs)
-        # user.is_staff = True
-        # user.is_admin = True
-        # user.is_superuser = True
-        # user.save(using=self._db)
-        #
-        # return user
 
 
 class SimpleUser(AbstractBaseUser):
@@ -43,11 +32,7 @@ class SimpleUser(AbstractBaseUser):
     surname = models.CharField(max_length=200, verbose_name='Прізвище')
     alias = models.CharField(max_length=200, verbose_name='Псевдонім', unique=True)
     email = models.EmailField(max_length=200, verbose_name='E-mail', unique=True)
-<<<<<<< HEAD
     password = models.CharField(max_length=200, verbose_name='Пароль', blank=True, null=True)  # delete blank and null
-=======
-    password1 = models.CharField(max_length=200, verbose_name='Пароль', blank=True, null=True)  # delete blank and null
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
     card_number = models.IntegerField(verbose_name='Номер карти', blank=True, null=True)    # delete blank and null
 
     class Language(models.TextChoices):

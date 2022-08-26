@@ -24,26 +24,20 @@
 
               <form action="{% url 'login' %}" method="post">
                   {% csrf_token %}
-<<<<<<< HEAD
                     <div class="input-group mb-3"
                             {% if login_form.email.errors %}
                          style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                             {% endif %}>
-=======
-                    <div class="input-group mb-3">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
+
                       <input id="{{ login_form.email.auto_id }}" name="{{ login_form.email.html_name }}"
                              class="form-control" placeholder="E-mail">
                       <div class="input-group-append">
                         <div class="input-group-text">
                           <span class="fas fa-envelope"></span>
                         </div>
-<<<<<<< HEAD
-                          {% if login_form.email.errors %}
                              {% for error in login_form.email.errors %}
                                  <p>{{ error }}</p>
                              {% endfor %}
-                          {% endif %}
                       </div>
 
                     </div>
@@ -52,12 +46,6 @@
                             {% if login_form.password.errors %}
                          style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                             {% endif %}>
-=======
-                      </div>
-                    </div>
-
-                    <div class="input-group mb-3">
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
                         <input class="form-control" type="password" id="{{ login_form.password.auto_id }}"
                                name="{{ login_form.password.html_name }}" placeholder="Введіть пароль" required>
                         <div class="input-group-append">
@@ -65,14 +53,9 @@
                              <span class="fas fa-lock"></span>
                             </div>
                         </div>
-<<<<<<< HEAD
-                        {% if login_form.password.errors %}
                            {% for error in login_form.password.errors %}
                                <p style="margin-top: 4px; color: red;">{{ error }}</p>
                            {% endfor %}
-                        {% endif %}
-=======
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
                     </div>
                   <div class="row">
                  <div class="col-4">
@@ -83,13 +66,8 @@
                       </div>
                       <!-- /.col -->
                  </div>
-<<<<<<< HEAD
-
               </form>
                 <p style="margin-top: 4%; margin-bottom: 0;">Do not have account? - <a href="{% url 'registration' %}" >Sign up</a></p>
-=======
-              </form>
->>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
             </div>
           </div>
     </div>
