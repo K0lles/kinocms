@@ -7,7 +7,7 @@ from cinema.models import Cinema
 from user.models import SimpleUser
 
 
-@login_required()
+@login_required
 def cinema_view(request):
     cinema_list = Cinema.objects.all()
     context = {

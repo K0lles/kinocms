@@ -30,7 +30,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/lesyyk/space-lab/kinocms/venv"
+set -gx VIRTUAL_ENV "/home/lesyyk/space-lab/kinocms-test/kinocms/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

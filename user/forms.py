@@ -20,6 +20,7 @@ class UserRegistrationForm(UserCreationForm):
         widgets = {
             'name': TextInput(attrs={'class': 'form-control', 'placeholder': "Ваше ім'я", 'value': ''}),
             'surname': TextInput(attrs={'class': 'form-control', 'placeholder': "Ваше прізвище"}),
+<<<<<<< HEAD
             'email': TextInput(attrs={'class': 'form-control', 'placeholder': "E-mail"}),
             'alias': TextInput(attrs={'class': 'form-control', 'placeholder': "Псевдонім"}),
             'birthday': TextInput(attrs={'class': 'form-control', 'placeholder': 'Дата народження'}),
@@ -29,6 +30,13 @@ class UserRegistrationForm(UserCreationForm):
             'language': RadioSelect(attrs={'class': 'form-check-input'}),
             'sex': RadioSelect(attrs={'class': 'form-check-input'}),
             'password': PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть пароль'})
+=======
+            'birthday': TextInput(attrs={'class': 'form-control', 'placeholder': 'Дата народження'}),
+            'phone_number': TextInput(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
+            'card_number': NumberInput(attrs={'class': 'form-control', 'placeholder': 'Номер банківської картки'}),
+            'language': RadioSelect(attrs={'class': 'form-check-input'}),
+            'sex': RadioSelect(attrs={'class': 'form-check-input'}),
+>>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
         }
 
     def clean(self):
@@ -37,7 +45,11 @@ class UserRegistrationForm(UserCreationForm):
         confirm_password = cleaned_data.get('password1')
 
         if password != confirm_password:
+<<<<<<< HEAD
             self.add_error('password', 'Passwords must match. Check it writing!')
+=======
+            raise ValueError('Passwords must be similar')
+>>>>>>> 630369c3e2e9a552c8ca6173ec21b3061412630d
 
         return cleaned_data
 
