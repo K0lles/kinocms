@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'event.apps.EventConfig',
     'movie.apps.MovieConfig',
     'page.apps.PageConfig',
-    'user.apps.UserConfig'
+    'user.apps.UserConfig',
 ]
 
 MIDDLEWARE = [

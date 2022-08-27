@@ -2,7 +2,9 @@ const addMoreButtons = $('#add-more')
 const photoFormList = $('#photo-form-list');
 
 const mainBannerFormList = $('#main-banner-list');
+const newsBannerFormList = $('#news-banner-list');
 const addMoreMainBanner = $('#add-more-main_banner');
+const addMoreNewsBanner = $('#add-more-news_banner');
 
 $(document).on("click", ".cancel-button" , function() {
     $(this).parent().parent().remove();
@@ -34,19 +36,40 @@ addMoreMainBanner.click(function(e) {
 
 
     let totalForms = parseInt($('#id_form-TOTAL_FORMS').val());
-    let emptyRow = $('#empy_form').clone();
+    let emptyRow = $('#empty-form').clone();
 
-    emptyRow.find('id_form-__prefix__-photo').attr('id', `id_form-${totalForms}-photo`)
-        .attr('name', `form-${totalForms}-photo`);
-    emptyRow.find('id_form-__prefix__-url').attr('id', `id_form-${totalForms}-url`)
+    emptyRow.find('#id_form-__prefix__-photo').attr('id', `id_form-${totalForms}-photo`)
+        .attr('name', `form-${totalForms}-photo`)
+    emptyRow.find('#id_form-__prefix__-url').attr('id', `id_form-${totalForms}-url`)
         .attr('name', `form-${totalForms}-url`);
-    emptyRow.find('id_form-__prefix__-text').attr('id', `id_form-${totalForms}-text`)
+    emptyRow.find('#id_form-__prefix__-text').attr('id', `id_form-${totalForms}-text`)
         .attr('name', `form-${totalForms}-text`);
+    emptyRow.attr('id', `id_form-${totalForms}-banner`);
+    emptyRow.find('#image-preview').attr('id', `id_form-${totalForms}-photo-preview`);
+    emptyRow.attr('class', 'flex-column');
     emptyRow.css('display', 'inline-block');
-    console.log(mainBannerFormList);
     mainBannerFormList.append(emptyRow);
     $('#id_form-TOTAL_FORMS').val(totalForms + 1);
+})
 
+
+addMoreNewsBanner.click(function(e) {
+    e.preventDefault();
+    console.log('hello');
+
+    let totalForms = parseInt($('#id_news-TOTAL_FORMS').val());
+    let emptyRow = $('#empty-news-form').clone();
+
+    emptyRow.find('#id_news-__prefix__-photo').attr('id', `id_news-${totalForms}-photo`)
+        .attr('name', `news-${totalForms}-photo`)
+    emptyRow.find('#id_news-__prefix__-url').attr('id', `id_news-${totalForms}-url`)
+        .attr('name', `news-${totalForms}-url`);
+    emptyRow.attr('id', `id_news-${totalForms}-banner`);
+    emptyRow.find('#image-preview').attr('id', `id_news-${totalForms}-photo-preview`);
+    emptyRow.attr('class', 'flex-column');
+    emptyRow.css('display', 'inline-block');
+    newsBannerFormList.append(emptyRow);
+    $('#id_news-TOTAL_FORMS').val(totalForms + 1);
 })
 
 function loadFile(event, id) {

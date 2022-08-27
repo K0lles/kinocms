@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
 from movie.models import Session
 
-
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password, **extra_fields):

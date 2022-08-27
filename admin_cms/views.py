@@ -46,7 +46,6 @@ def create_cinema(request):
             new_seo_object = seo_form_class.save()
 
             # setting for Gallery and SEO field in Cinema gallery and seo created objects
-
             cinema = cinema_form_class.save(commit=False)
             cinema.gallery = new_gallery_object
             cinema.seo = new_seo_object
@@ -129,6 +128,7 @@ def delete_cinema(request, pk):
         cinema_to_delete = Cinema.objects.get(pk=pk)
         halls = Hall.objects.filter(cinema_id=cinema_to_delete)
 
+        # deleting all related objects to Cinema
         for hall in halls:
             hall.seo.delete()
             hall.gallery.delete()
@@ -243,31 +243,72 @@ def create_banner(request):
     main_top_photo_formset = main_top_formset_factory(queryset=MainTopBannerPhoto.objects.none())
     background_banner_form = background_banner_form_factory()
     news_banner_form = news_banner_form_factory()
+    news_banner_formset = news_banner_formset_factory(queryset=NewsBannerPhoto.objects.none(), prefix='news')
 
     context = {
         'main_top_banner_form': main_top_banner_form,
         'main_top_photo_formset': main_top_photo_formset,
         'background_banner_form': background_banner_form,
         'news_banner_form': news_banner_form,
+        'news_banner_formset': news_banner_formset,
         'curr_page': 'banners',
         'title': 'KinoCMS | Створення банерів'
     }
 
     if request.method == 'POST':
-        main_top_banner_form_class = main_top_banner_form_factory(request.POST, request.FILES or None)
-        main_top_photo_formset_class = main_top_formset_factory(request.POST, request.FILES or None)
-        background_banner_form_class = background_banner_form_factory(request.POST, request.FILES or None)
-        news_banner_form_class = news_banner_form_factory(request.POST, request.FILES or None)
 
-        print(f"Main top banner: {main_top_banner_form_class.errors} \n\n")
-        print(f"Main top photo: {main_top_photo_formset_class.errors} \n\n")
-        print(f"Background banner: {background_banner_form_class.errors} \n\n")
-        print(f"News banner: {news_banner_form_class.errors} \n\n")
+        if 'main_top_banner' in request.POST:
+            main_top_banner_form_class = main_top_banner_form_factory(request.POST, request.FILES or None)
+            main_top_photo_formset_class = main_top_formset_factory(request.POST, request.FILES or None)
 
-        context['main_top_banner_form'] = main_top_banner_form_class
-        context['main_top_photo_formset'] = main_top_photo_formset_class
-        context['background_banner_form'] = background_banner_form_class
-        context['news_banner_form'] = news_banner_form_class
+            print(main_top_banner_form_class.errors)
+
+            if main_top_banner_form_class.is_valid() and main_top_photo_formset_class.is_valid() and \
+                    all([form.is_valid() for form in main_top_photo_formset_class]):
+
+                main_banner_saved = main_top_banner_form_class.save()
+
+                for form in main_top_photo_formset_class:
+                    if form.cleaned_data.get('photo') and form.cleaned_data.get('url') \
+                            and form.cleaned_data.get('text'):
+                        main_banner_photo_saved = form.save(commit=False)
+                        main_banner_photo_saved.main_top_banner = main_banner_saved
+                        main_banner_photo_saved.save()
+
+                return redirect('create_banner')
+
+            context['main_top_banner_form'] = main_top_banner_form_class
+            context['main_top_photo_formset'] = main_top_photo_formset_class
+
+        if 'background_banner' in request.POST:
+            background_banner_form_class = background_banner_form_factory(request.POST, request.FILES or None)
+            if background_banner_form_class.is_valid():
+                background_banner_form_class.save()
+                return redirect('create_banner')
+
+            context['background_banner_form'] = background_banner_form_class
+
+        if 'news_banner' in request.POST:
+            news_banner_form_class = news_banner_form_factory(request.POST)
+            news_banner_formset_class = news_banner_formset_factory(request.POST, request.FILES or None, prefix='news')
+
+            if news_banner_form_class.is_valid() and news_banner_formset_class.is_valid() \
+                    and all([form.is_valid() for form in news_banner_formset_class]):
+
+                news_banner_saved = news_banner_form_class.save()
+
+                for form in news_banner_formset_class:
+                    print(form.cleaned_data.get('photo'))
+                    print(form.cleaned_data.get('url'))
+                    if form.cleaned_data.get('photo') and form.cleaned_data.get('url'):
+                        news_banner_photo_saved = form.save(commit=False)
+                        news_banner_photo_saved.news_banner = news_banner_saved
+                        news_banner_photo_saved.save()
+
+                return redirect('create_banner')
+
+            context['news_banner_form'] = news_banner_form_class
+            context['news_banner_formset'] = news_banner_formset_class
 
     return render(request, 'admin_cms/banner_form.html', context=context)
 
@@ -321,13 +362,18 @@ def user_update(request, pk):
             if request.method == 'POST':
                 simple_user_class = UserFormUpdate(request.POST, instance=simple_user_instance)
                 if simple_user_class.is_valid():
+
+                    # saving old password for occasion if new password not entered
                     old_password = SimpleUser.objects.get(email=simple_user_class.cleaned_data.get('email')).password
+
                     new_password = simple_user_class.cleaned_data.get('password')
                     user_saved = simple_user_class.save()
                     if new_password:
                         user = SimpleUser.objects.get(email=user_saved.email)
                         user.set_password(new_password)
                         user.save()
+
+                    # if no password were entered, old password is set again
                     else:
                         user_saved.password = old_password
                         user_saved.save()

@@ -1,6 +1,6 @@
 from django.forms import modelform_factory, modelformset_factory, ModelForm, CharField
-from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateInput, DateTimeInput, NumberInput, \
-    RadioSelect, PasswordInput
+from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateTimeInput, NumberInput, \
+    RadioSelect, PasswordInput, CheckboxInput
 from user.models import SimpleUser
 from cinema.models import *
 from page.models import *
@@ -48,13 +48,15 @@ hall_form_factory = modelform_factory(Hall, exclude=('cinema_id', 'gallery', 'cr
 
 main_top_banner_form_factory = modelform_factory(MainTopBanner, fields=('turned_on', 'turning_speed'),
                                                  widgets={
-                                                     'turning_speed': Select(attrs={'class': 'form-control'})
+                                                     'turning_speed': Select(attrs={'class': 'form-control'}),
+                                                     'turned_on': CheckboxInput()
                                                  })
 
 main_top_formset_factory = modelformset_factory(MainTopBannerPhoto, exclude=('main_top_banner',), extra=0,
                                                 widgets={
-                                                    'url': TextInput(attrs={'class': 'form-control'}),
-                                                    'text': Textarea(attrs={'class': 'form-control'})
+                                                    'photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
+                                                    'url': TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
+                                                    'text': TextInput(attrs={'class': 'form-control', 'placeholder': 'текст'})
                                                 }, can_delete=True)
 
 news_banner_form_factory = modelform_factory(NewsBanner, fields=('turning_speed', 'turned_on'),
@@ -62,9 +64,16 @@ news_banner_form_factory = modelform_factory(NewsBanner, fields=('turning_speed'
                                                  'turning_speed': Select(attrs={'class': 'form-control'})
                                              })
 
+news_banner_formset_factory = modelformset_factory(NewsBannerPhoto, fields=('photo', 'url'), extra=0,
+                                                   widgets={
+                                                       'photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
+                                                       'url': TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'})
+                                                   })
+
 background_banner_form_factory = modelform_factory(BackgroundBanner, fields=('photo', 'background'),
                                                    widgets={
-                                                       'background': Select(attrs={'class': 'form-control'})
+                                                       'background': RadioSelect(attrs={'class': 'form-control'}),
+                                                       'photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
                                                    })
 
 user_form_factory = modelform_factory(SimpleUser,
@@ -96,7 +105,7 @@ class UserFormUpdate(ModelForm):
         # del self.fields['password1']
 
     password_repeat = CharField(widget=PasswordInput(attrs={'class': 'form-control',
-                                                            'placeholder': 'Новий пароль'}), required=False)
+                                                            'placeholder': 'Повторіть пароль'}), required=False)
 
     class Meta:
         model = SimpleUser
