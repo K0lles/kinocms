@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 from .forms import *
@@ -7,7 +6,6 @@ from cinema.models import Cinema
 from user.models import SimpleUser
 
 
-@login_required()
 def cinema_view(request):
     cinema_list = Cinema.objects.all()
     context = {
@@ -18,7 +16,6 @@ def cinema_view(request):
     return render(request, 'admin_cms/cinema.html', context=context)
 
 
-@login_required()
 def create_cinema(request):
     cinema_form = cinema_form_factory()
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
@@ -67,7 +64,6 @@ def create_cinema(request):
     return render(request, 'admin_cms/cinema_form.html', context=context)
 
 
-@login_required()
 def update_cinema(request, pk):
     cinema = Cinema.objects.get(pk=pk)
     gallery = Gallery.objects.prefetch_related('photo_set').get(pk=cinema.gallery_id)
@@ -122,7 +118,6 @@ def update_cinema(request, pk):
     return render(request, 'admin_cms/cinema_change_form.html', context=context)
 
 
-@login_required()
 def delete_cinema(request, pk):
     try:
         cinema_to_delete = Cinema.objects.get(pk=pk)
@@ -149,7 +144,6 @@ def delete_cinema(request, pk):
         return render(request, 'admin_cms/cinema.html', context=context)
 
 
-@login_required()
 def create_hall(request, cinema_pk):
     hall_form = hall_form_factory()
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
@@ -192,7 +186,6 @@ def create_hall(request, cinema_pk):
     return render(request, 'admin_cms/hall_form.html', context=context)
 
 
-@login_required()
 def update_hall(request, hall_pk):
     hall = Hall.objects.get(pk=hall_pk)
     gallery = Gallery.objects.prefetch_related('photo_set').get(pk=hall.gallery.pk)
@@ -237,7 +230,95 @@ def update_hall(request, hall_pk):
     return render(request, 'admin_cms/hall_change_form.html', context=context)
 
 
-@login_required()
+def movie_view(request):
+    movies = Movie.objects.all()
+
+    context = {
+        'movies': movies
+    }
+
+    return render(request, 'admin_cms/movies.html', context=context)
+
+
+def create_movie(request):
+    movie_form = MovieForm()
+    photo_formset = photo_formset_factory(queryset=Photo.objects.none())
+    seo_form = seo_form_factory()
+
+    context = {
+        'title': 'KinoCMS | Створення фільму',
+        'movie_form': movie_form,
+        'photo_formset': photo_formset,
+        'seo_form': seo_form
+    }
+
+    if request.method == 'POST':
+        movie_form_class = MovieForm(request.POST, request.FILES or None)
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES or None)
+        seo_form_class = seo_form_factory(request.POST)
+
+        if movie_form_class.is_valid() and all([form.is_valid() for form in photo_formset_class]) \
+                and seo_form_class.is_valid():
+            new_gallery = Gallery.objects.create(name=movie_form_class.cleaned_data.get('name'))
+            new_seo = seo_form_class.save()
+            movie_saved = movie_form_class.save(commit=False)
+            movie_saved.gallery = new_gallery
+            movie_saved.seo = new_seo
+            movie_saved.save()
+
+            for photo in photo_formset_class:
+                if photo.cleaned_data.get('photo'):
+                    photo_saved = photo.save(commit=False)
+                    photo_saved.gallery = new_gallery
+                    photo_saved.save()
+
+            return redirect('cinema')
+
+        context['movie_form'] = movie_form_class
+        context['photo_formset'] = photo_formset_class
+        context['seo_form'] = seo_form_class
+
+    return render(request, 'admin_cms/movie_form.html', context=context)
+
+
+def update_movie(request, pk):
+    movie = Movie.objects.select_related('gallery', 'seo').get(pk=pk)
+    movie_form = MovieForm(instance=movie)
+    seo_form = seo_form_factory(instance=movie.seo)
+    photo_formset = photo_formset_factory(queryset=movie.gallery.photo_set.all())
+    context = {
+        'movie_form': movie_form,
+        'photo_formset': photo_formset,
+        'seo_form': seo_form
+    }
+
+    if request.method == 'POST':
+        movie_form_class = MovieForm(request.POST, request.FILES, instance=movie)
+        seo_form_class = seo_form_factory(request.POST, instance=movie.seo)
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=movie.gallery.photo_set.all())
+
+        if movie_form_class.is_valid() and seo_form_class.is_valid() and photo_formset_class.is_valid() \
+                and all([form.is_valid() for form in photo_formset_class]) \
+                and all([deleted_form.is_valid() for deleted_form in photo_formset_class.deleted_forms]):
+
+            for form in photo_formset_class:
+                form_saved = form.save(commit=False)
+                if form_saved.photo:
+                    form_saved.gallery = movie.gallery
+                    form.save()
+
+            photo_formset_class.save()
+            seo_form_class.save()
+            movie_form_class.save()
+            return redirect('movie')
+
+        context['movie_form'] = movie_form_class
+        context['seo_form'] = seo_form_class
+        context['photo_formset'] = photo_formset_class
+
+    return render(request, 'admin_cms/movie_change_form.html', context=context)
+
+
 def create_banner(request):
     main_top_banner_form = main_top_banner_form_factory()
     main_top_photo_formset = main_top_formset_factory(queryset=MainTopBannerPhoto.objects.none())
@@ -260,8 +341,6 @@ def create_banner(request):
         if 'main_top_banner' in request.POST:
             main_top_banner_form_class = main_top_banner_form_factory(request.POST, request.FILES or None)
             main_top_photo_formset_class = main_top_formset_factory(request.POST, request.FILES or None)
-
-            print(main_top_banner_form_class.errors)
 
             if main_top_banner_form_class.is_valid() and main_top_photo_formset_class.is_valid() and \
                     all([form.is_valid() for form in main_top_photo_formset_class]):
@@ -298,8 +377,6 @@ def create_banner(request):
                 news_banner_saved = news_banner_form_class.save()
 
                 for form in news_banner_formset_class:
-                    print(form.cleaned_data.get('photo'))
-                    print(form.cleaned_data.get('url'))
                     if form.cleaned_data.get('photo') and form.cleaned_data.get('url'):
                         news_banner_photo_saved = form.save(commit=False)
                         news_banner_photo_saved.news_banner = news_banner_saved
@@ -313,7 +390,6 @@ def create_banner(request):
     return render(request, 'admin_cms/banner_form.html', context=context)
 
 
-@login_required()
 def create_page(request):
     page_form = PageCreateForm()
     seo_form = seo_form_factory()
@@ -334,22 +410,20 @@ def create_page(request):
     return render(request, 'admin_cms/page_form.html', context=context)
 
 
-@login_required()
 def users(request):
-    if request.user.is_superuser:
-        simple_users = SimpleUser.objects.all()
-        paginator = Paginator(simple_users, 5)
+    # if request.user.is_superuser:
+    simple_users = SimpleUser.objects.all()
+    paginator = Paginator(simple_users, 5)
 
-        page_number = request.GET.get('page')
-        page_objects = paginator.get_page(page_number)
-        context = {
-            'users': page_objects
-        }
-        return render(request, 'admin_cms/users.html', context=context)
-    return HttpResponseForbidden()
+    page_number = request.GET.get('page')
+    page_objects = paginator.get_page(page_number)
+    context = {
+        'users': page_objects
+    }
+    return render(request, 'admin_cms/users.html', context=context)
+    # return HttpResponseForbidden()
 
 
-@login_required()
 def user_update(request, pk):
     if request.user.is_superuser:
         try:
@@ -386,7 +460,7 @@ def user_update(request, pk):
 
             return render(request, 'admin_cms/user_change_form.html', context=context)
 
-        except ValueError:
+        except:
             return redirect('users')
 
     return HttpResponseForbidden()

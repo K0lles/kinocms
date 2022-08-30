@@ -9,10 +9,8 @@ def registration(request):
 
     if request.method == 'POST':
         registration_form_class = UserRegistrationForm(request.POST)
-        print(registration_form_class.errors)
 
         if registration_form_class.is_valid():
-            print('validation completed')
             registration_form_class.save()
             email = registration_form_class.cleaned_data.get('email')
             password = registration_form_class.cleaned_data.get('password')
@@ -37,14 +35,11 @@ def registration(request):
 def login_in(request):
     if request.method == 'POST':
         login_form_class = UserLoginForm(request.POST)
-        print(login_form_class.errors)
 
         if login_form_class.is_valid():
             email = login_form_class.cleaned_data['email']
             password = login_form_class.cleaned_data['password']
-            print(password)
             user = authenticate(email=email, password=password)
-            print(f"The user is {user}")
 
             if user is not None and user.is_active:
                 login(request, user)

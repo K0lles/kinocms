@@ -16,9 +16,9 @@
         </div>
     {% else %}
 
-        <div class="d-flex" style="padding-top: 75px;">
+        <div class="content flex-column" style="padding-top: 75px;">
             {% for cinema in cinema_list %}
-                <div style="position: relative; margin-left: 8%;">
+                <div style="position: relative; margin-left: 8%; display: inline-block;">
                     <a href="{% url 'update_cinema' pk=cinema.id %}">
                         <img class="img-fluid" src="{{ cinema.logo.url }}" alt="cinema_logo" style="width: 295px; height: 255px;">
                     </a>

@@ -2,95 +2,59 @@
 {% load static %}
 
 {% block content %}
-    <form id="cinema-form" action="{% url 'update_cinema' pk=cinema_form.instance.id %}" method="POST" enctype="multipart/form-data">
+    
+    <form id="movie-form" action="{% url 'update_movie' pk=movie_form.instance.id %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="form-group row"
-                    {% if cinema_form.name.errors %}
+                    {% if movie_form.name.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
-            <label class="col-sm-2 col-form-label" for="{{ cinema_form.name.id_for_label }}">
-                {{ cinema_form.name.label }}
+            <label class="col-sm-2 col-form-label" for="{{ movie_form.name.id_for_label }}">
+                {{ movie_form.name.label }}
             </label>
             <div class="col-sm-10">
-                {{ cinema_form.name }}
-                {% for error in cinema_form.name.errors %}
+                {{ movie_form.name }}
+                {% for error in movie_form.name.errors %}
                     <p style="color: red">{{ error }}</p>
                 {% endfor %}
             </div>
         </div>
 
         <div class="form-group row"
-                    {% if cinema_form.description.errors %}
+                    {% if movie_form.description.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
-            <label class="col-sm-2 col-form-label" for="{{ cinema_form.description.id_for_label }}">
-                {{ cinema_form.description.label }}
+            <label class="col-sm-2 col-form-label" for="{{ movie_form.description.id_for_label }}">
+                {{ movie_form.description.label }}
             </label>
             <div class="col-sm-10">
-                {{ cinema_form.description }}
-                {% for error in cinema_form.description.errors %}
+                {{ movie_form.description }}
+                {% for error in movie_form.description.errors %}
                     <p style="color: red">{{ error }}</p>
                 {% endfor %}
             </div>
         </div>
 
         <div class="form-group row"
-                    {% if cinema_form.condition.errors %}
+                    {% if movie_form.main_photo.errors %}
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
-            <label class="col-sm-2 col-form-label" for="{{ cinema_form.condition.id_for_label }}">
-                {{ cinema_form.condition.label }}
+            <label class="col-sm-2 col-form-label" for="{{ movie_form.main_photo.id_for_label }}">
+               {{ movie_form.main_photo.label }}
             </label>
             <div class="col-sm-10">
-                {{ cinema_form.condition }}
-                {% for error in cinema_form.condition.errors %}
-                    <p style="color: red">{{ error }}</p>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="form-group row"
-                    {% if cinema_form.logo.errors %}
-                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
-                    {% endif %}>
-            <label class="col-sm-2 col-form-label" for="{{ cinema_form.logo.id_for_label }}">
-               Лого
-            </label>
-            <div class="col-sm-10">
-                <img id="id_logo-preview" src="{{ cinema_form.instance.logo.url }}"
+                <img id="{{ movie_form.main_photo.auto_id }}-preview" src="{{ movie_form.instance.main_photo.url }}"
                     class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                 <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">Додати
-                    {{ cinema_form.logo }}
+                    {{ movie_form.main_photo }}
                 </span>
-                <button id="{{ cinema_form.logo.id_for_label }}-delete" type="button"
+                <button id="{{ movie_form.main_photo.id_for_label }}-delete" type="button"
                         class="btn btn-danger" onclick="removeFile(this)"
                         style="margin: 0% 0% 0% 8%;">Видалити</button>
             </div>
         </div>
-                {% for error in cinema_form.logo.errors %}
-                    <p style="color: red">{{ error }}</p>
-                {% endfor %}
-
-        <div class="form-group row"
-                    {% if cinema_form.banner_photo.errors %}
-                 style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
-                    {% endif %}>
-            <label class="col-sm-2 col-form-label" for="{{ cinema_form.banner_photo.id_for_label }}">
-               Фото верхнього банера
-            </label>
-            <div class="col-sm-10">
-                <img id="id_banner_photo-preview" src="{{ cinema_form.instance.banner_photo.url }}"
-                    class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
-                <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">Додати
-                    {{ cinema_form.banner_photo }}
-                </span>
-                <button id="{{ cinema_form.banner_photo.id_for_label }}-delete" type="button"
-                        class="btn btn-danger" onclick="removeFile(this)"
-                        style="margin: 0% 0% 0% 8%;">Видалити</button>
-            </div>
-        </div>
-                {% for error in cinema_form.banner_photo.errors %}
+                {% for error in movie_form.main_photo.errors %}
                     <p style="color: red">{{ error }}</p>
                 {% endfor %}
 
@@ -105,8 +69,8 @@
                 <div id="{{ form.photo.auto_id }}" style="display: inline-block; margin: 2% 0% 0% 4%;">
                     <div style="position: relative">
                         <img id="{{ form.photo.auto_id }}-preview" src="{% if form.instance.photo %}
-                                                                            {{ form.instance.photo.url }}
-                                                                        {% endif %}"
+                                                                            {{ form.instance.photo.url }}"
+                                                                        {% endif %}
                         class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                         <img class="cancel-button-checkbox" alt="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}"
                                         onclick="hidePhoto(event, this)">
@@ -132,46 +96,40 @@
        </div>
        <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">Додати картинку</button>
 
-        {{ hall_formset.management_form }}
-        <div class="list" id="table-list" style="padding-top: 2%;">
-            <h5 class="text-center">Список залів</h5>
-            <table class="table table-bordered" border="1">
-                <tbody>
-                    <tr>
-                        <td>
-                            Номер зала
-                        </td>
-                        <td>
-                            Дата створення
-                        </td>
-                    </tr>
-                    {% for hall_form in hall_formset %}
-                        {{ hall_form.id }}
-                        <tr>
-                            <td>
-                                <div style="display: none">{{ hall_form.number }}</div>
-                                {{ hall_form.number.value }}
-                            </td>
-                            <td>
-                                <div style="display: none">{{ hall_form.created_at }}</div>
-                                {{ hall_form.created_at.value|date:"d.m.Y" }}
-                            </td>
-                            <td style="border: none">
-                                <a href="{% url 'update_hall' hall_pk=hall_form.instance.id %}" style="text-decoration: none;">
-                                    <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
-                                </a>
-                                <img id="{{ hall_form.number.auto_id }}-to-delete" src="{% static 'admin_cms/logos/cancel-button.png' %}"
-                                     onclick="deleteHall(this)" style="width: 25px; height: 25px;">
-                                <div style="display: none">
-                                    {{ hall_form.DELETE }}
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        <a class="btn btn-success" href="{% url 'create_hall' cinema_pk=cinema_form.instance.id %}">Створити кінозал</a>
+        <div class="form-group row"
+                    style="{% if movie_form.trailer_url.errors %}
+                 border: 1px solid red; border-radius: 0.25em; padding: 3px;
+                            {% endif %}
+                     margin-top: 10px;">
+            <label class="col-sm-2 col-form-label" for="{{ movie_form.trailer_url.id_for_label }}">
+                {{ movie_form.trailer_url.label }}
+            </label>
+            <div class="col-sm-10">
+                {{ movie_form.trailer_url }}
+                {% for error in movie_form.trailer_url.errors %}
+                    <p style="color: red">{{ error }}</p>
+                {% endfor %}
+            </div>
         </div>
+
+        <div class="form-group row" style="margin-top: 20px;">
+            <label class="col-md-2 col-form-label">Тип кіно</label>
+            <div class="col-md-10">
+                <div class="form-check form-check-inline">
+                    {{ movie_form.type_2D }}
+                    <label class="form-check-label" for="{{ movie_form.type_2D.auto_id }}">2D</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    {{ movie_form.type_3D }}
+                    <label class="form-check-label" for="{{ movie_form.type_3D.auto_id }}">3D</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    {{ movie_form.type_IMAX }}
+                    <label class="form-check-label" for="{{ movie_form.type_IMAX.auto_id }}">IMAX</label>
+                </div>
+            </div>
+        </div>
+
         <div class="seo-form row" style="padding-top: 3%">
             <div class="col-1">
                 <b>SEO блок:</b>
@@ -237,4 +195,5 @@
         </div>
         <button class="btn btn-success" type="submit" style="margin-top: 5%">Зберегти</button>
     </form>
+    
 {% endblock %}

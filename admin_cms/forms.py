@@ -3,6 +3,7 @@ from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateTim
     RadioSelect, PasswordInput, CheckboxInput
 from user.models import SimpleUser
 from cinema.models import *
+from movie.models import Movie
 from page.models import *
 from banner.models import *
 
@@ -45,6 +46,29 @@ hall_form_factory = modelform_factory(Hall, exclude=('cinema_id', 'gallery', 'cr
                                           'scheme': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
                                           'banner_photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
                                       })
+
+
+class MovieForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(MovieForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget = TextInput(attrs={'class': 'form-control'})
+        self.fields['description'].widget = Textarea(attrs={'class': 'form-control'})
+        self.fields['main_photo'].widget = FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
+        self.fields['trailer_url'].widget = TextInput(attrs={'class': 'form-control'})
+        self.fields['type_2D'].widget = CheckboxInput(attrs={'class': 'form-check-input'})
+        self.fields['type_IMAX'].widget = CheckboxInput(attrs={'class': 'form-check-input'})
+        self.fields['type_3D'].widget = CheckboxInput(attrs={'class': 'form-check-input'})
+
+    class Meta:
+        model = Movie
+        exclude = ['gallery', 'seo']
+
+
+movie_form_factory = modelform_factory(Movie, exclude=('gallery', 'seo'),
+                                       widgets={
+                                           'name': TextInput(attrs={'class': 'form-control'})
+                                       })
 
 main_top_banner_form_factory = modelform_factory(MainTopBanner, fields=('turned_on', 'turning_speed'),
                                                  widgets={

@@ -45,6 +45,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'admin_cms.middleware.LoginRequiredAccess',
 ]
 
 ROOT_URLCONF = 'kinocms.urls'
@@ -129,4 +130,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'user.SimpleUser'
+
 LOGIN_URL = '/user/login/'
+
+LOGIN_REQUIRED_URLS = (
+    r'/admin_cms/movie/(.*)$',
+    r'/admin_cms/users/(.*)$',
+)
