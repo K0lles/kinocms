@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
+from phonenumber_field.modelfields import PhoneNumberField
 from movie.models import Session
 
 
@@ -46,7 +47,7 @@ class SimpleUser(AbstractBaseUser):
         FEMALE = 'female', 'Жінка'
 
     sex = models.CharField(max_length=55, choices=Sex.choices, verbose_name='Стать', default='male')
-    phone_number = models.CharField(max_length=15, verbose_name='Телефон')
+    phone_number = PhoneNumberField()
     birthday = models.DateField(verbose_name='Дата народження')
     city = models.CharField(max_length=200, verbose_name='Місто')
     date_joined = models.DateTimeField(auto_now_add=True, blank=True, null=True)    # delete blank and null

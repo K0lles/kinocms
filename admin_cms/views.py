@@ -8,6 +8,7 @@ from user.models import SimpleUser
 
 def cinema_view(request):
     cinema_list = Cinema.objects.all()
+
     context = {
         'title': 'KinoCMS| Список кінотеатрів',
         'cinema_list': cinema_list,
@@ -65,14 +66,24 @@ def create_cinema(request):
 
 
 def update_cinema(request, pk):
-    cinema = Cinema.objects.get(pk=pk)
-    gallery = Gallery.objects.prefetch_related('photo_set').get(pk=cinema.gallery_id)
-    halls = Hall.objects.filter(cinema_id=cinema)
+    cinema = Cinema.objects.select_related('gallery', 'seo').prefetch_related('hall_set', 'gallery__photo_set').get(pk=pk)
+
+    # cinema = Cinema.objects.get(pk=pk)
+    # gallery = Gallery.objects.prefetch_related('photo_set').get(pk=cinema.gallery_id)
+    # halls = Hall.objects.filter(cinema_id=cinema)
+    #
+    # cinema_form = cinema_form_factory(instance=cinema)
+    # hall_formset = hall_formset_factory(queryset=halls, prefix='hall')
+    # seo_form = seo_form_factory(instance=cinema.seo)
+    # photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
 
     cinema_form = cinema_form_factory(instance=cinema)
-    hall_formset = hall_formset_factory(queryset=halls, prefix='hall')
+    hall_formset = hall_formset_factory(queryset=cinema.hall_set.all(), prefix='hall')
     seo_form = seo_form_factory(instance=cinema.seo)
-    photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
+    photo_formset = photo_formset_factory(queryset=cinema.gallery.photo_set.all())
+
+    # print(gallery.photo_set)
+    # print(halls)
 
     context = {
         'cinema_form': cinema_form,
@@ -83,10 +94,14 @@ def update_cinema(request, pk):
     }
 
     if request.method == 'POST':
-        photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
+        # photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
+        # cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
+        # seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
+        # hall_formset_class = hall_formset_factory(request.POST, queryset=halls, prefix='hall')
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=cinema.gallery.photo_set.all())
         cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
         seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
-        hall_formset_class = hall_formset_factory(request.POST, queryset=halls, prefix='hall')
+        hall_formset_class = hall_formset_factory(request.POST, queryset=cinema.hall_set.all(), prefix='hall')
 
         if cinema_form_class.is_valid() and seo_form_class.is_valid() and photo_formset_class.is_valid() \
                 and hall_formset_class.is_valid() \
@@ -96,7 +111,7 @@ def update_cinema(request, pk):
             for form in photo_formset_class:
                 form_saved = form.save(commit=False)
                 if form_saved.photo:
-                    form_saved.gallery = gallery
+                    form_saved.gallery = cinema.gallery
                     form_saved.save()
 
             for deleted_form in hall_formset_class.deleted_forms:
@@ -120,11 +135,13 @@ def update_cinema(request, pk):
 
 def delete_cinema(request, pk):
     try:
-        cinema_to_delete = Cinema.objects.get(pk=pk)
-        halls = Hall.objects.filter(cinema_id=cinema_to_delete)
+        cinema_to_delete = Cinema.objects.select_related('seo', 'gallery')\
+            .prefetch_related('hall_set', 'hall_set__seo', 'hall_set__gallery').get(pk=pk)
+        # cinema_to_delete = Cinema.objects.get(pk=pk)
+        # halls = Hall.objects.filter(cinema_id=cinema_to_delete)
 
         # deleting all related objects to Cinema
-        for hall in halls:
+        for hall in cinema_to_delete.hall_set.all():
             hall.seo.delete()
             hall.gallery.delete()
             hall.delete()
@@ -134,14 +151,15 @@ def delete_cinema(request, pk):
         cinema_to_delete.delete()
 
     finally:
-        cinema_list = Cinema.objects.all()
-        context = {
-            'cinema_list': cinema_list,
-            'title': 'KinoCMS| Список кінотеатрів',
-            'curr_page': 'cinema'
-        }
-
-        return render(request, 'admin_cms/cinema.html', context=context)
+        return redirect('cinema')
+        # cinema_list = Cinema.objects.all().values('id', 'name', 'logo')
+        # context = {
+        #     'cinema_list': cinema_list,
+        #     'title': 'KinoCMS| Список кінотеатрів',
+        #     'curr_page': 'cinema'
+        # }
+        #
+        # return render(request, 'admin_cms/cinema.html', context=context)
 
 
 def create_hall(request, cinema_pk):
@@ -187,13 +205,26 @@ def create_hall(request, cinema_pk):
 
 
 def update_hall(request, hall_pk):
-    hall = Hall.objects.get(pk=hall_pk)
-    gallery = Gallery.objects.prefetch_related('photo_set').get(pk=hall.gallery.pk)
+    # hall = Hall.objects.get(pk=hall_pk)
+    # gallery = Gallery.objects.prefetch_related('photo_set').get(pk=hall.gallery.pk)
+    hall = Hall.objects.select_related('seo', 'gallery').prefetch_related('gallery__photo_set').get(pk=hall_pk)
+    hall_form = hall_form_factory(instance=hall)
+    seo_form = seo_form_factory(instance=hall.seo)
+    photo_formset = photo_formset_factory(queryset=hall.gallery.photo_set.all())
+
+    context = {
+        'hall_form': hall_form,
+        'seo_form': seo_form,
+        'photo_formset': photo_formset,
+        'curr_page': 'cinema',
+        'title': 'KinoCMS | Редагування залу'
+    }
 
     if request.method == "POST":
         hall_form = hall_form_factory(request.POST, request.FILES, instance=hall)
         seo_form = seo_form_factory(request.POST, instance=hall.seo)
-        photo_formset = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
+        # photo_formset = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
+        photo_formset = photo_formset_factory(request.POST, request.FILES, queryset=hall.gallery.photo_set.all())
 
         if hall_form.is_valid() and seo_form.is_valid() and photo_formset.is_valid() \
                 and all([form.is_valid() for form in photo_formset]):
@@ -212,20 +243,11 @@ def update_hall(request, hall_pk):
                     photo.save()
             photo_formset.save()
 
-        return redirect('update_cinema', pk=hall.cinema_id.pk)
+            return redirect('update_cinema', pk=hall.cinema_id.pk)
 
-    else:
-        hall_form = hall_form_factory(instance=hall)
-        seo_form = seo_form_factory(instance=hall.seo)
-        photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
-
-    context = {
-        'hall_form': hall_form,
-        'seo_form': seo_form,
-        'photo_formset': photo_formset,
-        'curr_page': 'cinema',
-        'title': 'KinoCMS | Редагування залу'
-    }
+        context['hall_form'] = hall_form
+        context['seo_form'] = seo_form
+        context['photo_formset'] = photo_formset
 
     return render(request, 'admin_cms/hall_change_form.html', context=context)
 
@@ -282,7 +304,8 @@ def create_movie(request):
 
 
 def update_movie(request, pk):
-    movie = Movie.objects.select_related('gallery', 'seo').get(pk=pk)
+    # movie = Movie.objects.select_related('gallery', 'seo').get(pk=pk)
+    movie = Movie.objects.select_related('gallery', 'seo').prefetch_related('gallery__photo_set').get(pk=pk)
     movie_form = MovieForm(instance=movie)
     seo_form = seo_form_factory(instance=movie.seo)
     photo_formset = photo_formset_factory(queryset=movie.gallery.photo_set.all())

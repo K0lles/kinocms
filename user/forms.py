@@ -2,6 +2,7 @@ from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import CharField, Form, EmailField
 from django.forms.widgets import RadioSelect, NumberInput, TextInput, PasswordInput
+from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -23,7 +24,7 @@ class UserRegistrationForm(UserCreationForm):
             'email': TextInput(attrs={'class': 'form-control', 'placeholder': "E-mail"}),
             'alias': TextInput(attrs={'class': 'form-control', 'placeholder': "Псевдонім"}),
             'birthday': TextInput(attrs={'class': 'form-control', 'placeholder': 'Дата народження'}),
-            'phone_number': TextInput(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
+            'phone_number': PhoneNumberInternationalFallbackWidget(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
             'city': TextInput(attrs={'class': 'form-control', 'placeholder': "Місто"}),
             'card_number': NumberInput(attrs={'class': 'form-control', 'placeholder': 'Номер банківської картки'}),
             'language': RadioSelect(attrs={'class': 'form-check-input'}),
