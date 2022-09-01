@@ -12,7 +12,6 @@ def cinema_view(request):
     context = {
         'title': 'KinoCMS| Список кінотеатрів',
         'cinema_list': cinema_list,
-        'curr_page': 'cinema'
     }
     return render(request, 'admin_cms/cinema.html', context=context)
 
@@ -27,7 +26,6 @@ def create_cinema(request):
         'cinema_form': cinema_form,
         'photo_formset': photo_formset,
         'seo_form': seo_form,
-        'curr_page': 'cinema'
     }
 
     if request.method == 'POST':
@@ -66,7 +64,8 @@ def create_cinema(request):
 
 
 def update_cinema(request, pk):
-    cinema = Cinema.objects.select_related('gallery', 'seo').prefetch_related('hall_set', 'gallery__photo_set').get(pk=pk)
+    cinema = Cinema.objects.select_related('gallery', 'seo') \
+        .prefetch_related('hall_set', 'gallery__photo_set').get(pk=pk)
 
     # cinema = Cinema.objects.get(pk=pk)
     # gallery = Gallery.objects.prefetch_related('photo_set').get(pk=cinema.gallery_id)
@@ -90,7 +89,6 @@ def update_cinema(request, pk):
         'hall_formset': hall_formset,
         'photo_formset': photo_formset,
         'seo_form': seo_form,
-        'curr_page': 'cinema'
     }
 
     if request.method == 'POST':
@@ -98,7 +96,8 @@ def update_cinema(request, pk):
         # cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
         # seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
         # hall_formset_class = hall_formset_factory(request.POST, queryset=halls, prefix='hall')
-        photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=cinema.gallery.photo_set.all())
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES,
+                                                    queryset=cinema.gallery.photo_set.all())
         cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
         seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
         hall_formset_class = hall_formset_factory(request.POST, queryset=cinema.hall_set.all(), prefix='hall')
@@ -135,7 +134,7 @@ def update_cinema(request, pk):
 
 def delete_cinema(request, pk):
     try:
-        cinema_to_delete = Cinema.objects.select_related('seo', 'gallery')\
+        cinema_to_delete = Cinema.objects.select_related('seo', 'gallery') \
             .prefetch_related('hall_set', 'hall_set__seo', 'hall_set__gallery').get(pk=pk)
         # cinema_to_delete = Cinema.objects.get(pk=pk)
         # halls = Hall.objects.filter(cinema_id=cinema_to_delete)
@@ -156,7 +155,6 @@ def delete_cinema(request, pk):
         # context = {
         #     'cinema_list': cinema_list,
         #     'title': 'KinoCMS| Список кінотеатрів',
-        #     'curr_page': 'cinema'
         # }
         #
         # return render(request, 'admin_cms/cinema.html', context=context)
@@ -194,7 +192,6 @@ def create_hall(request, cinema_pk):
 
     context = {
         'title': 'KinoCMS | Створення зала',
-        'curr_page': 'cinema',
         'hall_form': hall_form,
         'photo_formset': photo_formset,
         'seo_form': seo_form,
@@ -216,7 +213,6 @@ def update_hall(request, hall_pk):
         'hall_form': hall_form,
         'seo_form': seo_form,
         'photo_formset': photo_formset,
-        'curr_page': 'cinema',
         'title': 'KinoCMS | Редагування залу'
     }
 
@@ -256,7 +252,8 @@ def movie_view(request):
     movies = Movie.objects.all()
 
     context = {
-        'movies': movies
+        'movies': movies,
+        'title': 'KinoCMS | Фільми'
     }
 
     return render(request, 'admin_cms/movies.html', context=context)
@@ -271,7 +268,7 @@ def create_movie(request):
         'title': 'KinoCMS | Створення фільму',
         'movie_form': movie_form,
         'photo_formset': photo_formset,
-        'seo_form': seo_form
+        'seo_form': seo_form,
     }
 
     if request.method == 'POST':
@@ -312,7 +309,8 @@ def update_movie(request, pk):
     context = {
         'movie_form': movie_form,
         'photo_formset': photo_formset,
-        'seo_form': seo_form
+        'seo_form': seo_form,
+        'title': 'KinoCMS | Оновлення фільму'
     }
 
     if request.method == 'POST':
@@ -343,11 +341,20 @@ def update_movie(request, pk):
 
 
 def create_banner(request):
-    main_top_banner_form = main_top_banner_form_factory()
-    main_top_photo_formset = main_top_formset_factory(queryset=MainTopBannerPhoto.objects.none())
-    background_banner_form = background_banner_form_factory()
-    news_banner_form = news_banner_form_factory()
-    news_banner_formset = news_banner_formset_factory(queryset=NewsBannerPhoto.objects.none(), prefix='news')
+    main_banner_first_record = MainTopBanner.objects.first()
+    background_banner_first_record = BackgroundBanner.objects.first()
+    news_banner_first_record = NewsBanner.objects.first()
+
+    main_top_banner_form = main_top_banner_form_factory(instance=main_banner_first_record)
+    main_top_photo_formset = main_top_formset_factory(
+        queryset=main_banner_first_record.maintopbannerphoto_set.all() if main_banner_first_record
+        else MainTopBannerPhoto.objects.none())
+    background_banner_form = background_banner_form_factory(instance=background_banner_first_record)
+    news_banner_form = news_banner_form_factory(instance=news_banner_first_record)
+    news_banner_formset = news_banner_formset_factory(
+        queryset=news_banner_first_record.newsbannerphoto_set.all() if news_banner_first_record
+        else NewsBannerPhoto.objects.none(),
+        prefix='news')
 
     context = {
         'main_top_banner_form': main_top_banner_form,
@@ -355,15 +362,21 @@ def create_banner(request):
         'background_banner_form': background_banner_form,
         'news_banner_form': news_banner_form,
         'news_banner_formset': news_banner_formset,
-        'curr_page': 'banners',
         'title': 'KinoCMS | Створення банерів'
     }
 
     if request.method == 'POST':
 
         if 'main_top_banner' in request.POST:
-            main_top_banner_form_class = main_top_banner_form_factory(request.POST, request.FILES or None)
-            main_top_photo_formset_class = main_top_formset_factory(request.POST, request.FILES or None)
+            main_top_banner_form_class = main_top_banner_form_factory(request.POST,
+                                                                      request.FILES or None,
+                                                                      instance=main_banner_first_record)
+            main_top_photo_formset_class = main_top_formset_factory(request.POST,
+                                                                    request.FILES or None,
+                                                                    queryset=main_banner_first_record.maintopbannerphoto_set.all()
+                                                                    if main_banner_first_record
+                                                                    else MainTopBannerPhoto.objects.none()
+                                                                    )
 
             if main_top_banner_form_class.is_valid() and main_top_photo_formset_class.is_valid() and \
                     all([form.is_valid() for form in main_top_photo_formset_class]):
@@ -371,11 +384,15 @@ def create_banner(request):
                 main_banner_saved = main_top_banner_form_class.save()
 
                 for form in main_top_photo_formset_class:
-                    if form.cleaned_data.get('photo') and form.cleaned_data.get('url') \
-                            and form.cleaned_data.get('text'):
+                    if (form.cleaned_data.get('photo') is not None) and (form.cleaned_data.get('url') is not None) \
+                            and (form.cleaned_data.get('text') is not None):
                         main_banner_photo_saved = form.save(commit=False)
                         main_banner_photo_saved.main_top_banner = main_banner_saved
                         main_banner_photo_saved.save()
+
+                for deleted_obj in main_top_photo_formset_class.deleted_forms:
+                    if deleted_obj.instance.pk:
+                        deleted_obj.instance.delete()
 
                 return redirect('create_banner')
 
@@ -383,7 +400,9 @@ def create_banner(request):
             context['main_top_photo_formset'] = main_top_photo_formset_class
 
         if 'background_banner' in request.POST:
-            background_banner_form_class = background_banner_form_factory(request.POST, request.FILES or None)
+            background_banner_form_class = background_banner_form_factory(request.POST,
+                                                                          request.FILES or None,
+                                                                          instance=background_banner_first_record)
             if background_banner_form_class.is_valid():
                 background_banner_form_class.save()
                 return redirect('create_banner')
@@ -391,8 +410,12 @@ def create_banner(request):
             context['background_banner_form'] = background_banner_form_class
 
         if 'news_banner' in request.POST:
-            news_banner_form_class = news_banner_form_factory(request.POST)
-            news_banner_formset_class = news_banner_formset_factory(request.POST, request.FILES or None, prefix='news')
+            news_banner_form_class = news_banner_form_factory(request.POST, instance=news_banner_first_record)
+            news_banner_formset_class = news_banner_formset_factory(request.POST,
+                                                                    request.FILES or None,
+                                                                    queryset=news_banner_first_record.newsbannerphoto_set.all()
+                                                                    if news_banner_first_record else NewsBannerPhoto.objects.none(),
+                                                                    prefix='news')
 
             if news_banner_form_class.is_valid() and news_banner_formset_class.is_valid() \
                     and all([form.is_valid() for form in news_banner_formset_class]):
@@ -405,6 +428,10 @@ def create_banner(request):
                         news_banner_photo_saved.news_banner = news_banner_saved
                         news_banner_photo_saved.save()
 
+                for deleted_form in news_banner_formset_class.deleted_forms:
+                    if deleted_form.instance.pk:
+                        deleted_form.instance.delete()
+
                 return redirect('create_banner')
 
             context['news_banner_form'] = news_banner_form_class
@@ -413,24 +440,144 @@ def create_banner(request):
     return render(request, 'admin_cms/banner_form.html', context=context)
 
 
+def main_page_create_update(request):
+    main_page_record = MainPage.objects.select_related('seo').first()
+    main_page = main_page_form_factory(instance=main_page_record)
+    seo_form = seo_form_factory(instance=main_page_record.seo if main_page_record else None)
+
+    context = {
+        'main_page': main_page,
+        'seo_form': seo_form,
+        'title': 'KinoCMS | Створення головної сторінки'
+    }
+    if request.method == 'POST':
+        main_page = main_page_form_factory(request.POST, instance=main_page_record)
+        seo_form = seo_form_factory(request.POST, instance=main_page_record.seo if main_page_record else None)
+
+        print(main_page.errors)
+        print(seo_form.errors)
+
+        if main_page.is_valid() and seo_form.is_valid():
+            seo_form_saved = seo_form.save()
+            main_page_saved = main_page.save(commit=False)
+            if not main_page_record:
+                main_page_saved.seo = seo_form_saved
+            main_page_saved.save()
+
+            return redirect('pages')
+
+        context['main_page'] = main_page
+        context['seo_form'] = seo_form
+
+    return render(request, 'admin_cms/main_page_change_form.html', context=context)
+
+
+def page_view(request):
+    main_page = MainPage.objects.first()
+    pages = Page.objects.all()
+
+    context = {
+        'main_page': main_page,
+        'pages': pages,
+        'title': 'KinoCMS | Сторінки'
+    }
+
+    return render(request, 'admin_cms/pages.html', context=context)
+
+
 def create_page(request):
     page_form = PageCreateForm()
     seo_form = seo_form_factory()
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
 
     context = {
-        'form': page_form,
+        'page_form': page_form,
         'seo_form': seo_form,
         'photo_formset': photo_formset,
-        'curr_page': 'pages',
         'title': 'KinoCMS | Створення сторінок'
     }
 
     if request.method == 'POST':
-        page_form = PageCreateForm(request.POST)
-        page_form.save(commit=False)
+        page_form_class = PageCreateForm(request.POST, request.FILES)
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES)
+        seo_form_class = seo_form_factory(request.POST)
+
+        if page_form_class.is_valid() and photo_formset_class.is_valid() and photo_formset_class.is_valid() \
+                and all([form.is_valid() for form in photo_formset_class]) and seo_form_class.is_valid():
+
+            new_gallery = Gallery.objects.create(name=page_form_class.cleaned_data.get('name'))
+            seo_saved = seo_form_class.save()
+            page_saved = page_form_class.save(commit=False)
+            page_saved.gallery = new_gallery
+            page_saved.seo = seo_saved
+            page_saved.save()
+
+            for form in photo_formset_class:
+                if form.cleaned_data.get('photo'):
+                    form_saved = form.save(commit=False)
+                    form_saved.gallery = new_gallery
+                    form_saved.save()
+
+            return redirect('pages')
+
+        context['page_form'] = page_form_class
+        context['seo_form'] = seo_form_class
+        context['photo_formset'] = photo_formset_class
 
     return render(request, 'admin_cms/page_form.html', context=context)
+
+
+def update_page(request, pk):
+    page = Page.objects.select_related('gallery', 'seo').prefetch_related('gallery__photo_set').get(pk=pk)
+
+    page_form = PageCreateForm(instance=page)
+    photo_formset = photo_formset_factory(queryset=page.gallery.photo_set.all())
+    seo_form = seo_form_factory(instance=page.seo)
+
+    context = {
+        'title': 'KinoCMS | Оновлення сторінки',
+        'page_form': page_form,
+        'photo_formset': photo_formset,
+        'seo_form': seo_form
+    }
+
+    if request.method == 'POST':
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES,
+                                                    queryset=page.gallery.photo_set.all())
+        page_form_class = PageCreateForm(request.POST, request.FILES, instance=page)
+        seo_form_class = seo_form_factory(request.POST, instance=page.seo)
+
+        if page_form_class.is_valid() and seo_form_class.is_valid() and photo_formset_class.is_valid() \
+                and all([form.is_valid() for form in photo_formset_class]):
+
+            for form in photo_formset_class:
+                form_saved = form.save(commit=False)
+                if form_saved.photo:
+                    form_saved.gallery = page.gallery
+                    form_saved.save()
+
+            page_form_class.save()
+            photo_formset_class.save()
+            seo_form_class.save()
+
+            return redirect('pages')
+
+        context['page_form'] = page_form_class
+        context['photo_formset'] = photo_formset_class
+        context['seo_form'] = seo_form_class
+
+    return render(request, 'admin_cms/page_change_form.html', context=context)
+
+
+def delete_page(request, pk):
+    try:
+        page = Page.objects.get(pk=pk)
+        page.gallery.delete()
+        page.seo.delete()
+        page.delete()
+
+    finally:
+        return redirect('pages')
 
 
 def users(request):
@@ -441,6 +588,7 @@ def users(request):
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
     context = {
+        'title': 'KinoCMS | Користувачі',
         'users': page_objects
     }
     return render(request, 'admin_cms/users.html', context=context)

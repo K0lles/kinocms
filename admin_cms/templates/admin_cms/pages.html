@@ -1,0 +1,85 @@
+{% extends 'admin_cms/base.html' %}
+{% load static %}
+
+{% block content-header %}
+    <h3 class="text-center">Список сторінок</h3>
+    <a class="btn btn-success float-right" style="margin-right: 3%;" href="{% url 'page_create' %}">Створити сторінку</a>
+{% endblock %}
+
+{% block content %}
+    <div class="list" id="table-list">
+        <table class="table table-bordered" border="1" style="margin-top: 4%;">
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>Назва</strong>
+                    </td>
+                    <td>
+                        <strong>Дата створення</strong>
+                    </td>
+                    <td>
+                        <strong>Статус</strong>
+                    </td>
+                </tr>
+                <tr>
+                        <td>
+                            Головна сторінка
+                        </td>
+                        <td>
+                            {% if main_page %}{{ main_page.created_at|date:"d.m.Y" }}{% endif %}
+                        </td>
+                        <td>
+                        {% if main_page %}
+                            {% if main_page.status == True %}
+                                ВВІМК
+                                {% else %}
+                                ВИМК
+                            {% endif %}
+                        {% endif %}
+                        </td>
+                        <td style="border: none">
+                            <a href="{% url 'main_page_create_update' %}" style="text-decoration: none;">
+                                <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                            </a>
+                            {% comment %}<div style="display: none">
+                                {{ page.DELETE }}
+                            </div>{% endcomment %}
+                        </td>
+                </tr>
+                {% for page in pages %}
+                    <tr>
+                        <td>
+{#                            <div style="display: none">{{ page.name }}</div>#}
+                            {{ page.name }}
+                        </td>
+                        <td>
+{#                            <div style="display: none">{{ page.created_at }}</div>#}
+                            {{ page.created_at|date:"d.m.Y" }}
+                        </td>
+                        <td>
+{#                             <div style="display: none">{{ page.status }}</div>#}
+                            {% if page.status == True %}
+                                ВВІМК
+                                {% else %}
+                                ВИМК
+                            {% endif %}
+                        </td>
+                        <td style="border: none">
+                            <a href="{% url 'update_page' pk=page.id %}" style="text-decoration: none;">
+                                <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                            </a>
+                            <a href="{% url 'delete_page' pk=page.id %}">
+                                <img src="{% static 'admin_cms/logos/cancel-button.png' %}"
+                                     style="width: 25px; height: 25px;">
+                            </a>
+
+                            {% comment %}<div style="display: none">
+                                {{ page.DELETE }}
+                            </div>{% endcomment %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

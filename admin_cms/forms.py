@@ -1,6 +1,7 @@
-from django.forms import modelform_factory, modelformset_factory, ModelForm, CharField
+from django.forms import modelform_factory, modelformset_factory, ModelForm, CharField, BaseModelFormSet
 from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateTimeInput, NumberInput, \
     RadioSelect, PasswordInput, CheckboxInput
+from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 from user.models import SimpleUser
 from cinema.models import *
 from movie.models import Movie
@@ -70,6 +71,17 @@ movie_form_factory = modelform_factory(Movie, exclude=('gallery', 'seo'),
                                            'name': TextInput(attrs={'class': 'form-control'})
                                        })
 
+main_page_form_factory = modelform_factory(MainPage, exclude=('seo', 'created_at'),
+                                           widgets={
+                                               'phone_number_first': PhoneNumberInternationalFallbackWidget(
+                                                   attrs={'class': 'form-control'}
+                                               ),
+                                               'phone_number_second': PhoneNumberInternationalFallbackWidget(
+                                                   attrs={'class': 'form-control'}
+                                               ),
+                                               'seo_text': Textarea(attrs={'class': 'form-control'}),
+                                           })
+
 main_top_banner_form_factory = modelform_factory(MainTopBanner, fields=('turned_on', 'turning_speed'),
                                                  widgets={
                                                      'turning_speed': Select(attrs={'class': 'form-control'}),
@@ -88,11 +100,14 @@ news_banner_form_factory = modelform_factory(NewsBanner, fields=('turning_speed'
                                                  'turning_speed': Select(attrs={'class': 'form-control'})
                                              })
 
-news_banner_formset_factory = modelformset_factory(NewsBannerPhoto, fields=('photo', 'url'), extra=0,
+news_banner_formset_factory = modelformset_factory(NewsBannerPhoto,
+                                                   fields=('photo', 'url'),
+                                                   extra=0,
                                                    widgets={
                                                        'photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
                                                        'url': TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'})
-                                                   })
+                                                   },
+                                                   can_delete=True)
 
 background_banner_form_factory = modelform_factory(BackgroundBanner, fields=('photo', 'background'),
                                                    widgets={
@@ -161,7 +176,17 @@ class UserFormUpdate(ModelForm):
         return cleaned_data
 
 
+pages_formset_factory = modelformset_factory(Page, fields=('name', 'created_at', 'status'), extra=0, can_delete=True)
+
+
 class PageCreateForm(ModelForm):
+        
     class Meta:
         model = Page
-        exclude = ('gallery', 'seo',)
+        exclude = ('gallery', 'seo', 'created_at')
+        widgets = {
+            'name': TextInput(attrs={'class': 'form-control'}),
+            'description': Textarea(attrs={'class': 'form-control'}),
+            'main_photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
+            'status': CheckboxInput()
+        }

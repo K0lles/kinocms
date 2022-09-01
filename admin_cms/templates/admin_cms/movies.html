@@ -10,6 +10,12 @@
 
 {% block content %}
 
+    {% if movies|length == 0 %}
+        <div class="content" style="padding-top: 15%;">
+            <h1>Поки що не існує жодного фільму, але ви можете виправити це</h1>
+        </div>
+    {% else %}
+
     <div class="content flex-column" style="margin-top: 5%;">
         {% for movie in movies %}
             <div style="position: relative; margin-right: 4%; display: inline-block">
@@ -20,5 +26,7 @@
             </div>
         {% endfor %}
     </div>
+
+    {% endif %}
 
 {% endblock %}

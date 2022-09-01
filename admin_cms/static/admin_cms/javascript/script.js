@@ -55,7 +55,6 @@ addMoreMainBanner.click(function(e) {
 
 addMoreNewsBanner.click(function(e) {
     e.preventDefault();
-    console.log('hello');
 
     let totalForms = parseInt($('#id_news-TOTAL_FORMS').val());
     let emptyRow = $('#empty-news-form').clone();
@@ -81,6 +80,12 @@ function loadFile(event, id) {
         URL.revokeObjectURL(image.src);
     };
 }
+
+// function hideMainBanner(event, element) {
+//     $(element).parent().parent().css('display', 'none');
+//     let photoID = ($(element).parent().parent().attr('id')).replace('-photo', '-DELETE');
+//     $(`#${photoID}`).prop('checked', true);
+// }
 
 function hidePhoto(event, element) {
     $(element).parent().parent().css('display', 'none');

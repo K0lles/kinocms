@@ -1,11 +1,13 @@
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from decorator_include import decorator_include
+from .decorators import login_admin_required
 from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('admin_cms/', include('admin_cms.urls')),
+    path('admin_cms/', decorator_include(login_admin_required, 'admin_cms.urls')),
     # path('', include('cinema.urls')),
     # path('event/', include('event.urls')),
     # path('page/', include('page.urls')),

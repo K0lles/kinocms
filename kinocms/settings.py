@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'movie.apps.MovieConfig',
     'page.apps.PageConfig',
     'user.apps.UserConfig',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -47,7 +48,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'admin_cms.middleware.LoginRequiredAccess',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
