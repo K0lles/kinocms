@@ -3,6 +3,7 @@ from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateTim
     RadioSelect, PasswordInput, CheckboxInput
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 from user.models import SimpleUser
+from event.models import *
 from cinema.models import *
 from movie.models import Movie
 from page.models import *
@@ -69,6 +70,15 @@ class MovieForm(ModelForm):
 movie_form_factory = modelform_factory(Movie, exclude=('gallery', 'seo'),
                                        widgets={
                                            'name': TextInput(attrs={'class': 'form-control'})
+                                       })
+
+event_form_factory = modelform_factory(Event, exclude=('seo', 'created_at', 'gallery'),
+                                       widgets={
+                                           'name': TextInput(attrs={'class': 'form-control'}),
+                                           'description': Textarea(attrs={'class': 'form-control'}),
+                                           'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
+                                           'url': TextInput(attrs={'class': 'form-control'}),
+
                                        })
 
 main_page_form_factory = modelform_factory(MainPage, exclude=('seo', 'created_at'),

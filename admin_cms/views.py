@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 from .forms import *
+from event.models import *
 from cinema.models import Cinema
 from user.models import SimpleUser
 
@@ -340,6 +341,107 @@ def update_movie(request, pk):
     return render(request, 'admin_cms/movie_change_form.html', context=context)
 
 
+def event_view(request):
+    events = Event.objects.all()
+
+    context = {
+        'events': events,
+        'title': 'KinoCMS | Події'
+    }
+
+    return render(request, 'admin_cms/events.html', context=context)
+
+
+def event_create(request):
+    event_form = event_form_factory()
+    photo_formset = photo_formset_factory(queryset=Photo.objects.none())
+    seo_form = seo_form_factory()
+
+    context = {
+        'title': 'KinoCMS | Створення події',
+        'event_form': event_form,
+        'photo_formset': photo_formset,
+        'seo_form': seo_form
+    }
+
+    if request.method == 'POST':
+        event_form_class = event_form_factory(request.POST, request.FILES or None)
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES or None)
+        seo_form_class = seo_form_factory(request.POST)
+
+        if event_form_class.is_valid() and all([form.is_valid() for form in photo_formset_class]) \
+                and seo_form_class.is_valid():
+            new_gallery = Gallery.objects.create(name=event_form_class.cleaned_data.get('name'))
+            new_seo = seo_form_class.save()
+            event_saved = event_form_class.save(commit=False)
+            event_saved.gallery = new_gallery
+            event_saved.seo = new_seo
+            event_saved.save()
+
+            for photo in photo_formset_class:
+                if photo.cleaned_data.get('photo'):
+                    photo_saved = photo.save(commit=False)
+                    photo_saved.gallery = new_gallery
+                    photo_saved.save()
+
+            return redirect('events')
+
+        context['event_form'] = event_form_class
+        context['photo_formset'] = photo_formset_class
+        context['seo_form'] = seo_form_class
+
+    return render(request, 'admin_cms/event_form.html', context=context)
+
+
+def update_event(request, pk):
+    event_record = Event.objects.select_related('seo').prefetch_related('gallery__photo_set').get(pk=pk)
+    event_form = event_form_factory(instance=event_record)
+    photo_formset = photo_formset_factory(queryset=event_record.gallery.photo_set.all())
+    seo_form = seo_form_factory(instance=event_record.seo)
+
+    context = {
+        'title': 'KinoCMS | Створення події',
+        'event_form': event_form,
+        'photo_formset': photo_formset,
+        'seo_form': seo_form
+    }
+
+    if request.method == 'POST':
+        event_form_class = event_form_factory(request.POST, request.FILES, instance=event_record)
+        seo_form_class = seo_form_factory(request.POST, instance=event_record.seo)
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=event_record.gallery.photo_set.all())
+
+        if event_form_class.is_valid() and seo_form_class.is_valid() and photo_formset_class.is_valid() \
+                and all([form.is_valid() for form in photo_formset_class]) \
+                and all([deleted_form.is_valid() for deleted_form in photo_formset_class.deleted_forms]):
+
+            for form in photo_formset_class:
+                form_saved = form.save(commit=False)
+                if form_saved.photo:
+                    form_saved.gallery = event_record.gallery
+                    form.save()
+
+            photo_formset_class.save()
+            seo_form_class.save()
+            event_form_class.save()
+            return redirect('events')
+
+        context['event_form'] = event_form_class
+        context['seo_form'] = seo_form_class
+        context['photo_formset'] = photo_formset_class
+
+    return render(request, 'admin_cms/event_change_form.html', context=context)
+
+
+def delete_event(request, pk):
+    event_to_delete = Event.objects.get(pk=pk)
+    event_to_delete.gallery.delete()
+    event_to_delete.seo.delete()
+    event_to_delete.delete()
+
+    return redirect('events')
+
+
 def create_banner(request):
     main_banner_first_record = MainTopBanner.objects.first()
     background_banner_first_record = BackgroundBanner.objects.first()
@@ -453,9 +555,6 @@ def main_page_create_update(request):
     if request.method == 'POST':
         main_page = main_page_form_factory(request.POST, instance=main_page_record)
         seo_form = seo_form_factory(request.POST, instance=main_page_record.seo if main_page_record else None)
-
-        print(main_page.errors)
-        print(seo_form.errors)
 
         if main_page.is_valid() and seo_form.is_valid():
             seo_form_saved = seo_form.save()

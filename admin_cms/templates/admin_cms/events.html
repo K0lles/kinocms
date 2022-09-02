@@ -1,0 +1,60 @@
+{% extends 'admin_cms/base.html' %}
+{% load static %}
+
+{% block content-header %}
+    <h3 class="text-center">Список подій</h3>
+    <a class="btn btn-success float-right" style="margin-right: 3%;" href="{% url 'create_event' %}">Створити подію</a>
+{% endblock %}
+
+{% block content %}
+    <div class="list" id="table-list">
+        <table class="table table-bordered" border="1" style="margin-top: 4%;">
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>Назва</strong>
+                    </td>
+                    <td>
+                        <strong>Дата створення</strong>
+                    </td>
+                    <td>
+                        <strong>Статус</strong>
+                    </td>
+                </tr>
+                {% for event in events %}
+                    <tr>
+                        <td>
+{#                            <div style="display: none">{{ event.name }}</div>#}
+                            {{ event.name }}
+                        </td>
+                        <td>
+{#                            <div style="display: none">{{ event.created_at }}</div>#}
+                            {{ event.created_at|date:"d.m.Y" }}
+                        </td>
+                        <td>
+{#                             <div style="display: none">{{ event.status }}</div>#}
+                            {% if event.status == True %}
+                                ВВІМК
+                                {% else %}
+                                ВИМК
+                            {% endif %}
+                        </td>
+                        <td style="border: none">
+                            <a href="{% url 'update_event' pk=event.id %}" style="text-decoration: none;">
+                                <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                            </a>
+                            <a href="{% url 'delete_event' pk=event.id %}">
+                                <img src="{% static 'admin_cms/logos/cancel-button.png' %}"
+                                     style="width: 25px; height: 25px;">
+                            </a>
+
+                            {% comment %}<div style="display: none">
+                                {{ event.DELETE }}
+                            </div>{% endcomment %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
