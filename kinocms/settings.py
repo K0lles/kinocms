@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'movie.apps.MovieConfig',
     'page.apps.PageConfig',
     'user.apps.UserConfig',
-    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

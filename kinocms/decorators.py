@@ -4,14 +4,10 @@ from django.http import HttpResponseForbidden
 
 def login_admin_required(function):
     def wrapper(request, *args, **kwargs):
-        # decorated_view_func = login_required(request)
-        # if not decorated_view_func.user.is_authenticated:
-        #     return decorated_view_func(request)  # return redirect to signin
         if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path())
 
-        if not request.user.is_superuser:  # if not coach redirect to home page
-            # return HttpResponseRedirect(reverse('home', args=(), kwargs={}))
+        if not request.user.is_superuser:
             return HttpResponseForbidden()
 
         return function(request, *args, **kwargs)

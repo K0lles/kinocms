@@ -78,9 +78,7 @@
                 {{ form.id }}
                 <div id="{{ form.photo.auto_id }}" style="display: inline-block; margin: 2% 0% 0% 4%;">
                     <div style="position: relative">
-                        <img id="{{ form.photo.auto_id }}-preview" src="{% if form.instance.photo %}
-                                                                            {{ form.instance.photo.url }}
-                                                                        {% endif %}"
+                        <img id="{{ form.photo.auto_id }}-preview" src="{% if form.instance.photo %}{{ form.instance.photo.url }}{% endif %}"
                         class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                         <img class="cancel-button-checkbox" alt="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}"
                                         onclick="hidePhoto(event, this)">

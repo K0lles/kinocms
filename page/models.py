@@ -23,3 +23,11 @@ class Page(models.Model):
                                    null=True)
     status = models.BooleanField(default=True)
     seo = models.OneToOneField(SEO, on_delete=models.CASCADE, blank=True, null=True)
+
+
+class Contacts(models.Model):
+    cinema_name = models.CharField(max_length=55, verbose_name='Назва кінотеатру')
+    address = models.TextField(verbose_name='Адреса')
+    coordinates = models.CharField(max_length=55, verbose_name='Координати')
+    logo = models.ImageField(upload_to='contacts/', verbose_name='Лого')
+    seo = models.ForeignKey(SEO, on_delete=models.CASCADE, blank=True, null=True)
