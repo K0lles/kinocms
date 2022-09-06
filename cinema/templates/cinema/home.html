@@ -6,10 +6,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'cinema/css/styles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- CSS Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
+        .nav-item {
+            display: inline-block;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: rgba(255,255,255,.5);
+        }
+
         body {
             {% if background %}
             background-image:  url("{{ background }}");
@@ -18,7 +28,7 @@
             background-size: cover;
             background-size: 100% 100%;
             {% else %}
-            background: #063940;
+            background: #ffffff;
             {% endif %};
         }
     </style>
@@ -29,35 +39,43 @@
             <!-- There must be the top strip image -->
         </div>
         <div class="row">
-            <div class="col-md-2" style="padding-top: 1%;">
+            <div class="col-sm-12 col-md-2 col-lg-2" style="padding-top: 1%;">
                 <a href="{% url 'home' %}" style="text-decoration: none;">
                     <img src="{% static 'admin_cms/logos/cinema-logo.png' %}" style="width: 150px; height: 100px;">
                 </a>
             </div>
-            <div class="col-md-3" style="padding-top: 3%;">
-                <input type="text" placeholder="Пошук" >
+            <div class="col-sm-12 col-md-2 col-lg-2" style="padding-top: 3%;">
+                <input type="text" placeholder="Пошук" style="width: 125px;">
             </div>
-            <div class="col-md-3" style="padding-top: 3%;">
+            <div class="col-sm-12 col-md-1 col-lg-2" style="padding-top: 3%;">
+                {% if not authenticated %}
+                    <a href="{% url 'login' %}" class="btn btn-success" style="margin-left: 15%;">Логін</a>
+                    <a href="{% url 'registration' %}" class="btn btn-info" style="margin-top: 10%;">Зареєструватися</a>
+                {% else %}
+                    <a href="{% url 'logout' %}" class="btn btn-danger">Вийти</a>
+                {% endif %}
+            </div>
+            <div class="col-sm-2 col-md-3 col-lg-3" style="padding-top: 3%;">
                 <img src="{% static 'cinema/logos/social-media.png' %}">
             </div>
             <div class="col-md-3" >
                 <div class="row">
-                    <p style="color: white; font-size: 30px;">+38054548765</p>
+                    <p style="font-size: 30px;">{{ phone_number_first }}</p>
                 </div>
                 <div class="row">
-                    <p style="color: white; font-size: 30px;">+38054548765</p>
+                    <p style="font-size: 30px;">{{ phone_number_second }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin-top: 1%">
             <div class="col-md-2"></div>
             <div class="col-md-10">
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <nav class="navbar navbar-expand navbar-dark bg-dark">
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                        <ul class="navbar-nav">
+                        <ul class="flex-column dark-colour">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Афіша</a>
+                                <a class="nav-link" href="{% url 'poster' %}">Афіша</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Розклад</a>
@@ -71,11 +89,6 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Акції</a>
                             </li>
-                            {% if admin %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'cinema' %}">Адмін панель</a>
-                            </li>
-                            {% endif %}
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Про кінотеатр
@@ -88,6 +101,11 @@
                                     <a class="dropdown-item" href="#">Контакти</a>
                                 </div>
                             </li>
+                            {% if admin %}
+                            <li class="nav-item" style="margin-left: 15px;">
+                                <a class="nav-link" href="{% url 'cinema' %}">Адмін панель</a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </nav>

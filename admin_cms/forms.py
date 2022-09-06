@@ -9,11 +9,10 @@ from movie.models import Movie
 from page.models import *
 from banner.models import *
 
-
 hall_formset_factory = modelformset_factory(Hall, fields=('number', 'created_at'), extra=0,
                                             widgets={
-                                               'number': TextInput(attrs={'readonly': True}),
-                                               'created_at': DateTimeInput(attrs={'readonly': True})
+                                                'number': TextInput(attrs={'readonly': True}),
+                                                'created_at': DateTimeInput(attrs={'readonly': True})
                                             }, can_delete=True)
 
 photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=0,
@@ -92,6 +91,23 @@ main_page_form_factory = modelform_factory(MainPage, exclude=('seo', 'created_at
                                                'seo_text': Textarea(attrs={'class': 'form-control'}),
                                            })
 
+
+def func_contact_formset_factory(extra_forms):
+    return modelformset_factory(Contacts, exclude=('seo',), extra=extra_forms,
+                                               widgets={
+                                                   'cinema_name': TextInput(attrs={'class': 'form-control'}),
+                                                   'address': Textarea(attrs={'class': 'form-control'}),
+                                                   'coordinates': TextInput(attrs={'class': 'form-control'}),
+                                                   'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
+                                               })
+# contact_formset_factory = modelformset_factory(Contacts, exclude=('seo',), extra=1,
+#                                                widgets={
+#                                                    'cinema_name': TextInput(attrs={'class': 'form-control'}),
+#                                                    'address': Textarea(attrs={'class': 'form-control'}),
+#                                                    'coordinates': TextInput(attrs={'class': 'form-control'}),
+#                                                    'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
+#                                                })
+
 main_top_banner_form_factory = modelform_factory(MainTopBanner, fields=('turned_on', 'turning_speed'),
                                                  widgets={
                                                      'turning_speed': Select(attrs={'class': 'form-control'}),
@@ -101,8 +117,10 @@ main_top_banner_form_factory = modelform_factory(MainTopBanner, fields=('turned_
 main_top_formset_factory = modelformset_factory(MainTopBannerPhoto, exclude=('main_top_banner',), extra=0,
                                                 widgets={
                                                     'photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
-                                                    'url': TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
-                                                    'text': TextInput(attrs={'class': 'form-control', 'placeholder': 'текст'})
+                                                    'url': TextInput(
+                                                        attrs={'class': 'form-control', 'placeholder': 'URL'}),
+                                                    'text': TextInput(
+                                                        attrs={'class': 'form-control', 'placeholder': 'текст'})
                                                 }, can_delete=True)
 
 news_banner_form_factory = modelform_factory(NewsBanner, fields=('turning_speed', 'turned_on'),
@@ -114,15 +132,18 @@ news_banner_formset_factory = modelformset_factory(NewsBannerPhoto,
                                                    fields=('photo', 'url'),
                                                    extra=0,
                                                    widgets={
-                                                       'photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
-                                                       'url': TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'})
+                                                       'photo': FileInput(
+                                                           attrs={'onchange': 'loadFile(event, this.id)'}),
+                                                       'url': TextInput(
+                                                           attrs={'class': 'form-control', 'placeholder': 'URL'})
                                                    },
                                                    can_delete=True)
 
 background_banner_form_factory = modelform_factory(BackgroundBanner, fields=('photo', 'background'),
                                                    widgets={
                                                        'background': RadioSelect(attrs={'class': 'form-control'}),
-                                                       'photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
+                                                       'photo': FileInput(
+                                                           attrs={'onchange': 'loadFile(event, this.id)'})
                                                    })
 
 user_form_factory = modelform_factory(SimpleUser,
@@ -149,7 +170,7 @@ class UserFormUpdate(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['sex'].empty_label = None
-        self.fields['birthday'].input_formats = [ '%d.%m.%Y' ]
+        self.fields['birthday'].input_formats = ['%d.%m.%Y']
         self.fields['password'].required = False
         # del self.fields['password1']
 
@@ -190,7 +211,6 @@ pages_formset_factory = modelformset_factory(Page, fields=('name', 'created_at',
 
 
 class PageCreateForm(ModelForm):
-        
     class Meta:
         model = Page
         exclude = ('gallery', 'seo', 'created_at')

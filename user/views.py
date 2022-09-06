@@ -16,7 +16,7 @@ def registration(request):
             password = registration_form_class.cleaned_data.get('password')
             user = authenticate(email=email, password=password)
             login(request, user)
-            return redirect('cinema')
+            return redirect('home')
 
         context = {
             'registration_form': registration_form_class
@@ -43,7 +43,7 @@ def login_in(request):
 
             if user is not None and user.is_active:
                 login(request, user)
-                return redirect('cinema')
+                return redirect('home')
 
             login_form_class.add_error('password', 'Password is wrong, check the writing!')
 
@@ -61,9 +61,9 @@ def login_in(request):
         }
         return render(request, 'user/login.html', context=context)
 
-    return redirect('cinema')
+    return redirect('home')
 
 
 def log_out(request):
     logout(request)
-    return HttpResponseRedirect(reverse('login'))
+    return HttpResponseRedirect(reverse('home'))

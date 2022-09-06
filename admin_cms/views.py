@@ -571,6 +571,29 @@ def main_page_create_update(request):
     return render(request, 'admin_cms/main_page_change_form.html', context=context)
 
 
+def contact_page_create(request):
+    contact_records = Contacts.objects.all().order_by('pk')
+    contact_formset = (func_contact_formset_factory(0 if contact_records else 1))(queryset=contact_records)
+
+    context = {
+        'have_records': True if contact_records else False,
+        'contact_formset': contact_formset,
+    }
+
+    if request.method == 'POST':
+        contact_formset_class = (func_contact_formset_factory(0 if contact_records else 1))(request.POST,
+                                                                                            request.FILES,
+                                                                                            queryset=contact_records)
+
+        if contact_formset_class.is_valid():
+            contact_formset_class.save()
+            return redirect('pages')
+
+        context['contact_formset'] = contact_formset_class
+
+    return render(request, 'admin_cms/contact_form.html', context=context)
+
+
 def page_view(request):
     main_page = MainPage.objects.first()
     pages = Page.objects.all()

@@ -6,6 +6,9 @@ const newsBannerFormList = $('#news-banner-list');
 const addMoreMainBanner = $('#add-more-main_banner');
 const addMoreNewsBanner = $('#add-more-news_banner');
 
+const addMoreContacts = $('#add-more-contacts');
+const contactList = $('#contact-list');
+
 $(document).on("click", ".cancel-button" , function() {
     $(this).parent().parent().remove();
 });
@@ -52,6 +55,41 @@ addMoreMainBanner.click(function(e) {
     $('#id_form-TOTAL_FORMS').val(totalForms + 1);
 })
 
+addMoreContacts.click(function(e) {
+    e.preventDefault();
+
+    let totalForms = parseInt($('#id_form-TOTAL_FORMS').val());
+    let emptyRow = $('#empty-form').clone();
+
+    emptyRow.find('#id_form-__prefix__-cinema_name').attr('id', `id_form-${totalForms}-cinema_name`)
+        .attr('name', `form-${totalForms}-cinema_name`);
+
+    emptyRow.find('label[for="id_form-__prefix__-cinema_name"]').attr('for', `id_form-${totalForms}-cinema_name`);
+
+    emptyRow.find('#id_form-__prefix__-address').attr('id', `id_form-${totalForms}-address`)
+        .attr('name', `form-${totalForms}-address`);
+    emptyRow.find('label[for="id_form-__prefix__-address"]').attr('for', `id_form-${totalForms}-address`);
+
+    emptyRow.find('#id_form-__prefix__-coordinates').attr('id', `id_form-${totalForms}-coordinates`)
+        .attr('name', `form-${totalForms}-coordinates`);
+    emptyRow.find('label[for="id_form-__prefix__-coordinates"]').attr('for', `id_form-${totalForms}-coordinates`);
+
+    emptyRow.find('#id_form-__prefix__-logo').attr('id', `id_form-${totalForms}-logo`)
+        .attr('name', `form-${totalForms}-logo`);
+
+    emptyRow.find('label[for="id_form-__prefix__-logo"]').attr('for', `id_form-${totalForms}-logo`);
+    emptyRow.find('#id_form-__prefix__-logo-preview').attr('id', `id_form-${totalForms}-logo-preview`);
+    emptyRow.find('#id_form-__prefix__-logo-delete').attr('id', `id_form-${totalForms}-logo-delete`);
+    // emptyRow.attr('id', `id_form-${totalForms}-logo`);
+    emptyRow.css('display', '');
+    emptyRow.css('border-radius', '20px;');
+    emptyRow.css('border', 'solid black 2px;');
+    emptyRow.css('padding', '25px;')
+    console.log(contactList);
+    contactList.append(emptyRow);
+    $('#id_form-TOTAL_FORMS').val(totalForms + 1);
+})
+
 
 addMoreNewsBanner.click(function(e) {
     e.preventDefault();
@@ -70,6 +108,8 @@ addMoreNewsBanner.click(function(e) {
     newsBannerFormList.append(emptyRow);
     $('#id_news-TOTAL_FORMS').val(totalForms + 1);
 })
+
+
 
 function loadFile(event, id) {
     event.preventDefault();

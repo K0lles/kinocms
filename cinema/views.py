@@ -1,13 +1,18 @@
 from django.shortcuts import render
 from banner.models import *
 from movie.models import *
-from django.utils import timezone
-from datetime import datetime
+from page.models import *
 
 
-def header_data():
+def header_data(request):
     """Returns data, which will be in the header on each user page"""
-    pass
+    main_page = MainPage.objects.first()
+    return {
+        'phone_number_first': main_page.phone_number_first if main_page.phone_number_first else '+380500000000',
+        'phone_number_second': main_page.phone_number_second if main_page.phone_number_second else '+380500000000',
+        'admin': True if (request.user.is_authenticated and request.user.is_superuser) else False,
+        'authenticated': False if request.user.is_anonymous else True
+        }
 
 
 def home_view(request):
@@ -21,7 +26,21 @@ def home_view(request):
         'photos': main_top_banner_photos.maintopbannerphoto_set.all(),
         'interval': main_top_banner_photos.turning_speed * 1000,
         'sessions': sessions,
-        'admin': True if (request.user.is_authenticated and request.user.is_superuser) else False
     }
 
+    # adding keys with phone numbers
+    context.update(header_data(request))
+
     return render(request, 'cinema/home.html', context=context)
+
+
+def poster_view(request):
+    movies = Movie.objects.filter(session__date__month__gte=timezone.now().month)
+
+    context = {
+        'title': 'KinoCMS | Афіша',
+        'movies': movies,
+    }
+    context.update(header_data(request))
+
+    return render(request, 'cinema/poster.html', context=context)

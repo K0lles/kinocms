@@ -18,6 +18,7 @@ urlpatterns = [
     path('event/delete/<int:pk>/', views.delete_event, name='delete_event'),
     path('pages/', views.page_view, name='pages'),
     path('main-page/create/', views.main_page_create_update, name='main_page_create_update'),
+    path('contacts/create', views.contact_page_create, name='contacts_create'),
     path('page/create/', views.create_page, name='page_create'),
     path('page/update/<int:pk>', views.update_page, name='update_page'),
     path('page/delete/<int:pk>/', views.delete_page, name='delete_page'),
