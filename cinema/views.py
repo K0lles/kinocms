@@ -28,7 +28,7 @@ def home_view(request):
         'sessions': sessions,
     }
 
-    # adding keys with phone numbers
+    # there and further - adding keys with phone numbers
     context.update(header_data(request))
 
     return render(request, 'cinema/home.html', context=context)
@@ -44,3 +44,10 @@ def poster_view(request):
     context.update(header_data(request))
 
     return render(request, 'cinema/poster.html', context=context)
+
+
+def movie_detail(request, movie_pk):
+    movie = Movie.objects.get(pk=movie_pk)
+    print(movie)
+
+    return render(request, '', )

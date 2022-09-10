@@ -147,5 +147,3 @@ function deleteHall(element) {
     $(`#${hallID}`).prop('checked', true);
 }
 
-
-

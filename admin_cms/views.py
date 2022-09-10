@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 from .forms import *
 from event.models import *
 from cinema.models import Cinema
 from user.models import SimpleUser
+from django.core.mail import send_mail
+from kinocms import settings
 
 
 def cinema_view(request):
@@ -703,18 +704,13 @@ def delete_page(request, pk):
 
 
 def users(request):
-    # if request.user.is_superuser:
     simple_users = SimpleUser.objects.all()
-    paginator = Paginator(simple_users, 5)
 
-    page_number = request.GET.get('page')
-    page_objects = paginator.get_page(page_number)
     context = {
         'title': 'KinoCMS | Користувачі',
-        'users': page_objects
+        'users': simple_users
     }
     return render(request, 'admin_cms/users.html', context=context)
-    # return HttpResponseForbidden()
 
 
 def user_update(request, pk):
@@ -767,3 +763,33 @@ def user_delete(request, pk):
         finally:
             return redirect('users')
     return HttpResponseForbidden()
+
+
+def send_email_view(request):
+    simple_users = SimpleUser.objects.all()
+    user_data_form = SendMail()
+
+    context = {
+        'title': 'KinoCMS | Розсилка',
+        'simple_users': simple_users,
+        'user_data_form': user_data_form
+    }
+
+    if request.method == 'POST':
+        user_data_form_class = SendMail(request.POST, request.FILES)
+        print(user_data_form_class.data, '\n\n\n')
+
+        if user_data_form_class.is_valid():
+
+            file = request.FILES['file'].read().decode('utf-8')
+
+            if user_data_form_class.cleaned_data.get('all_users') == 'True':
+                send_mail('Розсилка з KinoCMS', file, settings.EMAIL_HOST_USER, ['oleksijkolotilo63@gmail.com'])
+
+            elif user_data_form_class.cleaned_data.get('all_users') == 'False':
+                user_list = user_data_form_class.data.getlist('send_to_current_user')
+                send_mail('Розсилка із KinoCMS', file, settings.EMAIL_HOST_USER, user_list)
+
+            return redirect('cinema')
+
+    return render(request, 'admin_cms/mailing.html', context)

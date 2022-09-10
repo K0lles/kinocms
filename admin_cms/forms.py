@@ -1,4 +1,5 @@
-from django.forms import modelform_factory, modelformset_factory, ModelForm, CharField, BaseModelFormSet
+from django.forms import modelform_factory, modelformset_factory, ModelForm, CharField, Form, BooleanField, ChoiceField, \
+    FileField
 from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateTimeInput, NumberInput, \
     RadioSelect, PasswordInput, CheckboxInput
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
@@ -94,19 +95,13 @@ main_page_form_factory = modelform_factory(MainPage, exclude=('seo', 'created_at
 
 def func_contact_formset_factory(extra_forms):
     return modelformset_factory(Contacts, exclude=('seo',), extra=extra_forms,
-                                               widgets={
-                                                   'cinema_name': TextInput(attrs={'class': 'form-control'}),
-                                                   'address': Textarea(attrs={'class': 'form-control'}),
-                                                   'coordinates': TextInput(attrs={'class': 'form-control'}),
-                                                   'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
-                                               })
-# contact_formset_factory = modelformset_factory(Contacts, exclude=('seo',), extra=1,
-#                                                widgets={
-#                                                    'cinema_name': TextInput(attrs={'class': 'form-control'}),
-#                                                    'address': Textarea(attrs={'class': 'form-control'}),
-#                                                    'coordinates': TextInput(attrs={'class': 'form-control'}),
-#                                                    'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
-#                                                })
+                                widgets={
+                                    'cinema_name': TextInput(attrs={'class': 'form-control'}),
+                                    'address': Textarea(attrs={'class': 'form-control'}),
+                                    'coordinates': TextInput(attrs={'class': 'form-control'}),
+                                    'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
+                                })
+
 
 main_top_banner_form_factory = modelform_factory(MainTopBanner, fields=('turned_on', 'turning_speed'),
                                                  widgets={
@@ -199,7 +194,10 @@ class UserFormUpdate(ModelForm):
 
     def clean(self):
         cleaned_data = super(UserFormUpdate, self).clean()
-        print('you are inside clean def')
+        card_number = cleaned_data.get('card_number')
+
+        if len(card_number) < 16 or not card_number.isnumeric():
+            self.add_error('card_number', 'Incorrect card number. Check it writing!')
 
         if cleaned_data.get('password') != cleaned_data.get('password_repeat') and cleaned_data.get('password'):
             self.add_error('password', "Passwords must match. Check the validity of entered passwords!")
@@ -220,3 +218,17 @@ class PageCreateForm(ModelForm):
             'main_photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
             'status': CheckboxInput()
         }
+
+
+class SendMail(Form):
+    user_email_list = CharField(required=False, widget=Textarea())
+    send_to_current_user = BooleanField(required=False)
+    file = FileField(required=True)
+
+    CHOICES = (
+        (True, 'Всім користувачам'),
+        (False, 'Вибраним користувачам'),
+    )
+
+    all_users = ChoiceField(choices=CHOICES, required=True, widget=RadioSelect())
+    users = CharField(widget=Textarea, required=False)

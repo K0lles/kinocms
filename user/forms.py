@@ -36,6 +36,10 @@ class UserRegistrationForm(UserCreationForm):
         cleaned_data = super(UserRegistrationForm, self).clean()
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('password1')
+        card_number = cleaned_data.get('card_number')
+
+        if len(card_number) < 16 or not card_number.isnumeric():
+            self.add_error('card_number', 'Incorrect card number. Check it writing!')
 
         if password != confirm_password:
             self.add_error('password', 'Passwords must match. Check it writing!')

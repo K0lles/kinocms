@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 from page.models import *
-from django.core.files.images import ImageFile
 from cinema.models import *
 
 
