@@ -7,8 +7,10 @@
             {% for movie in movies %}
                 <div style="display: inline-block; margin: 5px 0 5px 5%">
                     <a href="#" style="text-decoration: none;">
-                        <img src="{{ movie.main_photo.url }}" style="width: 150px; height: 180px;">
-                        <p class="lead text-center" style="font-size: 110%;"><strong>{{ movie.name }}</strong></p>
+                        <a href="{% url 'movie_detail' movie_pk=movie.pk %}" style="text-decoration: none;">
+                            <img src="{{ movie.main_photo.url }}" style="width: 150px; height: 180px;">
+                        </a>
+                        <p class="lead text-center" style="font-size: 110%; color: white"><strong>{{ movie.name }}</strong></p>
                     </a>
                 </div>
             {% endfor %}

@@ -18,8 +18,12 @@ class Movie(models.Model):
 class Session(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
-    type_2D = models.BooleanField(default=False)
-    type_3D = models.BooleanField(default=False)
+
+    class Type(models.TextChoices):
+        type_2D = '2D', '2D'
+        type_3D = '3D', '3D'
+
+    type = models.CharField(max_length=10, choices=Type.choices, verbose_name='Тип')
     type_IMAX = models.BooleanField(default=False)
     price = models.FloatField()
     date = models.DateTimeField()

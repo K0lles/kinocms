@@ -11,7 +11,7 @@ urlpatterns = [
     path('', include('cinema.urls')),
     # path('event/', include('event.urls')),
     # path('page/', include('page.urls')),
-    # path('movie/', include('movie.urls')),
+    path('movie/', include('movie.urls')),
     # path('banner/', include('banner.urls')),
     path('user/', include('user.urls')),
     path('__debug__/', include('debug_toolbar.urls')),

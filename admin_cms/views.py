@@ -282,9 +282,13 @@ def create_movie(request):
                 and seo_form_class.is_valid():
             new_gallery = Gallery.objects.create(name=movie_form_class.cleaned_data.get('name'))
             new_seo = seo_form_class.save()
+            movie_url = movie_form_class.cleaned_data.get('trailer_url')
+            movie_url = movie_url.replace('watch?v=', 'embed/') + '?autoplay=1&mute=1'
+            print(movie_url)
             movie_saved = movie_form_class.save(commit=False)
             movie_saved.gallery = new_gallery
             movie_saved.seo = new_seo
+            movie_saved.trailer_url = movie_url
             movie_saved.save()
 
             for photo in photo_formset_class:

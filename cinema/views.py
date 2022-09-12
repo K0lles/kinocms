@@ -1,7 +1,11 @@
+from django.db.models import Q
+import json
+from django.core.serializers import serialize
 from django.shortcuts import render
 from banner.models import *
 from movie.models import *
 from page.models import *
+from django.http import JsonResponse
 
 
 def header_data(request):
@@ -10,8 +14,6 @@ def header_data(request):
     return {
         'phone_number_first': main_page.phone_number_first if main_page.phone_number_first else '+380500000000',
         'phone_number_second': main_page.phone_number_second if main_page.phone_number_second else '+380500000000',
-        'admin': True if (request.user.is_authenticated and request.user.is_superuser) else False,
-        'authenticated': False if request.user.is_anonymous else True
         }
 
 
@@ -44,10 +46,3 @@ def poster_view(request):
     context.update(header_data(request))
 
     return render(request, 'cinema/poster.html', context=context)
-
-
-def movie_detail(request, movie_pk):
-    movie = Movie.objects.get(pk=movie_pk)
-    print(movie)
-
-    return render(request, '', )

@@ -25,7 +25,7 @@ class Command(BaseCommand):
 
         for cinema in cinemas:
             cinema.gallery.delete()
-            cinema.seo.delete
+            cinema.seo.delete()
 
         cinemas.delete()
 

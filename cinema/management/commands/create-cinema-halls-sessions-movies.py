@@ -48,10 +48,10 @@ class Command(BaseCommand):
                                 gallery=gallery,
                                 seo=seo)
         hall = Hall.objects.first()
-        for index, name_tuple in enumerate([('hatiko', 'Хатіко', 'https://www.youtube.com/watch?v=nRiYwfZ-5qA'),
-                                            ('lost-city', 'Загублене місто', 'https://www.youtube.com/watch?v=P3C1nNnaMgY'),
-                                            ('joker', 'Джокер', 'https://www.youtube.com/watch?v=q3IqAuTlTfA'),
-                                            ('jumanji', 'Джуманджі', 'https://www.youtube.com/watch?v=ImZCLnCXglI')]):
+        for index, name_tuple in enumerate([('hatiko', 'Хатіко', 'https://www.youtube.com/embed/nRiYwfZ-5qA?autoplay=1&mute=1'),
+                                            ('lost-city', 'Загублене місто', 'https://www.youtube.com/embed/P3C1nNnaMgY?autoplay=1&mute=1'),
+                                            ('joker', 'Джокер', 'https://www.youtube.com/embed/q3IqAuTlTfA?autoplay=1&mute=1'),
+                                            ('jumanji', 'Джуманджі', 'https://www.youtube.com/embed/ImZCLnCXglI?autoplay=1&mute=1')]):
             gallery = Gallery.objects.create(name=name_tuple[0])
             seo = SEO.objects.create(url=f'https://movie-{name_tuple[0]}.com',
                                      title=name_tuple[0],
@@ -61,20 +61,23 @@ class Command(BaseCommand):
             for inner_index in range(0, 3):
                 Photo.objects.create(photo=f'static_preload/preload_movies/movie_{index}/gallery/{inner_index}.jpg',
                                      gallery=gallery)
+
+            type_2D = choice([True, False])
+            type_3D = True if not type_2D else False
+            type_IMAX = choice([True, False])
             movie = Movie.objects.create(name=name_tuple[1],
                                          description=f'{name_tuple[1]} description movie',
                                          main_photo=f'static_preload/preload_movies/movie_{index}/{name_tuple[0]}.jpg',
                                          gallery=gallery,
                                          trailer_url=name_tuple[2],
-                                         type_2D=choice([True, False]),
-                                         type_3D=choice([True, False]),
-                                         type_IMAX=choice([True, False]),
+                                         type_2D=type_2D,
+                                         type_3D=type_3D,
+                                         type_IMAX=type_IMAX,
                                          seo=seo
                                          )
             Session.objects.create(movie=movie,
                                    hall=hall,
-                                   type_2D=movie.type_2D,
-                                   type_3D=movie.type_3D,
+                                   type='2D' if movie.type_2D else '3D',
                                    type_IMAX=movie.type_IMAX,
                                    price=choice([150.0, 190.0, 210.0, 180.0]),
                                    date=datetime.datetime(2022,
