@@ -50,7 +50,7 @@
         </div>
         <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="row justify-content-center" style="padding: 3% 0 3% 0;">
-                <a href="#" class="btn btn-outline-success align-content-center">Купити білет</a>
+                <a href="{% url 'booking' session_pk=movie.session_set.first.id %}" class="btn btn-outline-success align-content-center">Купити квиток</a>
             </div>
             <div class="row justify-content-center">
                 <h4 class="text-center">{{ movie.name }}</h4>

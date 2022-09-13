@@ -19,6 +19,9 @@ function scheduleParse(data) {
     let dateNumbers = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     let dateMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     let schedule = $('#schedule');
+    let pathBook = $(location).attr('host') + '/movie/book/';
+    console.log(pathBook)
+    console.log(data['sessions'][0])
     schedule.empty();
     for (let date = 0; date < data['dates'].length; date++) {
         let contentTable = `<div class="row" style="margin-top: 4%;">
@@ -39,6 +42,9 @@ function scheduleParse(data) {
                                     <td>${data['sessions'][session]['fields']['movie']}</td>
                                     <td>${data['sessions'][session]['fields']['hall']}</td>
                                     <td>${data['sessions'][session]['fields']['price']}</td>
+                                    <td><a href="/movie/book/${data['sessions'][session]['pk']}" style="text-decoration: none">
+                                            <img src="/static/movie/logos/ticket.png" height="15px" width="15px">
+                                        </a></td>
                                  </tr>`
             }
         }

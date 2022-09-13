@@ -73,9 +73,14 @@
                             {% if session.date == date %}
                                 <tr class="text-center">
                                     <td>{{ session.date|date:'G:i' }}</td>
-                                    <td>{{ session.movie.name }}</td>
+                                    <td class="text-left">{{ session.movie.name }}</td>
                                     <td>{{ session.hall.number }}</td>
                                     <td>{{ session.price|floatformat }}</td>
+                                    <td class="justify-content-center">
+                                        <a href="{% url 'booking' session_pk=session.id %}" style="text-decoration: none">
+                                            <img src="{% static 'movie/logos/ticket.png' %}" height="15px" width="15px">
+                                        </a>
+                                    </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}

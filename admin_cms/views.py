@@ -753,7 +753,7 @@ def user_update(request, pk):
 
             return render(request, 'admin_cms/user_change_form.html', context=context)
 
-        except:
+        except Exception as e:
             return redirect('users')
 
     return HttpResponseForbidden()

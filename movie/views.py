@@ -1,19 +1,19 @@
-import datetime
 import json
 
 from django.core.serializers import serialize
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from cinema.views import header_data
 from .models import *
+from user.models import Ticket
 
 
 def movie_detail(request, movie_pk):
 
-    movie = Movie.objects.prefetch_related('gallery__photo_set').get(pk=movie_pk)
+    movie = Movie.objects.prefetch_related('gallery__photo_set', 'session_set').get(pk=movie_pk)
 
     if request.is_ajax():
         if request.GET['type'] != 'all':
@@ -81,7 +81,7 @@ def schedule_view(request):
 
     sessions = Session.objects.select_related('movie', 'hall', 'hall__cinema_id').all().order_by('date')
 
-    # array for further selecting and sorting in template
+    # lists for further selecting and sorting in template
     dates = sorted(set([session.date for session in sessions]))
     cinemas = set([session.hall.cinema_id for session in sessions])
     movies = set([session.movie for session in sessions])
@@ -98,3 +98,29 @@ def schedule_view(request):
     context.update(header_data(request))
 
     return render(request, 'movie/schedule.html', context)
+
+
+def book_tickets_view(request, session_pk):
+    session = Session.objects.select_related('movie', 'hall').prefetch_related('ticket_set', 'ticket_set__user')\
+        .get(pk=session_pk)
+
+    context = {
+        'title': 'KinoCMS | Бронювання та купівля квитків',
+        'session': session,
+        'rows': [number for number in range(1, session.hall.row_amount + 1)],
+        'seats': [number for number in range(1, session.hall.seat_amount + 1)],
+        'booked_seats': [f'{ticket.row_number} {ticket.seat_number}' for ticket in session.ticket_set.all()],
+    }
+    context.update(header_data(request))
+
+    if request.method == 'POST':
+        seat_list = (request.POST['seat_list']).split(';')[:-1]     # last element always is - ''
+
+        for seat_string in seat_list:
+            Ticket.objects.create(session=session,
+                                  user=request.user,
+                                  row_number=int(seat_string[0]),
+                                  seat_number=int(seat_string[2]))
+        return redirect('home')
+
+    return render(request, 'movie/book_ticket.html', context)
