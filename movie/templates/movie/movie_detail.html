@@ -7,7 +7,7 @@
         </iframe>
     </div>
     <div class="row" style="margin-top: 5%;">
-        <h4 class="col-8"><strong>Розклад сеансів кінотеатра: </strong></h4>
+        <h4 class="col-8"><strong>{% trans 'Розклад сеансів кінотеатра:' %} </strong></h4>
         <div class="col-1">
             <button class="btn btn-outline-success type-selector" type="button" value="2D">2D</button>
         </div>
@@ -50,7 +50,7 @@
         </div>
         <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="row justify-content-center" style="padding: 3% 0 3% 0;">
-                <a href="{% url 'booking' session_pk=movie.session_set.first.id %}" class="btn btn-outline-success align-content-center">Купити квиток</a>
+                <a href="{% url 'booking' session_pk=movie.session_set.first.id %}" class="btn btn-outline-success align-content-center">{% trans 'Купити квиток' %}</a>
             </div>
             <div class="row justify-content-center">
                 <h4 class="text-center">{{ movie.name }}</h4>
@@ -68,7 +68,7 @@
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-6"></div>
         <div class="col-sm-12 col-md-12 col-lg-6">
-            <div class="row justify-content-center"><h4 class="text-center">Кадри та постери</h4></div>
+            <div class="row justify-content-center"><h4 class="text-center">{% trans 'Кадри та постери' %}</h4></div>
             <div class="row align-items-center">
                 <div class="col-md-12">
                     <div id="carouselExampleControls" class="carousel slide justify-content-center" data-ride="carousel">
@@ -111,8 +111,8 @@
                     let detailTables = $('#detail-tables');
                     tableSessions.empty();
                     detailTables.empty();
-                    let dateNumbers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat']
-                    let dateMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                    let dateNumbers = ['Нед', 'Пон', 'Вівт', 'Сер', 'Четв', 'П`ятн', 'Суб']
+                    let dateMonths = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
                     for (let i = 0; i < (data['sessions']).length; i++) {
                         let date = parseISOLocal(data['sessions'][i]['fields']['date']);
                         let contentSessionTables = `<table class="table-bordered" style="margin-right: 5%; border: solid black 2px;">

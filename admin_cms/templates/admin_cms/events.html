@@ -1,9 +1,9 @@
 {% extends 'admin_cms/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block content-header %}
-    <h3 class="text-center">Список подій</h3>
-    <a class="btn btn-success float-right" style="margin-right: 3%;" href="{% url 'create_event' %}">Створити подію</a>
+    <h3 class="text-center">{% trans 'Список подій' %}</h3>
+    <a class="btn btn-success float-right" style="margin-right: 3%;" href="{% url 'create_event' %}">{% trans 'Створити подію' %}</a>
 {% endblock %}
 
 {% block content %}
@@ -12,31 +12,28 @@
             <tbody>
                 <tr>
                     <td>
-                        <strong>Назва</strong>
+                        <strong>{% trans 'Назва' %}</strong>
                     </td>
                     <td>
-                        <strong>Дата створення</strong>
+                        <strong>{% trans 'Дата створення' %}</strong>
                     </td>
                     <td>
-                        <strong>Статус</strong>
+                        <strong>{% trans 'Статус' %}</strong>
                     </td>
                 </tr>
                 {% for event in events %}
                     <tr>
                         <td>
-{#                            <div style="display: none">{{ event.name }}</div>#}
                             {{ event.name }}
                         </td>
                         <td>
-{#                            <div style="display: none">{{ event.created_at }}</div>#}
                             {{ event.created_at|date:"d.m.Y" }}
                         </td>
                         <td>
-{#                             <div style="display: none">{{ event.status }}</div>#}
                             {% if event.status == True %}
-                                ВВІМК
+                                {% trans 'ВВІМК' %}
                                 {% else %}
-                                ВИМК
+                                {% trans 'ВИМК' %}
                             {% endif %}
                         </td>
                         <td style="border: none">
@@ -47,10 +44,6 @@
                                 <img src="{% static 'admin_cms/logos/cancel-button.png' %}"
                                      style="width: 25px; height: 25px;">
                             </a>
-
-                            {% comment %}<div style="display: none">
-                                {{ event.DELETE }}
-                            </div>{% endcomment %}
                         </td>
                     </tr>
                 {% endfor %}

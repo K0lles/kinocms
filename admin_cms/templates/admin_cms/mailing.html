@@ -1,5 +1,5 @@
 {% extends 'admin_cms/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block content %}
 
@@ -9,7 +9,7 @@
             <div class="flex-column">
                 <div class="form-group row">
                     <div class="col-sm-4 col-md-4 col-lg-4">
-                        <label class="col-form-label">Вибрати, кому вислати:</label>
+                        <label class="col-form-label">{% trans 'Вибрати, кому вислати:' %}</label>
                     </div>
                     <div class="form-check form-check-inline col-sm-2">
                         {{ user_data_form.all_users.0 }}
@@ -17,26 +17,26 @@
                     <div class="form-check form-check-inline col-sm-4">
                         {{ user_data_form.all_users.1 }}
                         <button disabled id="choose-users-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#users-window" style="margin-left: 4%">
-                          Вибрати користувачів
+                          {% trans 'Вибрати користувачів' %}
                         </button>
                     </div>
                 </div>
                 <div class="form-group row" style="padding-top: 15px;">
                     <div class="col-6 row">
                         <div class="row col-12" style="margin-bottom: 15px;">
-                            <label class="col-sm-6">Виберіть файл: </label>
+                            <label class="col-sm-6">{% trans 'Виберіть файл:' %} </label>
                             <div class="col-sm-6">
-                                <span class="btn btn-success btn-file"> Завантажити
+                                <span class="btn btn-success btn-file"> {% trans 'Завантажити' %}
                                     {{ user_data_form.file }}
                                 </span>
                             </div>
                         </div>
                         <div class="row col-12" style="margin-bottom: 15px;">
-                            <label class="col-sm-6">Вибраний файл: </label>
-                            <p id="uploaded-html-file" class="col-sm-6">Файлу не вибрано</p>
+                            <label class="col-sm-6">{% trans 'Вибраний файл:' %} </label>
+                            <p id="uploaded-html-file" class="col-sm-6">{% trans 'Файлу не вибрано' %}</p>
                         </div>
                         <div class="row col-12" style="margin-bottom: 15px;">
-                            <label class="col-sm-6">Кількість вибраних користувачів: </label>
+                            <label class="col-sm-6">{% trans 'Кількість вибраних користувачів:' %} </label>
                             <p id="amount-chosen-users" class="col-sm-6">0</p>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Вибір користувачів</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">{% trans 'Вибір користувачів' %}</h5>
                         </div>
                         <div class="modal-body" style="margin-left: 4%;">
                             <div class="row">
@@ -56,10 +56,10 @@
                                     <thead>
                                         <td></td>
                                         <td>Email</td>
-                                        <td>ПІБ</td>
-                                        <td>Псевдонім</td>
-                                        <td>Дата народження</td>
-                                        <td>Місто</td>
+                                        <td>{% trans 'ПІБ' %}</td>
+                                        <td>{% trans 'Псевдонім' %}</td>
+                                        <td>{% trans 'Дата народження' %}</td>
+                                        <td>{% trans 'Місто' %}</td>
                                     </thead>
                                     {% for user in simple_users %}
                                         <tr style="margin-left: 10px;">
@@ -78,15 +78,15 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Закрити</button>
-                            <button type="button" onclick="countChecked()" data-dismiss="modal" data-bs-dismiss="modal" class="btn btn-primary">Вибрати</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">{% trans 'Закрити' %}</button>
+                            <button type="button" onclick="countChecked()" data-dismiss="modal" data-bs-dismiss="modal" class="btn btn-primary">{% trans 'Вибрати' %}</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-8"></div>
-                <div class="col-4"><button type="submit" class="row btn btn-success float-right" style="margin: 0 0 4% 0">Почати розсилку</button></div>
+                <div class="col-4"><button type="submit" class="row btn btn-success float-right" style="margin: 0 0 4% 0">{% trans 'Почати розсилку' %}</button></div>
             </div>
         </form>
 

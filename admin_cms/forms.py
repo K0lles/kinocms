@@ -1,5 +1,6 @@
 from django.forms import modelform_factory, modelformset_factory, ModelForm, CharField, Form, BooleanField, ChoiceField, \
     FileField
+from modeltranslation.forms import TranslationModelForm
 from django.forms.widgets import FileInput, Textarea, TextInput, Select, DateTimeInput, NumberInput, \
     RadioSelect, PasswordInput, CheckboxInput
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
@@ -23,14 +24,20 @@ photo_formset_factory = modelformset_factory(Photo, fields=('photo',), extra=0,
                                              },
                                              can_delete=True)
 
-cinema_form_factory = modelform_factory(Cinema, exclude=('gallery', 'seo'),
-                                        widgets={
-                                            'name': TextInput(attrs={'class': 'form-control'}),
-                                            'description': Textarea(attrs={'class': 'form-control'}),
-                                            'condition': Textarea(attrs={'class': 'form-control'}),
-                                            'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
-                                            'banner_photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
-                                        })
+
+class CinemaForm(TranslationModelForm):
+
+    class Meta:
+        model = Cinema
+        exclude = ('gallery', 'seo')
+        widgets = {
+            'name': TextInput(attrs={'class': 'form-control'}),
+            'description': Textarea(attrs={'class': 'form-control'}),
+            'condition': Textarea(attrs={'class': 'form-control'}),
+            'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
+            'banner_photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
+        }
+
 
 seo_form_factory = modelform_factory(SEO, fields=('url', 'title', 'keyword', 'seo_description'),
                                      widgets={
@@ -40,17 +47,20 @@ seo_form_factory = modelform_factory(SEO, fields=('url', 'title', 'keyword', 'se
                                          'seo_description': Textarea(attrs={'class': 'form-control'})
                                      })
 
-hall_form_factory = modelform_factory(Hall, exclude=('cinema_id', 'gallery', 'created_at', 'row_amount',
-                                                     'seat_amount', 'seo'),
-                                      widgets={
-                                          'number': TextInput(attrs={'class': 'form-control'}),
-                                          'description': Textarea(attrs={'class': 'form-control'}),
-                                          'scheme': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
-                                          'banner_photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'})
-                                      })
+
+class HallForm(TranslationModelForm):
+    class Meta:
+        model = Hall
+        exclude = ('cinema_id', 'gallery', 'created_at', 'row_amount', 'seat_amount', 'seo', )
+        widgets = {
+            'number': TextInput(attrs={'class': 'form-control'}),
+            'description': Textarea(attrs={'class': 'form-control'}),
+            'scheme': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
+            'banner_photo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
+        }
 
 
-class MovieForm(ModelForm):
+class MovieForm(TranslationModelForm):
 
     def __init__(self, *args, **kwargs):
         super(MovieForm, self).__init__(*args, **kwargs)
@@ -67,19 +77,20 @@ class MovieForm(ModelForm):
         exclude = ['gallery', 'seo']
 
 
-movie_form_factory = modelform_factory(Movie, exclude=('gallery', 'seo'),
-                                       widgets={
-                                           'name': TextInput(attrs={'class': 'form-control'})
-                                       })
+class EventForm(TranslationModelForm):
 
-event_form_factory = modelform_factory(Event, exclude=('seo', 'created_at', 'gallery'),
-                                       widgets={
-                                           'name': TextInput(attrs={'class': 'form-control'}),
-                                           'description': Textarea(attrs={'class': 'form-control'}),
-                                           'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
-                                           'url': TextInput(attrs={'class': 'form-control'}),
+    class Meta:
+        model = Event
+        exclude = ('seo', 'created_at', 'gallery'),
 
-                                       })
+        widgets = {
+            'name': TextInput(attrs={'class': 'form-control'}),
+            'description': Textarea(attrs={'class': 'form-control'}),
+            'logo': FileInput(attrs={'onchange': 'loadFile(event, this.id)'}),
+            'url': TextInput(attrs={'class': 'form-control'}),
+
+        }
+
 
 main_page_form_factory = modelform_factory(MainPage, exclude=('seo', 'created_at'),
                                            widgets={
@@ -208,7 +219,7 @@ class UserFormUpdate(ModelForm):
 pages_formset_factory = modelformset_factory(Page, fields=('name', 'created_at', 'status'), extra=0, can_delete=True)
 
 
-class PageCreateForm(ModelForm):
+class PageCreateForm(TranslationModelForm):
     class Meta:
         model = Page
         exclude = ('gallery', 'seo', 'created_at')

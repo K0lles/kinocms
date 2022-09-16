@@ -1,9 +1,9 @@
 {% extends 'admin_cms/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block content-header %}
-    <h3 class="text-center">Список сторінок</h3>
-    <a class="btn btn-success float-right" style="margin-right: 3%;" href="{% url 'page_create' %}">Створити сторінку</a>
+    <h3 class="text-center">{% trans 'Список сторінок' %}</h3>
+    <a class="btn btn-success float-right" style="margin-right: 3%;" href="{% url 'page_create' %}">{% trans 'Створити сторінку' %}</a>
 {% endblock %}
 
 {% block content %}
@@ -12,18 +12,18 @@
             <tbody>
                 <tr>
                     <td>
-                        <strong>Назва</strong>
+                        <strong>{% trans 'Назва' %}</strong>
                     </td>
                     <td>
-                        <strong>Дата створення</strong>
+                        <strong>{% trans 'Дата створення' %}</strong>
                     </td>
                     <td>
-                        <strong>Статус</strong>
+                        <strong>{% trans 'Статус' %}</strong>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Головна сторінка
+                        {% trans 'Головна сторінка' %}
                     </td>
                     <td>
                         {% if main_page %}{{ main_page.created_at|date:"d.m.Y" }}{% endif %}
@@ -31,9 +31,9 @@
                     <td>
                     {% if main_page %}
                         {% if main_page.status == True %}
-                            ВВІМК
+                            {% trans 'ВВІМК' %}
                             {% else %}
-                            ВИМК
+                            {% trans 'ВИМК' %}
                         {% endif %}
                     {% endif %}
                     </td>
@@ -53,9 +53,9 @@
                         </td>
                         <td>
                             {% if page.status == True %}
-                                ВВІМК
+                                {% trans 'ВВІМК' %}
                                 {% else %}
-                                ВИМК
+                                {% trans 'ВИМК' %}
                             {% endif %}
                         </td>
                         <td style="border: none">
@@ -71,13 +71,13 @@
                 {% endfor %}
                 <tr>
                     <td>
-                        Контакти
+                        {% trans 'Контакти' %}
                     </td>
                     <td>
-                        Створення контактів
+                        {% trans 'Створення контактів' %}
                     </td>
                     <td>
-                        ВВІМК
+                        {% trans 'ВВІМК' %}
                     </td>
                     <td style="border: none">
                             <a href="{% url 'contacts_create' %}" style="text-decoration: none;">

@@ -1,5 +1,5 @@
 {% extends 'admin_cms/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block content %}
     <form id="contact-form" action="{% url 'contacts_create' %}" method="POST" enctype="multipart/form-data">
@@ -77,7 +77,7 @@
                                 <img id="{{ contact.logo.auto_id }}-preview"
                                      src="{% if contact.instance.logo %} {{ contact.instance.logo.url }} {% else %} {% static 'admin_cms/logos/empty-photo.png' %} {% endif %}"
                                     class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
-                                <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">Додати
+                                <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">{% trans 'Додати' %}
                                     {{ contact.logo }}
                                 </span>
                                 <button id="{{ contact.logo.auto_id }}-delete" type="button"

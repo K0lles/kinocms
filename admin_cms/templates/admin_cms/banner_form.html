@@ -1,9 +1,9 @@
 {% extends 'admin_cms/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block content %}
 
-    <h3 class="text-center">На головній верх</h3>
+    <h3 class="text-center">{% trans 'На головній верх' %}</h3>
     <div class="container-fluid form-group" style="border: solid black 1px; border-radius: 5px;">
         <form action="{% url 'create_banner' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -31,7 +31,7 @@
                                 <img class="cancel-button-checkbox" style="top:-5%; right: -5%;" onclick="hidePhoto(event, this)"
                                      src="{% static 'admin_cms/logos/cancel-button.png' %}">
                             </div>
-                            <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 38%">Вибрати фото
+                            <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 38%">{% trans 'Вибрати фото' %}
                                 {{ form.photo }}
                             </span>
                             <div class="row" style="margin: 3% 0% 2% 0%">
@@ -56,7 +56,7 @@
                         class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                         <img class="cancel-button" style="top:-5%; right: -5%;" src="{% static 'admin_cms/logos/cancel-button.png' %}">
                     </div>
-                    <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 38%">Вибрати фото
+                    <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 38%">{% trans 'Вибрати фото' %}
                         {{ main_top_photo_formset.empty_form.photo }}
                     </span>
                     <div class="row" style="margin: 3% 0% 2% 0%">
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary row" style="margin: 3px 0 3px 5px;" id="add-more-main_banner" type="button" >Додати фото</button>
+            <button class="btn btn-primary row" style="margin: 3px 0 3px 5px;" id="add-more-main_banner" type="button" >{% trans 'Додати фото' %}</button>
             <div class="row" style="padding: 10px 0 10px 8px;">
                 <div class="col-md-2">{{ main_top_banner_form.turning_speed.label }}</div>
                 <div class="col-md-3">{{ main_top_banner_form.turning_speed }}</div>
@@ -77,13 +77,13 @@
             <div class="row" style="padding: 10px 5px 10px 0">
                 <div class="col-md-11"></div>
                 <div class="col-md-1">
-                    <button type="submit" name="main_top_banner" class="btn btn-primary btn-block">Зберегти</button>
+                    <button type="submit" name="main_top_banner" class="btn btn-primary btn-block">{% trans 'Зберегти' %}</button>
                 </div>
             </div>
         </form>
     </div>
 
-    <h3 class="text-center" style="margin-top: 5%;">Наскрізний банер на задньому фоні</h3>
+    <h3 class="text-center" style="margin-top: 5%;">{% trans 'Наскрізний банер на задньому фоні' %}</h3>
     <div class="flex-column container-fluid form-group" style="border: solid black 1px; border-radius: 5px; margin-bottom: 20px;">
         <form action="{% url 'create_banner' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -112,12 +112,12 @@
                                         {% static 'admin_cms/logos/empty-photo.png' %}
                                         {% endif %}"
                                 class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
-                            <span class="btn btn-primary btn-file" style="margin: 25px 0 0 25px; height: 40px;">Додати
+                            <span class="btn btn-primary btn-file" style="margin: 25px 0 0 25px; height: 40px;">{% trans 'Додати' %}
                                 {{ background_banner_form.photo }}
                             </span>
                             <button id="{{ background_banner_form.photo.id_for_label }}-delete" type="button"
                                     class="btn btn-danger" onclick="removeFile(this)"
-                                    style="height: 40px; margin: 25px 0 0 25px;">Видалити</button>
+                                    style="height: 40px; margin: 25px 0 0 25px;">{% trans 'Видалити' %}</button>
                         </div>
                     </div>
                 </div>
@@ -125,13 +125,13 @@
             <div class="d-flex row" style="padding: 10px 5px 10px 0">
                 <div class="col-md-11"></div>
                 <div class="col-md-1">
-                    <button type="submit" name="background_banner" class="btn btn-primary btn-block">Зберегти</button>
+                    <button type="submit" name="background_banner" class="btn btn-primary btn-block">{% trans 'Зберегти' %}</button>
                 </div>
             </div>
         </form>
     </div>
 
-    <h3 class="text-center" style="margin-top: 5%;">На головній Новини Акції</h3>
+    <h3 class="text-center" style="margin-top: 5%;">{% trans 'На головній Новини Акції' %}</h3>
     <div class="container-fluid form-group" style="border: solid black 1px; border-radius: 5px;">
         <form action="{% url 'create_banner' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -158,7 +158,7 @@
                                 class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                                 <img class="cancel-button-checkbox" onclick="hidePhoto(event, this)" style="top:-5%; right: -5%;" src="{% static 'admin_cms/logos/cancel-button.png' %}">
                             </div>
-                            <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 38%">Вибрати фото
+                            <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 38%">{% trans 'Вибрати фото' %}
                                 {{ form.photo }}
                             </span>
                             <div class="row" style="margin: 3% 0% 2% 0%">
@@ -179,7 +179,7 @@
                         class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                         <img class="cancel-button" style="top:-5%; right: -5%;" src="{% static 'admin_cms/logos/cancel-button.png' %}">
                     </div>
-                    <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 38%">Вибрати фото
+                    <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 38%">{% trans 'Вибрати фото' %}
                         {{ news_banner_formset.empty_form.photo }}
                     </span>
                     <div class="row" style="margin: 3% 0% 2% 0%">
@@ -188,7 +188,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary row" style="margin: 3px 0 3px 5px;" id="add-more-news_banner" type="button" >Додати фото</button>
+            <button class="btn btn-primary row" style="margin: 3px 0 3px 5px;" id="add-more-news_banner" type="button" >{% trans 'Додати фото' %}</button>
             <div class="row" style="padding: 10px 0 10px 8px;">
                 <div class="col-md-2">{{ news_banner_form.turning_speed.label }}</div>
                 <div class="col-md-3">{{ news_banner_form.turning_speed }}</div>
@@ -196,7 +196,7 @@
             <div class="row" style="padding: 10px 5px 10px 0">
                 <div class="col-md-11"></div>
                 <div class="col-md-1">
-                    <button type="submit" name="news_banner" class="btn btn-primary btn-block">Зберегти</button>
+                    <button type="submit" name="news_banner" class="btn btn-primary btn-block">{% trans 'Зберегти' %}</button>
                 </div>
             </div>
         </form>

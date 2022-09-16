@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +48,7 @@
             <li class="nav-item">
               <a class="nav-link" href="#" role="button">
                   <img src="{% static 'admin_cms/logos/admin-logo.png' %}" style="width: 30px; height: 30px;">
-                    Мій кабінет
+                    {% trans 'Мій кабінет' %}
               </a>
             </li>
 
@@ -77,10 +78,10 @@
               <!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'statistics' %}" class="nav-link">
                     <i class="nav-icon fas fa-chart-pie"></i>
                     <p>
-                      Статистика
+                      {% trans 'Статистика' %}
                     </p>
                   </a>
                 </li>
@@ -89,7 +90,7 @@
                 <a href="{% url 'create_banner' %}" class="nav-link">
                   <i class="nav-icon fas fa-photo-video"></i>
                   <p>
-                    Банера | Слайдери
+                    {% trans 'Банера | Слайдери' %}
                   </p>
                 </a>
               </li>
@@ -98,7 +99,7 @@
                 <a href="{% url 'movie' %}" class="nav-link">
                   <i class="nav-icon fas fa-film"></i>
                   <p>
-                    Фільми
+                    {% trans 'Фільми' %}
                   </p>
                 </a>
               </li>
@@ -107,7 +108,7 @@
                 <a href="{% url 'cinema' %}" class="nav-link">
                   <i class="nav-icon fas fa-landmark"></i>
                   <p>
-                    Кінотеатри
+                    {% trans 'Кінотеатри' %}
                   </p>
                 </a>
               </li>
@@ -116,7 +117,7 @@
                 <a href="{% url 'events' %}" class="nav-link">
                   <i class="nav-icon fas fa-newspaper"></i>
                   <p>
-                    Новини
+                    {% trans 'Новини' %}
                   </p>
                 </a>
               </li>
@@ -125,7 +126,7 @@
                 <a href="{% url 'events' %}" class="nav-link">
                   <i class="nav-icon fas fa-calendar-day"></i>
                   <p>
-                    Акції
+                    {% trans 'Акції' %}
                   </p>
                 </a>
               </li>
@@ -134,7 +135,7 @@
                 <a href="{% url 'pages' %}" class="nav-link">
                   <i class="nav-icon fas fa-pager"></i>
                   <p>
-                    Сторінки
+                    {% trans 'Сторінки' %}
                   </p>
                 </a>
               </li>
@@ -143,7 +144,7 @@
                 <a href="{% url 'users' %}" class="nav-link">
                   <i class="nav-icon fas fa-users"></i>
                   <p>
-                    Користувачі
+                    {% trans 'Користувачі' %}
                   </p>
                 </a>
               </li>
@@ -152,7 +153,7 @@
                 <a href="{% url 'mailing' %}" class="nav-link">
                   <i class="nav-icon fas fa-envelope"></i>
                   <p>
-                    Розсилки
+                    {% trans 'Розсилки' %}
                   </p>
                 </a>
               </li>
@@ -170,6 +171,27 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <div class="container-fluid">
+            {% if not language_blocked %}
+                <div class="row">
+                    <div class="col-10"></div>
+                    <div class="col-2>">
+                        <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                            <input name="next" type="hidden" value="{{ redirect_to }}">
+                            <select name="language">
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% get_language_info_list for LANGUAGES as languages %}
+                                {% for language in languages %}
+                                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                        {{ language.name_local }} ({{ language.code }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" value="Go">
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
             {% block content-header %}
 
             {% endblock content-header %}

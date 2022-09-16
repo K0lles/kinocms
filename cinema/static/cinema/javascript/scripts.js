@@ -16,12 +16,10 @@ function formatDate(date) {
 }
 
 function scheduleParse(data) {
-    let dateNumbers = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    let dateMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    let dateNumbers = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П`ятниця', 'Субота']
+    let dateMonths = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
     let schedule = $('#schedule');
     let pathBook = $(location).attr('host') + '/movie/book/';
-    console.log(pathBook)
-    console.log(data['sessions'][0])
     schedule.empty();
     for (let date = 0; date < data['dates'].length; date++) {
         let contentTable = `<div class="row" style="margin-top: 4%;">

@@ -1,5 +1,5 @@
 {% extends 'admin_cms/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block content %}
     <form id="page-form" action="{% url 'update_page' pk=page_form.instance.id %}" method="POST" enctype="multipart/form-data">
@@ -51,17 +51,17 @@
                  style="border: 1px solid red; border-radius: 0.25em; padding: 3px;"
                     {% endif %}>
             <label class="col-sm-2 col-form-label" for="{{ page_form.main_photo.id_for_label }}">
-               Фото верхнього банера
+               {% trans 'Фото верхнього банера' %}
             </label>
             <div class="col-sm-10">
                 <img id="id_main_photo-preview" src="{{ page_form.instance.main_photo.url }}"
                     class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
-                <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">Додати
+                <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">{% trans 'Додати' %}
                     {{ page_form.main_photo }}
                 </span>
                 <button id="{{ page_form.main_photo.id_for_label }}-delete" type="button"
                         class="btn btn-danger" onclick="removeFile(this)"
-                        style="margin: 0% 0% 0% 8%;">Видалити</button>
+                        style="margin: 0% 0% 0% 8%;">{% trans 'Видалити' %}</button>
             </div>
         </div>
                 {% for error in page_form.main_photo.errors %}
@@ -83,7 +83,7 @@
                         <img class="cancel-button-checkbox" alt="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}"
                                         onclick="hidePhoto(event, this)">
                     </div>
-                    <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 5%">Вибрати фото
+                    <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 5%">{% trans 'Вибрати фото' %}
                         {{ form.photo }}
                     </span>
                     <div style="display: none">
@@ -98,11 +98,11 @@
                    class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                    <img class="cancel-button-checkbox" src="{% static 'admin_cms/logos/cancel-button.png' %}">
                </div>
-               <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 5%">Вибрати фото
+               <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 5%">{% trans 'Вибрати фото' %}
                    {{photo_formset.empty_form.photo}}
                </span>
        </div>
-       <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">Додати картинку</button>
+       <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">{% trans 'Додати картинку' %}</button>
 
         <div class="seo-form row" style="padding-top: 3%">
             <div class="col-1">
@@ -167,6 +167,6 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-success" type="submit" style="margin-top: 5%">Зберегти</button>
+        <button class="btn btn-success" type="submit" style="margin-top: 5%">{% trans 'Зберегти' %}</button>
     </form>
 {% endblock %}

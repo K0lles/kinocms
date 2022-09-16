@@ -1,8 +1,8 @@
 {% extends 'admin_cms/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block content-header %}
-    <h4 class="text-center">Користувачі</h4>
+    <h4 class="text-center">{% trans 'Користувачі' %}</h4>
 {% endblock content-header %}
 
 
@@ -11,13 +11,13 @@
         <thead>
             <tr>
                 <td><b>ID</b></td>
-                <td><b>Дата реєстрації</b></td>
-                <td><b>День народження</b></td>
+                <td><b>{% trans 'Дата реєстрації' %}</b></td>
+                <td><b>{% trans 'День народження' %}</b></td>
                 <td><b>E-mail</b></td>
-                <td><b>Телефон</b></td>
-                <td><b>ПІБ</b></td>
-                <td><b>Псевдонім</b></td>
-                <td><b>Місто</b></td>
+                <td><b>{% trans 'Телефон' %}</b></td>
+                <td><b>{% trans 'ПІБ' %}</b></td>
+                <td><b>{% trans 'Псевдонім' %}</b></td>
+                <td><b>{% trans 'Місто' %}</b></td>
                 <td style="border: none;"></td>
             </tr>
         </thead>

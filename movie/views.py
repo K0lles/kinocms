@@ -57,9 +57,9 @@ def schedule_view(request):
                 filters_types = Q(type=types[0]) | Q(type=types[1])
 
         if cinema:
-            filters_cinema = Q(hall__cinema_id__name=cinema)
+            filters_cinema = Q(hall__cinema_id__name_uk=cinema) | Q(hall__cinema_id__name_ru=cinema)
         if movie:
-            filters_movie = Q(movie__name=movie)
+            filters_movie = Q(movie__name_uk=movie) | Q(movie__name_ru=movie)
         if date:
             if len(date) > 1:
                 searching_date = timezone.datetime(int(date[2]), int(date[1]), int(date[0]))

@@ -1,5 +1,5 @@
 {% extends 'admin_cms/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block content %}
     <form id="cinema-form" action="{% url 'page_create' %}" method="post" enctype="multipart/form-data">
@@ -55,12 +55,12 @@
             <div class="col-sm-10">
                 <img id="{{ page_form.main_photo.auto_id }}-preview" src="{% static 'admin_cms/logos/empty-photo.png' %}"
                     class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
-                <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">Додати
+                <span class="btn btn-primary btn-file" style="margin: 0% 0% 0% 8%">{% trans 'Додати' %}
                     {{ page_form.main_photo }}
                 </span>
                 <button id="{{ page_form.main_photo.id_for_label }}-delete" type="button"
                         class="btn btn-danger" onclick="removeFile(this)"
-                        style="margin: 0% 0% 0% 8%;">Видалити</button>
+                        style="margin: 0% 0% 0% 8%;">{% trans 'Видалити' %}</button>
             </div>
             {% for error in page_form.main_photo.errors %}
                     <p style="color: red">{{ error }}</p>
@@ -73,7 +73,7 @@
                                                         {% if page_form.banner_photo.errors %}
                                                      border: 1px solid red; border-radius: 0.25em; padding: 3px;
                                                         {% endif %} ">
-            <label>Галерея картинок</label> <br>
+            <label>{% trans 'Галерея картинок' %}</label> <br>
 
         </div>
         <div id="empty-form" style="display: none; margin: 2% 0% 0% 4%;">
@@ -82,11 +82,11 @@
                 class="img-thumbnail" alt="your image" style="width: 150px; height: 105px;"/>
                 <img class="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}">
             </div>
-            <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 5%">Вибрати фото
+            <span class="btn btn-primary btn-file" style="margin: 10% 0% 0% 5%">{% trans 'Вибрати фото' %}
                 {{ photo_formset.empty_form.photo }}
             </span>
         </div>
-        <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">Додати картинку</button>
+        <button class="btn btn-primary" id="add-more" type="button" style="margin-top: 2%">{% trans 'Додати картинку' %}</button>
 
         <div class="seo-form row" style="padding-top: 3%">
             <div class="col-1">
@@ -154,6 +154,6 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-success" type="submit" style="margin-top: 5%">Створити</button>
+        <button class="btn btn-success" type="submit" style="margin-top: 5%">{% trans 'Створити' %}</button>
     </form>
 {% endblock content %}

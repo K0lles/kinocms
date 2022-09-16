@@ -1,4 +1,5 @@
 {% load  static %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,10 +50,10 @@
             </div>
             <div class="col-sm-12 col-md-1 col-lg-2" style="padding-top: 3%;">
                 {% if user.is_anonymous %}
-                    <a href="{% url 'login' %}" class="btn btn-success" style="margin-left: 15%;">Логін</a>
-                    <a href="{% url 'registration' %}" class="btn btn-info" style="margin-top: 10%;">Зареєструватися</a>
+                    <a href="{% url 'login' %}" class="btn btn-success" style="margin-left: 15%;">{% trans 'Логін' %}</a>
+                    <a href="{% url 'registration' %}" class="btn btn-info" style="margin-top: 10%;"> {% trans 'Зареєструватися' %}</a>
                 {% else %}
-                    <a href="{% url 'logout' %}" class="btn btn-danger">Вийти</a>
+                    <a href="{% url 'logout' %}" class="btn btn-danger">{% trans 'Вийти' %}</a>
                 {% endif %}
             </div>
             <div class="col-sm-2 col-md-3 col-lg-3" style="padding-top: 3%;">
@@ -74,37 +75,53 @@
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="flex-column dark-colour">
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'poster' %}">Афіша</a>
+                                <a class="nav-link" href="{% url 'poster' %}">{% trans 'Афіша' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'schedule' %}">Розклад</a>
+                                <a class="nav-link" href="{% url 'schedule' %}">{% trans 'Розклад' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Незабаром</a>
+                                <a class="nav-link" href="#">{% trans 'Незабаром' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Кінотеатри</a>
+                                <a class="nav-link" href="#">{% trans 'Кінотеатри' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Акції</a>
+                                <a class="nav-link" href="#">{% trans 'Акції' %}</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Про кінотеатр
+                                    {% trans 'Про кінотеатр' %}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Новини</a>
-                                    <a class="dropdown-item" href="#">Реклама</a>
-                                    <a class="dropdown-item" href="#">Кафе</a>
-                                    <a class="dropdown-item" href="#">Мобільні додатки</a>
-                                    <a class="dropdown-item" href="#">Контакти</a>
+                                    <a class="dropdown-item" href="#">{% trans 'Новини' %}</a>
+                                    <a class="dropdown-item" href="#">{% trans 'Реклама' %}</a>
+                                    <a class="dropdown-item" href="#">{% trans 'Кафе' %}</a>
+                                    <a class="dropdown-item" href="#">{% trans 'Мобільні додатки' %}</a>
+                                    <a class="dropdown-item" href="#">{% trans 'Контакти' %}</a>
                                 </div>
                             </li>
                             {% if user.is_superuser %}
                             <li class="nav-item" style="margin-left: 15px;">
-                                <a class="nav-link" href="{% url 'cinema' %}">Адмін панель</a>
+                                <a class="nav-link" href="{% url 'cinema' %}">{% trans 'Адмін панель' %}</a>
                             </li>
                             {% endif %}
+                            <li class="float-right">
+                                <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ redirect_to }}">
+                                    <select name="language">
+                                        {% get_current_language as LANGUAGE_CODE %}
+                                        {% get_available_languages as LANGUAGES %}
+                                        {% get_language_info_list for LANGUAGES as languages %}
+                                        {% for language in languages %}
+                                            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                                {{ language.name_local }} ({{ language.code }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="submit" value="Go">
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -136,7 +153,7 @@
         </div>
 
         <div class="row" style="background-color: white; padding-top: 10%;">
-            <h2 class="" style="margin: 0 auto">Дивіться цього місяця</h2>
+            <h2 class="" style="margin: 0 auto">{% trans 'Дивіться цього місяця' %}</h2>
             <div class="row">
                 <div class="flex-column">
                     {% for session in sessions %}
@@ -159,35 +176,30 @@
         <div class="container text-center text-md-start mt-5">
         <div class="row mt-3">
             <div class="col-md-4 mx-auto mb-4">
-                <p class="text-left">Мобільні додатки</p>
+                <p class="text-left">{% trans 'Мобільні додатки' %}</p>
                 <img class="col-lg-5" src="{% static 'cinema/logos/google-play.png' %}" style="height: 40px; width: 197px;">
                 <img class="col-lg-5" src="{% static 'cinema/logos/app-store.png' %}" style="height: 40px; width: 197px;">
                 <p class="text-left" style="margin-top: 15%;">
-                Розробка сайтів: AVADA-MEDIA
+                {% trans 'Розробка сайтів: AVADA-MEDIA' %}
                 </p>
             </div>
             <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                <h6 class="text-uppercase fw-bold mb-4">Афіша</h6>
-                <p><a href="#" class="text-reset">Розклад</a></p>
-                <p><a href="#" class="text-reset">Незабаром</a></p>
-                <p><a href="#" class="text-reset">Кінотеатри</a></p>
-                <p><a href="#" class="text-reset">Акції</a></p>
+                <h6 class="text-uppercase fw-bold mb-4"> {% trans 'Афіша' %}</h6>
+                <p><a href="#" class="text-reset">{% trans 'Розклад' %}</a></p>
+                <p><a href="#" class="text-reset">{% trans 'Незабаром' %}</a></p>
+                <p><a href="#" class="text-reset">{% trans 'Кінотеатри' %}</a></p>
+                <p><a href="#" class="text-reset">{% trans 'Акції' %}</a></p>
             </div>
             <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-                <h6 class="text-uppercase fw-bold mb-4">Про кінотеатр</h6>
-                <p><a href="#" class="text-reset">Новини</a></p>
-                <p><a href="#" class="text-reset">Реклама</a></p>
-                <p><a href="#" class="text-reset">Кафе-бар</a></p>
-                <p><a href="#" class="text-reset">Контакти</a></p>
+                <h6 class="text-uppercase fw-bold mb-4">{% trans 'Про кінотеатр' %}</h6>
+                <p><a href="#" class="text-reset">{% trans 'Новини' %}</a></p>
+                <p><a href="#" class="text-reset">{% trans 'Реклама' %}</a></p>
+                <p><a href="#" class="text-reset">{% trans 'Кафе-бар' %}</a></p>
+                <p><a href="#" class="text-reset">{% trans 'Контакти' %}</a></p>
             </div>
             <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                 <a href="#"><img class="col-lg-5" src="{% static 'cinema/logos/facebook-icon.png' %}"></a>
                 <a href="#"><img class="col-lg-5" src="{% static 'cinema/logos/twitter-icon.png' %}"></a>
-                {% comment %}<h6 class="text-uppercase fw-bold mb-4">Contact</h6>
-                <p><i class="fas fa-home me-3 text-secondary"></i> New York, NY 10012, US</p>
-                <p><i class="fas fa-envelope me-3 text-secondary"></i> info@example.com</p>
-                <p><i class="fas fa-phone me-3 text-secondary"></i> + 01 234 567 88</p>
-                <p><i class="fas fa-print me-3 text-secondary"></i> + 01 234 567 89</p>{% endcomment %}
             </div>
         </div>
     </div>

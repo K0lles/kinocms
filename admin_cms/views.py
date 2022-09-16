@@ -1,11 +1,52 @@
+from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
+
 from .forms import *
 from event.models import *
 from cinema.models import Cinema
 from user.models import SimpleUser
+from movie.models import *
+
 from django.core.mail import send_mail
+
 from kinocms import settings
+
+
+def statistics_view(request):
+
+    # first chart with sex
+    sex_groups = SimpleUser.objects.all().values('sex').annotate(cnt=Count('sex')).order_by('sex')
+    males = sex_groups[1]['cnt']
+    females = sex_groups[0]['cnt']
+
+    # sessions sorted and counted by dates
+    groups = Session.objects.all().values('date__date').annotate(cnt=Count('date__date')).order_by('date__date')
+    session_dates = [f"{group['date__date'].day}.{group['date__date'].month}.{group['date__date'].year}" for group in groups]
+    session_amount = [group['cnt'] for group in groups]
+
+    # counting sessions by movie
+    movies_and_sessions = Movie.objects.prefetch_related('session_set').all()
+    movie_names = [movie.name for movie in movies_and_sessions]
+    movie_sessions = [movie.session_set.count() for movie in movies_and_sessions]
+
+    # amount users by city
+    city_groups = SimpleUser.objects.all().values('city').annotate(cnt=Count('city')).order_by('city')
+    city_names = [group['city'] for group in city_groups]
+    city_amount = [group['cnt'] for group in city_groups]
+
+    context = {
+        'title': 'KinoCMS | Статистика',
+        'males': males,
+        'females': females,
+        'session_dates': session_dates,
+        'session_amount': session_amount,
+        'movie_names': movie_names,
+        'movie_sessions': movie_sessions,
+        'city_names': city_names,
+        'city_amount': city_amount
+    }
+    return render(request, 'admin_cms/charts.html', context)
 
 
 def cinema_view(request):
@@ -14,12 +55,13 @@ def cinema_view(request):
     context = {
         'title': 'KinoCMS| Список кінотеатрів',
         'cinema_list': cinema_list,
+        'language_blocked': True
     }
     return render(request, 'admin_cms/cinema.html', context=context)
 
 
 def create_cinema(request):
-    cinema_form = cinema_form_factory()
+    cinema_form = CinemaForm()
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
     seo_form = seo_form_factory()
 
@@ -32,7 +74,7 @@ def create_cinema(request):
 
     if request.method == 'POST':
         photo_formset_class = photo_formset_factory(request.POST, request.FILES)
-        cinema_form_class = cinema_form_factory(request.POST, request.FILES)
+        cinema_form_class = CinemaForm(request.POST, request.FILES)
         seo_form_class = seo_form_factory(request.POST)
 
         if cinema_form_class.is_valid() and seo_form_class.is_valid() \
@@ -69,22 +111,10 @@ def update_cinema(request, pk):
     cinema = Cinema.objects.select_related('gallery', 'seo') \
         .prefetch_related('hall_set', 'gallery__photo_set').get(pk=pk)
 
-    # cinema = Cinema.objects.get(pk=pk)
-    # gallery = Gallery.objects.prefetch_related('photo_set').get(pk=cinema.gallery_id)
-    # halls = Hall.objects.filter(cinema_id=cinema)
-    #
-    # cinema_form = cinema_form_factory(instance=cinema)
-    # hall_formset = hall_formset_factory(queryset=halls, prefix='hall')
-    # seo_form = seo_form_factory(instance=cinema.seo)
-    # photo_formset = photo_formset_factory(queryset=gallery.photo_set.all())
-
-    cinema_form = cinema_form_factory(instance=cinema)
+    cinema_form = CinemaForm(instance=cinema)
     hall_formset = hall_formset_factory(queryset=cinema.hall_set.all(), prefix='hall')
     seo_form = seo_form_factory(instance=cinema.seo)
     photo_formset = photo_formset_factory(queryset=cinema.gallery.photo_set.all())
-
-    # print(gallery.photo_set)
-    # print(halls)
 
     context = {
         'cinema_form': cinema_form,
@@ -94,13 +124,9 @@ def update_cinema(request, pk):
     }
 
     if request.method == 'POST':
-        # photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
-        # cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
-        # seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
-        # hall_formset_class = hall_formset_factory(request.POST, queryset=halls, prefix='hall')
         photo_formset_class = photo_formset_factory(request.POST, request.FILES,
                                                     queryset=cinema.gallery.photo_set.all())
-        cinema_form_class = cinema_form_factory(request.POST, request.FILES, instance=cinema)
+        cinema_form_class = CinemaForm(request.POST, request.FILES, instance=cinema)
         seo_form_class = seo_form_factory(request.POST, instance=cinema.seo)
         hall_formset_class = hall_formset_factory(request.POST, queryset=cinema.hall_set.all(), prefix='hall')
 
@@ -138,8 +164,6 @@ def delete_cinema(request, pk):
     try:
         cinema_to_delete = Cinema.objects.select_related('seo', 'gallery') \
             .prefetch_related('hall_set', 'hall_set__seo', 'hall_set__gallery').get(pk=pk)
-        # cinema_to_delete = Cinema.objects.get(pk=pk)
-        # halls = Hall.objects.filter(cinema_id=cinema_to_delete)
 
         # deleting all related objects to Cinema
         for hall in cinema_to_delete.hall_set.all():
@@ -153,22 +177,15 @@ def delete_cinema(request, pk):
 
     finally:
         return redirect('cinema')
-        # cinema_list = Cinema.objects.all().values('id', 'name', 'logo')
-        # context = {
-        #     'cinema_list': cinema_list,
-        #     'title': 'KinoCMS| Список кінотеатрів',
-        # }
-        #
-        # return render(request, 'admin_cms/cinema.html', context=context)
 
 
 def create_hall(request, cinema_pk):
-    hall_form = hall_form_factory()
+    hall_form = HallForm()
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
     seo_form = seo_form_factory()
 
     if request.method == 'POST':
-        hall_form = hall_form_factory(request.POST, request.FILES or None)
+        hall_form = HallForm(request.POST, request.FILES or None)
         photo_formset = photo_formset_factory(request.POST, request.FILES or None)
         seo_form = seo_form_factory(request.POST)
 
@@ -204,10 +221,8 @@ def create_hall(request, cinema_pk):
 
 
 def update_hall(request, hall_pk):
-    # hall = Hall.objects.get(pk=hall_pk)
-    # gallery = Gallery.objects.prefetch_related('photo_set').get(pk=hall.gallery.pk)
     hall = Hall.objects.select_related('seo', 'gallery').prefetch_related('gallery__photo_set').get(pk=hall_pk)
-    hall_form = hall_form_factory(instance=hall)
+    hall_form = HallForm(instance=hall)
     seo_form = seo_form_factory(instance=hall.seo)
     photo_formset = photo_formset_factory(queryset=hall.gallery.photo_set.all())
 
@@ -219,9 +234,8 @@ def update_hall(request, hall_pk):
     }
 
     if request.method == "POST":
-        hall_form = hall_form_factory(request.POST, request.FILES, instance=hall)
+        hall_form = HallForm(request.POST, request.FILES, instance=hall)
         seo_form = seo_form_factory(request.POST, instance=hall.seo)
-        # photo_formset = photo_formset_factory(request.POST, request.FILES, queryset=gallery.photo_set.all())
         photo_formset = photo_formset_factory(request.POST, request.FILES, queryset=hall.gallery.photo_set.all())
 
         if hall_form.is_valid() and seo_form.is_valid() and photo_formset.is_valid() \
@@ -255,7 +269,8 @@ def movie_view(request):
 
     context = {
         'movies': movies,
-        'title': 'KinoCMS | Фільми'
+        'title': 'KinoCMS | Фільми',
+        'language_blocked': True
     }
 
     return render(request, 'admin_cms/movies.html', context=context)
@@ -284,7 +299,6 @@ def create_movie(request):
             new_seo = seo_form_class.save()
             movie_url = movie_form_class.cleaned_data.get('trailer_url')
             movie_url = movie_url.replace('watch?v=', 'embed/') + '?autoplay=1&mute=1'
-            print(movie_url)
             movie_saved = movie_form_class.save(commit=False)
             movie_saved.gallery = new_gallery
             movie_saved.seo = new_seo
@@ -307,7 +321,6 @@ def create_movie(request):
 
 
 def update_movie(request, pk):
-    # movie = Movie.objects.select_related('gallery', 'seo').get(pk=pk)
     movie = Movie.objects.select_related('gallery', 'seo').prefetch_related('gallery__photo_set').get(pk=pk)
     movie_form = MovieForm(instance=movie)
     seo_form = seo_form_factory(instance=movie.seo)
@@ -351,14 +364,15 @@ def event_view(request):
 
     context = {
         'events': events,
-        'title': 'KinoCMS | Події'
+        'title': 'KinoCMS | Події',
+        'language_blocked': True
     }
 
     return render(request, 'admin_cms/events.html', context=context)
 
 
 def event_create(request):
-    event_form = event_form_factory()
+    event_form = EventForm()
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
     seo_form = seo_form_factory()
 
@@ -370,7 +384,7 @@ def event_create(request):
     }
 
     if request.method == 'POST':
-        event_form_class = event_form_factory(request.POST, request.FILES or None)
+        event_form_class = EventForm(request.POST, request.FILES or None)
         photo_formset_class = photo_formset_factory(request.POST, request.FILES or None)
         seo_form_class = seo_form_factory(request.POST)
 
@@ -400,7 +414,7 @@ def event_create(request):
 
 def update_event(request, pk):
     event_record = Event.objects.select_related('seo').prefetch_related('gallery__photo_set').get(pk=pk)
-    event_form = event_form_factory(instance=event_record)
+    event_form = EventForm(instance=event_record)
     photo_formset = photo_formset_factory(queryset=event_record.gallery.photo_set.all())
     seo_form = seo_form_factory(instance=event_record.seo)
 
@@ -412,7 +426,7 @@ def update_event(request, pk):
     }
 
     if request.method == 'POST':
-        event_form_class = event_form_factory(request.POST, request.FILES, instance=event_record)
+        event_form_class = EventForm(request.POST, request.FILES, instance=event_record)
         seo_form_class = seo_form_factory(request.POST, instance=event_record.seo)
         photo_formset_class = photo_formset_factory(request.POST, request.FILES, queryset=event_record.gallery.photo_set.all())
 
@@ -469,7 +483,8 @@ def create_banner(request):
         'background_banner_form': background_banner_form,
         'news_banner_form': news_banner_form,
         'news_banner_formset': news_banner_formset,
-        'title': 'KinoCMS | Створення банерів'
+        'title': 'KinoCMS | Створення банерів',
+        'language_blocked': True
     }
 
     if request.method == 'POST':
@@ -555,7 +570,8 @@ def main_page_create_update(request):
     context = {
         'main_page': main_page,
         'seo_form': seo_form,
-        'title': 'KinoCMS | Створення головної сторінки'
+        'title': 'KinoCMS | Створення головної сторінки',
+        'language_blocked': True
     }
     if request.method == 'POST':
         main_page = main_page_form_factory(request.POST, instance=main_page_record)
@@ -583,6 +599,7 @@ def contact_page_create(request):
     context = {
         'have_records': True if contact_records else False,
         'contact_formset': contact_formset,
+        'language_blocked': True
     }
 
     if request.method == 'POST':
@@ -606,7 +623,8 @@ def page_view(request):
     context = {
         'main_page': main_page,
         'pages': pages,
-        'title': 'KinoCMS | Сторінки'
+        'title': 'KinoCMS | Сторінки',
+        'language_blocked': True
     }
 
     return render(request, 'admin_cms/pages.html', context=context)
@@ -712,7 +730,8 @@ def users(request):
 
     context = {
         'title': 'KinoCMS | Користувачі',
-        'users': simple_users
+        'users': simple_users,
+        'language_blocked': True
     }
     return render(request, 'admin_cms/users.html', context=context)
 
@@ -724,7 +743,8 @@ def user_update(request, pk):
             simple_user = UserFormUpdate(instance=simple_user_instance)
             context = {
                 'simple_user': simple_user,
-                'title': 'KinoCMS | Редагування користувача'
+                'title': 'KinoCMS | Редагування користувача',
+                'language_blocked': True
             }
             if request.method == 'POST':
                 simple_user_class = UserFormUpdate(request.POST, instance=simple_user_instance)
@@ -747,7 +767,8 @@ def user_update(request, pk):
                     return redirect('users')
                 context = {
                     'simple_user': simple_user_class,
-                    'title': 'KinoCMS | Редагування користувача'
+                    'title': 'KinoCMS | Редагування користувача',
+                    'language_blocked': True
                 }
                 return render(request, 'admin_cms/user_change_form.html', context=context)
 
@@ -776,19 +797,22 @@ def send_email_view(request):
     context = {
         'title': 'KinoCMS | Розсилка',
         'simple_users': simple_users,
-        'user_data_form': user_data_form
+        'user_data_form': user_data_form,
+        'language_blocked': True
     }
 
     if request.method == 'POST':
         user_data_form_class = SendMail(request.POST, request.FILES)
-        print(user_data_form_class.data, '\n\n\n')
 
         if user_data_form_class.is_valid():
 
             file = request.FILES['file'].read().decode('utf-8')
 
             if user_data_form_class.cleaned_data.get('all_users') == 'True':
-                send_mail('Розсилка з KinoCMS', file, settings.EMAIL_HOST_USER, ['oleksijkolotilo63@gmail.com'])
+                send_mail('Розсилка з KinoCMS',
+                          file,
+                          settings.EMAIL_HOST_USER,
+                          [simple_user.email for simple_user in SimpleUser.objects.all()])
 
             elif user_data_form_class.cleaned_data.get('all_users') == 'False':
                 user_list = user_data_form_class.data.getlist('send_to_current_user')
