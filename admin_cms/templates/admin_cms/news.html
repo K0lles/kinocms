@@ -1,0 +1,53 @@
+{% extends 'admin_cms/base.html' %}
+{% load static i18n %}
+
+{% block content-header %}
+    <h3 class="text-center">{% trans 'Список подій' %}</h3>
+    <a class="btn btn-success float-right" style="margin-right: 3%;" href="{% url 'create_news' %}">{% trans 'Створити новину' %}</a>
+{% endblock %}
+
+{% block content %}
+    <div class="list" id="table-list">
+        <table class="table table-bordered" border="1" style="margin-top: 4%;">
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>{% trans 'Назва' %}</strong>
+                    </td>
+                    <td>
+                        <strong>{% trans 'Дата створення' %}</strong>
+                    </td>
+                    <td>
+                        <strong>{% trans 'Статус' %}</strong>
+                    </td>
+                </tr>
+                {% for news in news_list %}
+                    <tr>
+                        <td>
+                            {{ news.name }}
+                        </td>
+                        <td>
+                            {{ news.created_at|date:"d.m.Y" }}
+                        </td>
+                        <td>
+                            {% if news.status == True %}
+                                {% trans 'ВВІМК' %}
+                                {% else %}
+                                {% trans 'ВИМК' %}
+                            {% endif %}
+                        </td>
+                        <td style="border: none">
+                            <a href="{% url 'update_event' pk=news.id %}" style="text-decoration: none;">
+                                <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                            </a>
+                            <a href="{% url 'delete_event' pk=news.id %}">
+                                <img src="{% static 'admin_cms/logos/cancel-button.png' %}"
+                                     style="width: 25px; height: 25px;">
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

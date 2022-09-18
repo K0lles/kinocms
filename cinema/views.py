@@ -1,11 +1,10 @@
-from django.db.models import Q
-import json
-from django.core.serializers import serialize
+from django.db.models import Count
 from django.shortcuts import render
+
 from banner.models import *
 from movie.models import *
 from page.models import *
-from django.http import JsonResponse
+from .models import *
 
 
 def header_data(request):
@@ -46,3 +45,42 @@ def poster_view(request):
     context.update(header_data(request))
 
     return render(request, 'cinema/poster.html', context=context)
+
+
+def cinema_view(request):
+    cinemas = Cinema.objects.all()
+
+    context = {
+        'title': 'KinoCMS | Кінотеатри',
+        'cinemas': cinemas
+    }
+    context.update(header_data(request))
+
+    return render(request, 'cinema/cinema_view.html', context)
+
+
+def cinema_detail(request, cinema_pk):
+    cinema = Cinema.objects.prefetch_related('hall_set',
+                                             'hall_set__session_set',
+                                             'hall_set__session_set__movie',
+                                             'gallery__photo_set').get(pk=cinema_pk)
+
+    context = {
+        'title': 'KinoCMS | Огляд кінотеатру',
+        'cinema': cinema,
+    }
+    context.update(header_data(request))
+
+    return render(request, 'cinema/cinema_detail.html', context)
+
+
+def hall_detail(request, hall_pk):
+    hall = Hall.objects.prefetch_related('gallery__photo_set', 'session_set', 'session_set__movie').get(pk=hall_pk)
+
+    context = {
+        'title': 'KinoCMS | Зал',
+        'hall': hall
+    }
+    context.update(header_data(request))
+
+    return render(request, 'cinema/hall_detail.html', context)

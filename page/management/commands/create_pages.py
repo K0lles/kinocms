@@ -18,6 +18,7 @@ class Command(BaseCommand):
                                     seo_text='Main page was created',
                                     seo=seo)
 
+        types = ['about_cinema', 'cafe_bar', 'vip_hall', 'baby_room', 'advertisment']
         for index, name in enumerate(['Про кінотеатр', 'Кафе-бар', 'Vip-зал', 'Дитяча кімната', 'Реклама']):
 
             seo = SEO.objects.create(url='https://pages.com',
@@ -32,7 +33,8 @@ class Command(BaseCommand):
                                 description=f'{name} description',
                                 main_photo=f'static_preload/preload_pages/{index}.jpg',
                                 gallery=gallery,
-                                seo=seo
+                                seo=seo,
+                                type=types[index]
                                 )
 
 

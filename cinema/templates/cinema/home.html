@@ -81,24 +81,26 @@
                                 <a class="nav-link" href="{% url 'schedule' %}">{% trans 'Розклад' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">{% trans 'Незабаром' %}</a>
+                                <a class="nav-link" href="{% url 'poster' %}">{% trans 'Незабаром' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">{% trans 'Кінотеатри' %}</a>
+                                <a class="nav-link" href="{% url 'cinema_view' %}">{% trans 'Кінотеатри' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">{% trans 'Акції' %}</a>
+                                <a class="nav-link" href="{% url 'event_view' %}">{% trans 'Акції' %}</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     {% trans 'Про кінотеатр' %}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">{% trans 'Новини' %}</a>
-                                    <a class="dropdown-item" href="#">{% trans 'Реклама' %}</a>
-                                    <a class="dropdown-item" href="#">{% trans 'Кафе' %}</a>
-                                    <a class="dropdown-item" href="#">{% trans 'Мобільні додатки' %}</a>
-                                    <a class="dropdown-item" href="#">{% trans 'Контакти' %}</a>
+                                    <a class="dropdown-item" href="{% url 'news_view' %}">{% trans 'Новини' %}</a>
+                                    <a class="dropdown-item" href="{% url 'advertisment_view' %}">{% trans 'Реклама' %}</a>
+                                    <a class="dropdown-item" href="{% url 'cafe_bar_detail' %}">{% trans 'Кафе' %}</a>
+                                    <a class="dropdown-item" href="{% url 'vip_hall_view' %}">Vip-зал</a>
+                                    <a class="dropdown-item" href="{% url 'baby_room_view' %}">{% trans 'Дитяча кімната' %}</a>
+                                    <a class="dropdown-item" href="{% url 'mobile_applications' %}">{% trans 'Мобільні додатки' %}</a>
+                                    <a class="dropdown-item" href="{% url 'contacts_view' %}">{% trans 'Контакти' %}</a>
                                 </div>
                             </li>
                             {% if user.is_superuser %}
@@ -160,6 +162,7 @@
                         <div style="display: inline-block; margin: 5px 0 5px 5%">
                             <img src="{{ session.movie.main_photo.url }}" style="width: 300px; height: 300px;">
                             <p class="lead text-center" style="font-size: 150%;"><strong>{{ session.movie.name }}</strong></p>
+                            <a href="{% url 'booking' session_pk=session.pk %}" class="btn btn-success col-12">{% trans 'Купити квиток' %}</a>
                         </div>
                     {% endfor %}
                 </div>

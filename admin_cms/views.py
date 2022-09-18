@@ -359,18 +359,63 @@ def update_movie(request, pk):
     return render(request, 'admin_cms/movie_change_form.html', context=context)
 
 
-def event_view(request):
-    events = Event.objects.all()
+# separate creator for news
+def news_create(request):
+    news_form = EventForm()
+    photo_formset = photo_formset_factory(queryset=Photo.objects.none())
+    seo_form = seo_form_factory()
 
     context = {
-        'events': events,
-        'title': 'KinoCMS | Події',
+        'title': 'KinoCMS | Створення новини',
+        'news_form': news_form,
+        'photo_formset': photo_formset,
+        'seo_form': seo_form
+    }
+
+    if request.method == 'POST':
+        news_form_class = EventForm(request.POST, request.FILES or None)
+        photo_formset_class = photo_formset_factory(request.POST, request.FILES or None)
+        seo_form_class = seo_form_factory(request.POST)
+
+        if news_form_class.is_valid() and all([form.is_valid() for form in photo_formset_class]) \
+                and seo_form_class.is_valid():
+            new_gallery = Gallery.objects.create(name=news_form_class.cleaned_data.get('name'))
+            new_seo = seo_form_class.save()
+            news_saved = news_form_class.save(commit=False)
+            news_saved.gallery = new_gallery
+            news_saved.type = 'news'
+            news_saved.seo = new_seo
+            news_saved.save()
+
+            for photo in photo_formset_class:
+                if photo.cleaned_data.get('photo'):
+                    photo_saved = photo.save(commit=False)
+                    photo_saved.gallery = new_gallery
+                    photo_saved.save()
+
+            return redirect('news')
+
+        context['news_form'] = news_form_class
+        context['photo_formset'] = photo_formset_class
+        context['seo_form'] = seo_form_class
+
+    return render(request, 'admin_cms/news_form.html', context=context)
+
+
+# separate viewer for news
+def news_view(request):
+    news = Event.objects.filter(type='news')
+
+    context = {
+        'news_list': news,
+        'title': 'KinoCMS | Новини',
         'language_blocked': True
     }
 
-    return render(request, 'admin_cms/events.html', context=context)
+    return render(request, 'admin_cms/news.html', context=context)
 
 
+# separate creator for events
 def event_create(request):
     event_form = EventForm()
     photo_formset = photo_formset_factory(queryset=Photo.objects.none())
@@ -394,6 +439,7 @@ def event_create(request):
             new_seo = seo_form_class.save()
             event_saved = event_form_class.save(commit=False)
             event_saved.gallery = new_gallery
+            event_saved.type = 'event'
             event_saved.seo = new_seo
             event_saved.save()
 
@@ -412,6 +458,20 @@ def event_create(request):
     return render(request, 'admin_cms/event_form.html', context=context)
 
 
+# separate viewer for events
+def event_view(request):
+    events = Event.objects.filter(type='event')
+
+    context = {
+        'events': events,
+        'title': 'KinoCMS | Події',
+        'language_blocked': True
+    }
+
+    return render(request, 'admin_cms/events.html', context=context)
+
+
+# common editor for news and events
 def update_event(request, pk):
     event_record = Event.objects.select_related('seo').prefetch_related('gallery__photo_set').get(pk=pk)
     event_form = EventForm(instance=event_record)
@@ -452,6 +512,7 @@ def update_event(request, pk):
     return render(request, 'admin_cms/event_change_form.html', context=context)
 
 
+# common deleter for news and events
 def delete_event(request, pk):
     event_to_delete = Event.objects.get(pk=pk)
     event_to_delete.gallery.delete()
@@ -618,10 +679,20 @@ def contact_page_create(request):
 
 def page_view(request):
     main_page = MainPage.objects.first()
-    pages = Page.objects.all()
+    about_cinema = Page.objects.get(type='about_cinema')
+    cafe_bar = Page.objects.get(type='cafe_bar')
+    vip_hall = Page.objects.get(type='vip_hall')
+    advertisment = Page.objects.get(type='advertisment')
+    baby_room = Page.objects.get(type='baby_room')
+    pages = Page.objects.filter(type=None)
 
     context = {
         'main_page': main_page,
+        'about_cinema': about_cinema,
+        'cafe_bar': cafe_bar,
+        'vip_hall': vip_hall,
+        'advertisment': advertisment,
+        'baby_room': baby_room,
         'pages': pages,
         'title': 'KinoCMS | Сторінки',
         'language_blocked': True
@@ -717,6 +788,10 @@ def update_page(request, pk):
 def delete_page(request, pk):
     try:
         page = Page.objects.get(pk=pk)
+
+        if page.type:
+            return HttpResponseForbidden()
+
         page.gallery.delete()
         page.seo.delete()
         page.delete()

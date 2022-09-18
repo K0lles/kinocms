@@ -43,6 +43,106 @@
                         </a>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        {% trans 'Про кінотеатр' %}
+                    </td>
+                    <td>
+                        {{ about_cinema.created_at|date:"d.m.Y" }}
+                    </td>
+                    <td>
+                        {% if about_cinema.status == True %}
+                            {% trans 'ВВІМК' %}
+                            {% else %}
+                            {% trans 'ВИМК' %}
+                        {% endif %}
+                    </td>
+                    <td style="border: none">
+                        <a href="{% url 'update_page' pk=about_cinema.id %}" style="text-decoration: none;">
+                            <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {% trans 'Кафе-бар' %}
+                    </td>
+                    <td>
+                        {{ cafe_bar.created_at|date:"d.m.Y" }}
+                    </td>
+                    <td>
+                        {% if cafe_bar.status == True %}
+                            {% trans 'ВВІМК' %}
+                            {% else %}
+                            {% trans 'ВИМК' %}
+                        {% endif %}
+                    </td>
+                    <td style="border: none">
+                        <a href="{% url 'update_page' pk=cafe_bar.id %}" style="text-decoration: none;">
+                            <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {% trans 'Vip-зал' %}
+                    </td>
+                    <td>
+                        {{ vip_hall.created_at|date:"d.m.Y" }}
+                    </td>
+                    <td>
+                        {% if vip_hall.status == True %}
+                            {% trans 'ВВІМК' %}
+                            {% else %}
+                            {% trans 'ВИМК' %}
+                        {% endif %}
+                    </td>
+                    <td style="border: none">
+                        <a href="{% url 'update_page' pk=vip_hall.id %}" style="text-decoration: none;">
+                            <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {% trans 'Реклама' %}
+                    </td>
+                    <td>
+                        {{ advertisment.created_at|date:"d.m.Y" }}
+                    </td>
+                    <td>
+                        {% if advertisment.status == True %}
+                            {% trans 'ВВІМК' %}
+                            {% else %}
+                            {% trans 'ВИМК' %}
+                        {% endif %}
+                    </td>
+                    <td style="border: none">
+                        <a href="{% url 'update_page' pk=advertisment.id %}" style="text-decoration: none;">
+                            <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {% trans 'Дитяча кімната' %}
+                    </td>
+                    <td>
+                        {{ baby_room.created_at|date:"d.m.Y" }}
+                    </td>
+                    <td>
+                        {% if baby_room.status == True %}
+                            {% trans 'ВВІМК' %}
+                            {% else %}
+                            {% trans 'ВИМК' %}
+                        {% endif %}
+                    </td>
+                    <td style="border: none">
+                        <a href="{% url 'update_page' pk=baby_room.id %}" style="text-decoration: none;">
+                            <img src="{% static 'admin_cms/logos/pencil.png' %}" style="width: 25px; height: 25px;">
+                        </a>
+                    </td>
+                </tr>
                 {% for page in pages %}
                     <tr>
                         <td>

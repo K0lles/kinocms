@@ -81,8 +81,7 @@ class EventForm(TranslationModelForm):
 
     class Meta:
         model = Event
-        exclude = ('seo', 'created_at', 'gallery'),
-
+        exclude = ('seo', 'created_at', 'gallery', 'type')
         widgets = {
             'name': TextInput(attrs={'class': 'form-control'}),
             'description': Textarea(attrs={'class': 'form-control'}),
@@ -222,7 +221,7 @@ pages_formset_factory = modelformset_factory(Page, fields=('name', 'created_at',
 class PageCreateForm(TranslationModelForm):
     class Meta:
         model = Page
-        exclude = ('gallery', 'seo', 'created_at')
+        exclude = ('gallery', 'seo', 'created_at', 'type')
         widgets = {
             'name': TextInput(attrs={'class': 'form-control'}),
             'description': Textarea(attrs={'class': 'form-control'}),

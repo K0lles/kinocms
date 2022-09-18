@@ -22,5 +22,5 @@ class Command(BaseCommand):
 
                 pages.delete()
 
-            except:
+            except Exception as e:
                 pass
