@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.forms import CharField, Form, EmailField
 from django.forms.widgets import RadioSelect, NumberInput, TextInput, PasswordInput
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
+from django.utils.translation import gettext as _
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -39,10 +41,10 @@ class UserRegistrationForm(UserCreationForm):
         card_number = cleaned_data.get('card_number')
 
         if len(card_number) < 16 or not card_number.isnumeric():
-            self.add_error('card_number', 'Incorrect card number. Check it writing!')
+            self.add_error('card_number', 'Неправильно введений номер карти. Перевірте правильність написання!')
 
         if password != confirm_password:
-            self.add_error('password', 'Passwords must match. Check it writing!')
+            self.add_error('password', _('Паролі повинні співпадати!. Перевірте правильність написання!'))
 
         return cleaned_data
 
@@ -57,3 +59,23 @@ class UserRegistrationForm(UserCreationForm):
 class UserLoginForm(Form):
     email = EmailField(max_length=200, widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'E-mail'}))
     password = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}))
+
+
+class UserChangePasswordForm(Form):
+    email = EmailField(max_length=200, widget=TextInput(attrs={'class': 'form-control', 'placeholder': "E-mail"}))
+    alias = CharField(max_length=200, widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Псевдонім"}))
+    password = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть новий пароль'}))
+    password1 = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повторіть новий пароль'}))
+
+    def clean(self):
+        cleaned_data = super(UserChangePasswordForm, self).clean()
+        try:
+            simple_user = SimpleUser.objects.get(email=cleaned_data.get('email'), alias=cleaned_data.get('alias'))
+        except ObjectDoesNotExist:
+            self.add_error('email', _('Перевірте правильність даних'))
+            return cleaned_data
+
+        if cleaned_data.get('password') != cleaned_data.get('password1'):
+            self.add_error('password', _('Паролі повинні співпадати!. Перевірте правильність написання!'))
+
+        return cleaned_data

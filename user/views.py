@@ -64,6 +64,31 @@ def login_in(request):
     return redirect('home')
 
 
+def change_password(request):
+    change_password_form = UserChangePasswordForm()
+
+    context = {
+        'title': 'KinoCMS | Зміна пароля',
+        'change_password_form': change_password_form
+    }
+
+    if request.method == 'POST':
+        change_password_form_class = UserChangePasswordForm(request.POST)
+
+        if change_password_form_class.is_valid():
+            simple_user = SimpleUser.objects.get(email=change_password_form_class.cleaned_data.get('email'),
+                                                 alias=change_password_form_class.cleaned_data.get('alias'))
+
+            simple_user.set_password(change_password_form_class.cleaned_data.get('password'))
+            simple_user.save()
+
+            return redirect('home')
+
+        context['change_password_form'] = change_password_form_class
+
+    return render(request, 'user/change_password.html', context)
+
+
 def log_out(request):
     logout(request)
     return HttpResponseRedirect(reverse('home'))

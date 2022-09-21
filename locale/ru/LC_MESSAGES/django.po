@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-18 23:36+0300\n"
+"POT-Creation-Date: 2022-09-21 17:48+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -564,3 +564,11 @@ msgstr "Зал"
 #: movie/templates/movie/schedule.html:68
 msgid "Ціна"
 msgstr "Цена"
+
+#: user/forms.py:47 user/forms.py:79
+msgid "Паролі повинні співпадати!. Перевірте правильність написання!"
+msgstr "Пароли должны совпадать! Проверьте написание!"
+
+#: user/forms.py:75
+msgid "Перевірте правильність даних"
+msgstr "Проверьте верность данных"
