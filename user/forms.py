@@ -5,6 +5,7 @@ from django.forms.widgets import RadioSelect, NumberInput, TextInput, PasswordIn
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.password_validation import validate_password
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -46,6 +47,8 @@ class UserRegistrationForm(UserCreationForm):
         if password != confirm_password:
             self.add_error('password', _('Паролі повинні співпадати!. Перевірте правильність написання!'))
 
+        validate_password(password)
+
         return cleaned_data
 
     def save(self, commit=True):
@@ -58,13 +61,15 @@ class UserRegistrationForm(UserCreationForm):
 
 class UserLoginForm(Form):
     email = EmailField(max_length=200, widget=TextInput(attrs={'class': 'form-control', 'placeholder': 'E-mail'}))
-    password = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}))
+    password = CharField(max_length=200,
+                         widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}))
 
 
 class UserChangePasswordForm(Form):
     email = EmailField(max_length=200, widget=TextInput(attrs={'class': 'form-control', 'placeholder': "E-mail"}))
     alias = CharField(max_length=200, widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Псевдонім"}))
-    password = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть новий пароль'}))
+    password = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть новий пароль'}),
+                         validators=[validate_password])
     password1 = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повторіть новий пароль'}))
 
     def clean(self):

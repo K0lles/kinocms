@@ -5,7 +5,7 @@ from .models import *
 
 
 def event_view(request):
-    events = Event.objects.filter(type='event')
+    events = Event.objects.filter(type='event', status=True)
 
     context = {
         'title': 'KinoCMS | Акції',
@@ -29,7 +29,7 @@ def event_detail(request, event_pk):
 
 
 def news_view(request):
-    news = Event.objects.filter(type='news')
+    news = Event.objects.filter(type='news', status=True)
 
     context = {
         'title': 'KinoCMS | Новини',

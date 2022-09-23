@@ -1,12 +1,13 @@
 from django.db.models import Count
 from django.shortcuts import render, redirect
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 
 from .forms import *
 from event.models import *
 from cinema.models import Cinema
 from user.models import SimpleUser
 from movie.models import *
+from .models import MailFile
 
 from django.core.mail import send_mail
 
@@ -826,7 +827,7 @@ def user_update(request, pk):
                 if simple_user_class.is_valid():
 
                     # saving old password for occasion if new password not entered
-                    old_password = SimpleUser.objects.get(email=simple_user_class.cleaned_data.get('email')).password
+                    old_password = SimpleUser.objects.get(pk=pk).password
 
                     new_password = simple_user_class.cleaned_data.get('password')
                     user_saved = simple_user_class.save()
@@ -849,7 +850,7 @@ def user_update(request, pk):
 
             return render(request, 'admin_cms/user_change_form.html', context=context)
 
-        except Exception as e:
+        except:
             return redirect('users')
 
     return HttpResponseForbidden()
@@ -868,12 +869,14 @@ def user_delete(request, pk):
 def send_email_view(request):
     simple_users = SimpleUser.objects.all()
     user_data_form = SendMail()
+    files = MailFile.objects.all().order_by('-created_at')[:5]
 
     context = {
         'title': 'KinoCMS | Розсилка',
         'simple_users': simple_users,
         'user_data_form': user_data_form,
-        'language_blocked': True
+        'language_blocked': True,
+        'files': files,
     }
 
     if request.method == 'POST':
@@ -881,18 +884,40 @@ def send_email_view(request):
 
         if user_data_form_class.is_valid():
 
-            file = request.FILES['file'].read().decode('utf-8')
+            file = MailFile.objects.get(pk=int(request.POST['file-for-mailing']))
+            text_to_send = file.file.open('r').read()
 
             if user_data_form_class.cleaned_data.get('all_users') == 'True':
                 send_mail('Розсилка з KinoCMS',
-                          file,
+                          text_to_send,
                           settings.EMAIL_HOST_USER,
                           [simple_user.email for simple_user in SimpleUser.objects.all()])
 
             elif user_data_form_class.cleaned_data.get('all_users') == 'False':
                 user_list = user_data_form_class.data.getlist('send_to_current_user')
-                send_mail('Розсилка із KinoCMS', file, settings.EMAIL_HOST_USER, user_list)
+                send_mail('Розсилка із KinoCMS', text_to_send, settings.EMAIL_HOST_USER, user_list)
 
             return redirect('cinema')
 
     return render(request, 'admin_cms/mailing.html', context)
+
+
+def files(request):
+    if request.method == 'POST':
+        try:
+            file_to_save = request.FILES['file']
+            MailFile.objects.create(file=file_to_save)
+        finally:
+            mailing_files = MailFile.objects.all().order_by('-created_at')
+            if len(mailing_files) > 5:
+                mailing_files = mailing_files[:5]
+                mailing_files_difference = [record for record in mailing_files if record not in mailing_files[:5]]
+                for record in mailing_files_difference:
+                    record.delete()
+
+            context = {
+                'files': [(file.id, file.filename()) for file in mailing_files]
+            }
+
+            return JsonResponse(context)
+

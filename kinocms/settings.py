@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'modeltranslation',
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -105,17 +104,6 @@ WSGI_APPLICATION = 'kinocms.wsgi.application'
 DATABASES = {
     'default': env.db_url()
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': env('DATABASE_ENGINE'),
-#         'NAME': env('DATABASE_NAME'),
-#         'USER': env('DATABASE_USER'),
-#         'PASSWORD': env('DATABASE_PASSWORD'),
-#         'HOST': env('DATABASE_HOST'),
-#         'PORT': env('DATABASE_PORT')
-#     }
-# }
 
 
 # Password validation

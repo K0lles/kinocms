@@ -16,6 +16,15 @@
   display: block;
 }
 
+.cancel-button-without-fade {
+  position: absolute;
+  cursor: pointer;
+  top: -20%;
+  right: -16%;
+  width: 25px;
+  height: 25px;
+}
+
 .cancel-button {
   position: absolute;
   cursor: pointer;

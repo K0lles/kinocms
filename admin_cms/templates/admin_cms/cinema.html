@@ -22,10 +22,29 @@
                     <a href="{% url 'update_cinema' pk=cinema.id %}">
                         <img class="img-fluid" src="{{ cinema.logo.url }}" alt="cinema_logo" style="width: 295px; height: 255px;">
                     </a>
-                    <a href="{% url 'delete_cinema' pk=cinema.id %}" style="color: black; text-decoration: none;">
-                        <img class="cancel-button" src="{% static 'admin_cms/logos/cancel-button.png' %}" style="top: -8%; right: -8%;">
+                    <a href="#" style="color: black; text-decoration: none;" data-toggle="modal" data-target="#deleteCinemaModal{{ cinema.id }}">
+                        <img class="cancel-button-without-fade" src="{% static 'admin_cms/logos/cancel-button.png' %}" style="top: -8%; right: -8%;">
                     </a>
                     <h5 class="text-center" style="margin-top: 2%;">{{ cinema.name }}</h5>
+                </div>
+                <div class="modal fade" id="deleteCinemaModal{{ cinema.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{% trans 'Видалити кінотеатр' %}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        {% trans 'Ви впевнені, що хочете видалити кінотеатр ' %} {{ cinema.name }}?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Скасувати' %}</button>
+                        <a class="btn btn btn-danger" href="{% url 'delete_cinema' pk=cinema.id %}">{% trans 'Видалити' %}</a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             {% endfor %}
         </div>

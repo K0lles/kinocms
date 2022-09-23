@@ -53,7 +53,26 @@
                     <a href="{% url 'login' %}" class="btn btn-success" style="margin-left: 15%;">{% trans 'Логін' %}</a>
                     <a href="{% url 'registration' %}" class="btn btn-info" style="margin-top: 10%;"> {% trans 'Зареєструватися' %}</a>
                 {% else %}
-                    <a href="{% url 'logout' %}" class="btn btn-danger">{% trans 'Вийти' %}</a>
+                    <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#logoutModal">{% trans 'Вийти' %}</a>
+                    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Logout</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            {% trans 'Ви впевнені, що хочете вийти?' %}
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Скасувати' %}</button>
+                            <a class="btn btn btn-danger" href="{% url 'logout' %}">{% trans 'Вийти' %}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 {% endif %}
             </div>
             <div class="col-sm-2 col-md-3 col-lg-3" style="padding-top: 3%;">

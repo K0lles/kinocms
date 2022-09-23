@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import user_passes_test
 from . import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n'))
 ]
 

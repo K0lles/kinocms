@@ -233,7 +233,6 @@ class PageCreateForm(TranslationModelForm):
 class SendMail(Form):
     user_email_list = CharField(required=False, widget=Textarea())
     send_to_current_user = BooleanField(required=False)
-    file = FileField(required=True)
 
     CHOICES = (
         (True, 'Всім користувачам'),

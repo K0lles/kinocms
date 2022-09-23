@@ -28,5 +28,6 @@ urlpatterns = [
     path('users/', views.users, name='users'),
     path('user/<int:pk>/delete', views.user_delete, name='user_delete'),
     path('user/update/<int:pk>', views.user_update, name='user_update'),
-    path('mailing/', views.send_email_view, name='mailing')
+    path('mailing/', views.send_email_view, name='mailing'),
+    path('files/', views.files, name='files')   # this url is used for ajax-requests to save uploaded file while mailing
 ]
