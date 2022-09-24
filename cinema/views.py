@@ -20,10 +20,16 @@ def home_view(request):
     background_banner = BackgroundBanner.objects.first()
     main_top_banner_photos = MainTopBanner.objects.prefetch_related('maintopbannerphoto_set').first()
     sessions = Session.objects.prefetch_related('movie', 'hall').filter(date__month=timezone.now().month)
+    background_photo = None
+
+    try:
+        background_photo = background_banner.photo.url if background_banner.background == 1 else None
+    except:
+        pass
 
     context = {
         'title': 'KinoCMS | Головна',
-        'background': background_banner.photo.url if background_banner.background == 1 else None,
+        'background': background_photo,
         'photos': main_top_banner_photos.maintopbannerphoto_set.all(),
         'interval': main_top_banner_photos.turning_speed * 1000,
         'sessions': sessions,

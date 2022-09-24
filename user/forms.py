@@ -1,11 +1,13 @@
 from .models import *
+
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import CharField, Form, EmailField
 from django.forms.widgets import RadioSelect, NumberInput, TextInput, PasswordInput
-from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.password_validation import validate_password
+
+from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -82,5 +84,7 @@ class UserChangePasswordForm(Form):
 
         if cleaned_data.get('password') != cleaned_data.get('password1'):
             self.add_error('password', _('Паролі повинні співпадати!. Перевірте правильність написання!'))
+
+        validate_password(cleaned_data.get('password'))
 
         return cleaned_data
