@@ -45,7 +45,8 @@ def statistics_view(request):
         'movie_names': movie_names,
         'movie_sessions': movie_sessions,
         'city_names': city_names,
-        'city_amount': city_amount
+        'city_amount': city_amount,
+        'language_blocked': True
     }
     return render(request, 'admin_cms/charts.html', context)
 

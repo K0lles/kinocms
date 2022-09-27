@@ -1,6 +1,17 @@
 version: '3.9'
 
 services:
+  nginx:
+    build: ./nginx
+    ports:
+      - "1339:80"
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    depends_on:
+      - web
+    restart: "on-failure"
+
   db:
     hostname: db
     image: postgres:13.0-alpine
@@ -9,19 +20,31 @@ services:
     volumes:
       - postgres_data:/var/lib/postgres/data/
     env_file:
-      - .env
+      - ./.env
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "python manage.py makemigrations &&
+                    python manage.py migrate &&
+                    python manage.py create_users &&
+                    python manage.py create-banners &&
+                    python manage.py create-cinema-halls-session-movies &&
+                    python manage.py create_pages &&
+                    python manage.py collectstatic &&
+                    gunicorn --bind 0.0.0.0:8000 kinocms.wsgi"
     volumes:
-      - .:/usr/src/app/
-    ports:
-      - "8000:8000"
+      - static_volume:/app/static
+      - media_volume:/app/media
+    expose:
+      - "8000"
     env_file:
-      - .env
+      - ./.env
     depends_on:
       - db
+    restart: "on-failure"
+    image: kinocms-app
 
 volumes:
   postgres_data:
+  media_volume:
+  static_volume:
