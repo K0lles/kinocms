@@ -4,7 +4,6 @@ FROM python:3.10-alpine
 ENV KINOCMS=/home/app/kinocms
 
 RUN mkdir -p $KINOCMS
-RUN mkdir -p $KINOCMS/static
 
 WORKDIR $KINOCMS
 
@@ -19,12 +18,4 @@ RUN pip install --upgrade pip
 COPY . $KINOCMS
 RUN pip install -r requirements.txt
 
-EXPOSE 8000
-
 CMD python manage.py runserver
-
-##copy entrypoint.sh
-#COPY ./entrypoint.sh $KINOCMS
-#
-## run entrypoint.sh
-#ENTRYPOINT ['/bin/bash', '/home/app/kinocms/entrypoint.sh']

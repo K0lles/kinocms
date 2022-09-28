@@ -1,4 +1,4 @@
-
+.env
 media/*
 !/media/static_preload
 .idea

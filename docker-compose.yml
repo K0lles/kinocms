@@ -6,8 +6,8 @@ services:
     ports:
       - "1339:80"
     volumes:
-      - static_volume:/app/static
-      - media_volume:/app/media
+      - static_volume:/home/app/kinocms/static
+      - media_volume:/home/app/kinocms/media
     depends_on:
       - web
     restart: "on-failure"
@@ -26,17 +26,17 @@ services:
     build: .
     command: sh -c "python manage.py makemigrations &&
                     python manage.py migrate &&
-                    python manage.py create_users &&
+                    python manage.py create_users 5 &&
                     python manage.py create-banners &&
-                    python manage.py create-cinema-halls-session-movies &&
+                    python manage.py create-cinema-halls-sessions-movies &&
                     python manage.py create_pages &&
-                    python manage.py collectstatic &&
+                    python manage.py collectstatic --noinput &&
                     gunicorn --bind 0.0.0.0:8000 kinocms.wsgi"
     volumes:
-      - static_volume:/app/static
-      - media_volume:/app/media
-    expose:
-      - "8000"
+      - static_volume:/app/kinocms/static
+      - media_volume:/app/kinocms/media
+    ports:
+      - "8000:8000"
     env_file:
       - ./.env
     depends_on:
