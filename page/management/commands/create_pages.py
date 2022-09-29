@@ -20,21 +20,21 @@ class Command(BaseCommand):
 
         types = ['about_cinema', 'cafe_bar', 'vip_hall', 'baby_room', 'advertisment']
         for index, name in enumerate(['Про кінотеатр', 'Кафе-бар', 'Vip-зал', 'Дитяча кімната', 'Реклама']):
-
-            seo = SEO.objects.create(url='https://pages.com',
-                                     title=name,
-                                     keyword=f'{name}, {name} page',
-                                     seo_description=f'{name} description')
-            gallery = Gallery.objects.create(name=name)
-            for inner_index in range(0, 3):
-                Photo.objects.create(photo=f'static_preload/preload_pages/gallery_{index}/{inner_index}.jpg',
-                                     gallery=gallery)
-            Page.objects.create(name=name,
-                                description=f'{name} description',
-                                main_photo=f'static_preload/preload_pages/{index}.jpg',
-                                gallery=gallery,
-                                seo=seo,
-                                type=types[index]
-                                )
+            if Page.objects.filter(type=name).exists():
+                seo = SEO.objects.create(url='https://pages.com',
+                                         title=name,
+                                         keyword=f'{name}, {name} page',
+                                         seo_description=f'{name} description')
+                gallery = Gallery.objects.create(name=name)
+                for inner_index in range(0, 3):
+                    Photo.objects.create(photo=f'static_preload/preload_pages/gallery_{index}/{inner_index}.jpg',
+                                         gallery=gallery)
+                Page.objects.create(name=name,
+                                    description=f'{name} description',
+                                    main_photo=f'static_preload/preload_pages/{index}.jpg',
+                                    gallery=gallery,
+                                    seo=seo,
+                                    type=types[index]
+                                    )
 
 

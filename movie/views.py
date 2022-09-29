@@ -45,11 +45,13 @@ def schedule_view(request):
         cinema = request.GET.get('cinema')
         movie = request.GET.get('movie')
         date = request.GET.getlist('date[]')
+        hall = request.GET.get('hall')
 
         filters_types = Q()
         filters_cinema = Q()
         filters_movie = Q()
         filters_date = Q()
+        filters_hall = Q()
 
         if types:
             filters_types = Q(type=types[0])
@@ -64,11 +66,13 @@ def schedule_view(request):
             if len(date) > 1:
                 searching_date = timezone.datetime(int(date[2]), int(date[1]), int(date[0]))
                 filters_date = Q(date__date=searching_date)
-
+        if hall:
+            filters_hall = Q(hall__number=int(hall))
         sessions = Session.objects.select_related('movie', 'hall').filter(filters_types &
                                                                           filters_cinema &
                                                                           filters_movie &
-                                                                          filters_date).order_by('date')
+                                                                          filters_date &
+                                                                          filters_hall).order_by('date')
         dates = sorted(set([session.date for session in sessions]))
         session_json = json.loads(serialize('json', sessions))
 

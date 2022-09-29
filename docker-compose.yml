@@ -44,6 +44,20 @@ services:
     restart: "on-failure"
     image: kinocms-app
 
+  celery:
+    build: .
+    command: celery -A kinocms.celery worker -l INFO
+    volumes:
+      - .:/home/app/kinocms
+    env_file:
+      - ./.env
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: "redis:alpine"
+
 volumes:
   postgres_data:
   media_volume:

@@ -8,6 +8,7 @@ from cinema.models import Cinema
 from user.models import SimpleUser
 from movie.models import *
 from .models import MailFile
+from .tasks import sending_mail
 
 from django.core.mail import send_mail
 
@@ -889,14 +890,14 @@ def send_email_view(request):
             text_to_send = file.file.open('r').read()
 
             if user_data_form_class.cleaned_data.get('all_users') == 'True':
-                send_mail('Розсилка з KinoCMS',
-                          text_to_send,
-                          settings.EMAIL_HOST_USER,
-                          [simple_user.email for simple_user in SimpleUser.objects.all()])
+                sending_mail.delay('Розсилка з KinoCMS',
+                                   text_to_send,
+                                   settings.EMAIL_HOST_USER,
+                                   [simple_user.email for simple_user in SimpleUser.objects.all()])
 
             elif user_data_form_class.cleaned_data.get('all_users') == 'False':
                 user_list = user_data_form_class.data.getlist('send_to_current_user')
-                send_mail('Розсилка із KinoCMS', text_to_send, settings.EMAIL_HOST_USER, user_list)
+                sending_mail.delay('Розсилка із KinoCMS', text_to_send, settings.EMAIL_HOST_USER, user_list)
 
             return redirect('cinema')
 

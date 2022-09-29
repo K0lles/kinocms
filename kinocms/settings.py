@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'movie.apps.MovieConfig',
     'page.apps.PageConfig',
     'user.apps.UserConfig',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -179,3 +180,19 @@ EMAIL_USE_TLS = env.parse_value(env('EMAIL_USE_TLS'), bool)
 EMAIL_PORT = env.parse_value(env('EMAIL_PORT'), int)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = env('CELERY_TIMEZONE')
+
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
+
+# CELERY_BROKER_URL = 'redis://redis:6379/0'
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'Europe/Kiev'
+#
+# CELERY_RESULT_BACKEND = 'django-db'

@@ -16,7 +16,7 @@ class Command(BaseCommand):
             for index in range(0, 3):
                 MainTopBannerPhoto.objects.create(main_top_banner=main_top_banner,
                                                   photo=f'static_preload/preload_banners/main_top_banners/{index}.jpg',
-                                                  url=f'Url of {index + 1} photo',
+                                                  url=f'https://photo-{index + 1}-.photo',
                                                   text=f'Text of {index + 1} photo')
 
         if not NewsBanner.objects.exists():
@@ -25,7 +25,8 @@ class Command(BaseCommand):
 
             for index in range(0, 3):
                 NewsBannerPhoto.objects.create(news_banner=news_banner,
-                                               photo=f'static_preload/preload_banners/news_banners/{index}.jpg')
+                                               photo=f'static_preload/preload_banners/news_banners/{index}.jpg',
+                                               url=f'https://photo{index}.com')
 
         if BackgroundBanner.objects.exists():
             background_banner = BackgroundBanner.objects.create(photo='static_preload/preload_banners/background_banner/background_banner.jpg',
