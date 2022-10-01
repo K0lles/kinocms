@@ -70,7 +70,7 @@
                     </thead>
                     <tbody>
                         {% for session in sessions %}
-                            {% if session.date == date %}
+                            {% if session.date.date == date.date %}
                                 <tr class="text-center">
                                     <td>{{ session.date|date:'G:i' }}</td>
                                     <td class="text-left">{{ session.movie.name }}</td>

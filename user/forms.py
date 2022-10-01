@@ -5,19 +5,19 @@ from django.forms import CharField, Form, EmailField
 from django.forms.widgets import RadioSelect, NumberInput, TextInput, PasswordInput
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.password_validation import validate_password, MinimumLengthValidator, \
+    UserAttributeSimilarityValidator, CommonPasswordValidator, NumericPasswordValidator
 
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
 
 class UserRegistrationForm(UserCreationForm):
-
     password1 = CharField(widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повторіть пароль'}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['sex'].empty_label = None
-        self.fields['birthday'].input_formats = [ '%d-%m-%Y' ]
+        # self.fields['sex'].empty_label = None
+        self.fields['birthday'].input_formats = ['%d-%m-%Y']
         del self.fields['password2']
 
     class Meta:
@@ -29,7 +29,8 @@ class UserRegistrationForm(UserCreationForm):
             'email': TextInput(attrs={'class': 'form-control', 'placeholder': "E-mail"}),
             'alias': TextInput(attrs={'class': 'form-control', 'placeholder': "Псевдонім"}),
             'birthday': TextInput(attrs={'class': 'form-control', 'placeholder': 'Дата народження'}),
-            'phone_number': PhoneNumberInternationalFallbackWidget(attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
+            'phone_number': PhoneNumberInternationalFallbackWidget(
+                attrs={'class': 'form-control', 'placeholder': 'Номер телефону'}),
             'city': TextInput(attrs={'class': 'form-control', 'placeholder': "Місто"}),
             'card_number': NumberInput(attrs={'class': 'form-control', 'placeholder': 'Номер банківської картки'}),
             'language': RadioSelect(attrs={'class': 'form-check-input'}),
@@ -42,14 +43,17 @@ class UserRegistrationForm(UserCreationForm):
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('password1')
         card_number = cleaned_data.get('card_number')
+        print(cleaned_data)
 
         if len(card_number) < 16 or not card_number.isnumeric():
             self.add_error('card_number', 'Неправильно введений номер карти. Перевірте правильність написання!')
 
+        validate_password(cleaned_data.get('password'), password_validators=(MinimumLengthValidator(),
+                                                                             UserAttributeSimilarityValidator(),
+                                                                             CommonPasswordValidator(),
+                                                                             NumericPasswordValidator()))
         if password != confirm_password:
             self.add_error('password', _('Паролі повинні співпадати!. Перевірте правильність написання!'))
-
-        validate_password(password)
 
         return cleaned_data
 
@@ -70,9 +74,10 @@ class UserLoginForm(Form):
 class UserChangePasswordForm(Form):
     email = EmailField(max_length=200, widget=TextInput(attrs={'class': 'form-control', 'placeholder': "E-mail"}))
     alias = CharField(max_length=200, widget=TextInput(attrs={'class': 'form-control', 'placeholder': "Псевдонім"}))
-    password = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть новий пароль'}),
-                         validators=[validate_password])
-    password1 = CharField(max_length=200, widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повторіть новий пароль'}))
+    password = CharField(max_length=200,
+                         widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть новий пароль'}),)
+    password1 = CharField(max_length=200,
+                          widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повторіть новий пароль'}))
 
     def clean(self):
         cleaned_data = super(UserChangePasswordForm, self).clean()
@@ -82,9 +87,13 @@ class UserChangePasswordForm(Form):
             self.add_error('email', _('Перевірте правильність даних'))
             return cleaned_data
 
+        print(cleaned_data)
+        validate_password(cleaned_data.get('password'), password_validators=(MinimumLengthValidator(),
+                                                                             UserAttributeSimilarityValidator(),
+                                                                             CommonPasswordValidator(),
+                                                                             NumericPasswordValidator()))
+
         if cleaned_data.get('password') != cleaned_data.get('password1'):
             self.add_error('password', _('Паролі повинні співпадати!. Перевірте правильність написання!'))
-
-        validate_password(cleaned_data.get('password'))
 
         return cleaned_data

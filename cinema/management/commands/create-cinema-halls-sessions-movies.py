@@ -53,7 +53,9 @@ class Command(BaseCommand):
                 for index, name_tuple in enumerate([('hatiko', 'Хатіко', 'https://www.youtube.com/embed/nRiYwfZ-5qA?autoplay=1&mute=1'),
                                                     ('lost-city', 'Загублене місто', 'https://www.youtube.com/embed/P3C1nNnaMgY?autoplay=1&mute=1'),
                                                     ('joker', 'Джокер', 'https://www.youtube.com/embed/q3IqAuTlTfA?autoplay=1&mute=1'),
-                                                    ('jumanji', 'Джуманджі', 'https://www.youtube.com/embed/ImZCLnCXglI?autoplay=1&mute=1')]):
+                                                    ('jumanji', 'Джуманджі', 'https://www.youtube.com/embed/ImZCLnCXglI?autoplay=1&mute=1'),
+                                                    ('escape-from-shoushenko', 'Втеча з Шоушенко', 'https://www.youtube.com/embed/kgAeKpAPOYk?autoplay=1&mute=1'),
+                                                    ('christ-parent', 'Хрещений батько', 'https://www.youtube.com/embed/ar1SHxgeZUc?autoplay=1&mute=1')]):
                     gallery = Gallery.objects.create(name=name_tuple[0])
                     seo = SEO.objects.create(url=f'https://movie-{name_tuple[0]}.com',
                                              title=name_tuple[0],
@@ -83,7 +85,7 @@ class Command(BaseCommand):
                                            type_IMAX=movie.type_IMAX,
                                            price=choice([150.0, 190.0, 210.0, 180.0]),
                                            date=datetime.datetime(2022,
-                                                                  9,
+                                                                  10,
                                                                   randrange(20, 31),
                                                                   randrange(10, 22),
                                                                   choice([0, 30])))

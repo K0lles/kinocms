@@ -151,6 +151,7 @@
 
     {% block content %}
 
+        {% if photos %}
         <div class="row" style="background-color: white;">
             <div class="col-md-12">
                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
@@ -172,6 +173,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
         <div class="row" style="background-color: white; padding-top: 10%;">
             <h2 class="" style="margin: 0 auto">{% trans 'Дивіться цього місяця' %}</h2>
@@ -188,6 +190,29 @@
             </div>
 
         </div>
+        {% if news_photos %}
+            <div class="row" style="background-color: white;">
+                <div class="col-md-12">
+                    <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for photo in news_photos %}
+                            <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}" data-interval="{{ interval }}">
+                                <img src="{{ photo.photo.url }}" class="d-block w-100" alt="photo">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls2" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls2" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 
     {% endblock content %}
@@ -202,7 +227,8 @@
                 <img class="col-lg-5" src="{% static 'cinema/logos/google-play.png' %}" style="height: 40px; width: 197px;">
                 <img class="col-lg-5" src="{% static 'cinema/logos/app-store.png' %}" style="height: 40px; width: 197px;">
                 <p class="text-left" style="margin-top: 15%;">
-                {% trans 'Розробка сайтів: AVADA-MEDIA' %}
+                <!-- {% trans 'Розробка сайтів: НАША-КОМАНДА' %} -->
+                Розробка сайтів - наша команда
                 </p>
             </div>
             <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">

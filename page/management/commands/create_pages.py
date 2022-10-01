@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         types = ['about_cinema', 'cafe_bar', 'vip_hall', 'baby_room', 'advertisment']
         for index, name in enumerate(['Про кінотеатр', 'Кафе-бар', 'Vip-зал', 'Дитяча кімната', 'Реклама']):
-            if Page.objects.filter(type=name).exists():
+            if not Page.objects.filter(type=name).exists():
                 seo = SEO.objects.create(url='https://pages.com',
                                          title=name,
                                          keyword=f'{name}, {name} page',

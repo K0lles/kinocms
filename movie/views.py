@@ -68,12 +68,16 @@ def schedule_view(request):
                 filters_date = Q(date__date=searching_date)
         if hall:
             filters_hall = Q(hall__number=int(hall))
-        sessions = Session.objects.select_related('movie', 'hall').filter(filters_types &
+        sessions = Session.objects.select_related('movie', 'hall', 'hall__cinema_id').filter(filters_types &
                                                                           filters_cinema &
                                                                           filters_movie &
                                                                           filters_date &
                                                                           filters_hall).order_by('date')
-        dates = sorted(set([session.date for session in sessions]))
+        dates = []
+        for session in sessions:
+            # add date, which date.date() not in dates[] yet
+            dates.append(session.date) if all(
+                [date_time.date() != session.date.date() for date_time in dates]) else None
         session_json = json.loads(serialize('json', sessions))
 
         for index, session in enumerate(session_json):
@@ -86,9 +90,15 @@ def schedule_view(request):
     sessions = Session.objects.select_related('movie', 'hall', 'hall__cinema_id').all().order_by('date')
 
     # lists for further selecting and sorting in template
-    dates = sorted(set([session.date for session in sessions]))
+    dates = []
+    for session in sessions:
+        # add date, which date.date() not in dates[] yet
+        dates.append(session.date) if all([date_time.date() != session.date.date() for date_time in dates]) else None
     cinemas = set([session.hall.cinema_id for session in sessions])
-    movies = set([session.movie for session in sessions])
+    movies = []
+    for session in sessions:
+        # add date, which date.date() not in dates[] yet
+        movies.append(session.movie) if all([movie.name != session.movie.name for movie in movies]) else None
     halls = set([session.hall for session in sessions])
 
     context = {

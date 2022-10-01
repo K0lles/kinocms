@@ -1,3 +1,5 @@
+from django.contrib.auth.password_validation import validate_password, MinimumLengthValidator, \
+    UserAttributeSimilarityValidator, CommonPasswordValidator, NumericPasswordValidator
 from django.forms import modelform_factory, modelformset_factory, ModelForm, CharField, Form, BooleanField, ChoiceField, \
     FileField
 from modeltranslation.forms import TranslationModelForm
@@ -208,6 +210,11 @@ class UserFormUpdate(ModelForm):
 
         if len(card_number) < 16 or not card_number.isnumeric():
             self.add_error('card_number', 'Incorrect card number. Check it writing!')
+
+        validate_password(cleaned_data.get('password'), password_validators=(MinimumLengthValidator(),
+                                                                             UserAttributeSimilarityValidator(),
+                                                                             CommonPasswordValidator(),
+                                                                             NumericPasswordValidator()))
 
         if cleaned_data.get('password') != cleaned_data.get('password_repeat') and cleaned_data.get('password'):
             self.add_error('password', "Passwords must match. Check the validity of entered passwords!")

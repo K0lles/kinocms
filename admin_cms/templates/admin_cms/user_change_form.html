@@ -7,6 +7,11 @@
             $( "#id_birthday" ).datepicker({ dateFormat: 'dd.mm.yy', defaultDate: new Date(2000, 10, 30) }).val();
         } );
     </script>
+    <style>
+        li {
+            color: red;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -201,6 +206,8 @@
         {% for error in simple_user.password1.errors %}
             <p style="color: red;">{{ error }}</p>
         {% endfor %}
+
+        {{ simple_user.non_field_errors }}
 
         <button type="submit" class="btn btn-primary btn-block">{% trans 'Зберегти' %}</button>
     </form>

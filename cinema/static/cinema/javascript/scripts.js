@@ -15,11 +15,19 @@ function formatDate(date) {
   ].join('-');
 }
 
+function parseToFullMinutes(minute) {
+    if (String(minute).length == 1) {
+        return String(minute) + "0"
+    }
+
+    return minute
+
+}
+
 function scheduleParse(data) {
     let dateNumbers = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П`ятниця', 'Субота']
     let dateMonths = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
     let schedule = $('#schedule');
-    let pathBook = $(location).attr('host') + '/movie/book/';
     schedule.empty();
     for (let date = 0; date < data['dates'].length; date++) {
         let contentTable = `<div class="row" style="margin-top: 4%;">
@@ -36,7 +44,7 @@ function scheduleParse(data) {
         for (let session = 0; session < data['sessions'].length; session++) {
             if (formatDate(parseISOLocal(data['dates'][date])) == formatDate(parseISOLocal(data['sessions'][session]['fields']['date']))) {
                 contentTable += `<tr class="text-center">
-                                    <td>${parseISOLocal(data['sessions'][session]['fields']['date']).getHours()+3}:${parseISOLocal(data['sessions'][session]['fields']['date']).getMinutes()}</td>
+                                    <td>${parseISOLocal(data['sessions'][session]['fields']['date']).getHours()+3}:${parseToFullMinutes(parseISOLocal(data['sessions'][session]['fields']['date']).getMinutes())}</td>
                                     <td>${data['sessions'][session]['fields']['movie']}</td>
                                     <td>${data['sessions'][session]['fields']['hall']}</td>
                                     <td>${data['sessions'][session]['fields']['price']}</td>

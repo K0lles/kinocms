@@ -19,6 +19,9 @@
         p {
             color: red;
         }
+        li {
+            color: red;
+        }
     </style>
 </head>
 <body class="hold-transition register-page">
@@ -221,6 +224,8 @@
                     {% endfor %}
                  {% endif %}
             </div>
+
+            {{ registration_form.non_field_errors }}
 
             <div class="row">
               <div class="col-4">

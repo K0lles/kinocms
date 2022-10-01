@@ -21,6 +21,7 @@ def home_view(request):
     main_top_banner_photos = MainTopBanner.objects.prefetch_related('maintopbannerphoto_set').first()
     sessions = Session.objects.prefetch_related('movie', 'hall').filter(date__month=timezone.now().month)
     background_photo = None
+    news_banner_photos = NewsBanner.objects.prefetch_related('newsbannerphoto_set').first()
 
     try:
         background_photo = background_banner.photo.url if background_banner.background == 1 else None
@@ -30,9 +31,10 @@ def home_view(request):
     context = {
         'title': 'KinoCMS | Головна',
         'background': background_photo,
-        'photos': main_top_banner_photos.maintopbannerphoto_set.all(),
+        'photos': main_top_banner_photos.maintopbannerphoto_set.all() if main_top_banner_photos.turned_on else None,
         'interval': main_top_banner_photos.turning_speed * 1000,
         'sessions': sessions,
+        'news_photos': news_banner_photos.newsbannerphoto_set.all() if news_banner_photos.turned_on else None
     }
 
     # there and further - adding keys with phone numbers
