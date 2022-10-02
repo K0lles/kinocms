@@ -2,6 +2,7 @@ from django.db.models import Count
 from django.shortcuts import render
 
 from banner.models import *
+from kinocms import settings
 from movie.models import *
 from page.models import *
 from .models import *

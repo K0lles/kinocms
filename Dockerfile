@@ -17,5 +17,3 @@ RUN pip install --upgrade pip
 # copy project
 COPY . $KINOCMS
 RUN pip install -r requirements.txt
-
-CMD python manage.py runserver

@@ -4,7 +4,7 @@ services:
   nginx:
     build: ./nginx
     ports:
-      - "1339:80"
+      - "81:80"
     volumes:
       - static_volume:/home/app/kinocms/static
       - media_volume:/home/app/kinocms/media
@@ -30,11 +30,12 @@ services:
                     python manage.py create-banners &&
                     python manage.py create-cinema-halls-sessions-movies &&
                     python manage.py create_pages &&
+                    python manage.py create-news-events &&
                     python manage.py collectstatic --noinput &&
                     gunicorn --bind 0.0.0.0:8000 kinocms.wsgi"
     volumes:
-      - static_volume:/app/kinocms/static
-      - media_volume:/app/kinocms/media
+      - static_volume:/home/app/kinocms/static
+      - media_volume:/home/app/kinocms/media
     ports:
       - "8000:8000"
     env_file:

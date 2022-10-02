@@ -5,7 +5,6 @@ from environ import environ
 
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,13 +15,14 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
+DEBUG = False
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-ibq!(dr%)s#d_17vnl2@yye)y=q!_7%05@llxf%my2!ldbbd+f')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS').split(" ")
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', default='138.68.64.203 localhost 127.0.0.1 [::1]').split(" ")
 
 
 # Application definition
@@ -92,13 +92,23 @@ WSGI_APPLICATION = 'kinocms.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': env('DATABASE_NAME'),
+#         'USER': env('DATABASE_USER'),
+#         'PASSWORD': env('DATABASE_PASSWORD'),
+#         'HOST': env('DATABASE_HOST'),
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD'),
-        'HOST': env('DATABASE_HOST'),
+        'NAME': os.environ.get('DATABASE_NAME', default='kinocms'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
     }
 }
 
@@ -155,15 +165,15 @@ LOCALE_PATHS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "static"
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'user.SimpleUser'
@@ -175,7 +185,7 @@ LOGIN_REQUIRED_URLS = (
     r'/admin_cms/users/(.*)$',
 )
 
-EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_USE_TLS = env.parse_value(env('EMAIL_USE_TLS'), bool)
 EMAIL_PORT = env.parse_value(env('EMAIL_PORT'), int)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
@@ -189,10 +199,3 @@ CELERY_TIMEZONE = env('CELERY_TIMEZONE')
 
 CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 
-# CELERY_BROKER_URL = 'redis://redis:6379/0'
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'Europe/Kiev'
-#
-# CELERY_RESULT_BACKEND = 'django-db'
